@@ -1,0 +1,163 @@
+/**
+Author -> ThemeTidy
+Email -> support@themetidy.com
+Version -> 1.0
+*/
+
+/* ===========================================================
+    Color And Font Settings
+============================================================ */
+body {
+    background: #f1f1f1;
+    font-family: 'Raleway', sans-serif;
+    font-size: 14px;
+    color: #000;
+}
+.product h1, .mega-menu .navbar-nav>li>a, .navbar-search a, .currencies button, .mega-menu-fw h4, .welcome-newsletter h1 span, .btn-default, .btn-default.disabled, .modal-content button.close, .product h1 a, .banner-small h1 a, .latest-collection h2 a, .instagram h3 a, .blog h3, .latest-product .see-more a, .btn-border, .welcome-newsletter-content h1, .team a p, .paira-success-message-title, .product-dtl h4, .raleway-sbold, .pagination .active span, b, strong, .footer-list-style li a , .footer-bottom p {
+    font-weight: 600;
+}
+.mega-menu .navbar-nav>li>a , .navbar-search a, .currencies button , a, .cart-menu-body a span, .currencies button:hover, .cart-menu-body a span, .carousel-control, .btn-border, .big-banner h1, .sort-by, footer a, .footer-list-style li a , .footer-bottom p, .carousel-control .right:hover ,.carousel-control .left:hover, h1,h2,h3,h4,h5,h6 , p {
+    color: #000;
+}
+.list-grid button.active:hover {
+    color: #000 !important;
+}
+.mega-menu-fw h4 , .cart-table-inner a , .row-3 p ,  .forget-password a , .mega-menu-fw li a , .sub-menu li a , .currencies .dropdown-menu li a , .paira-search-popup .form-control , .paira-login-popup h3{
+    color: #FFFFFF;
+}
+.mega-menu-fw li a:hover , .mega-menu .nav .dropdown-menu a:hover{
+    border-color: #f1f1f1 !important;
+    color: #FFFFFF;
+}
+.cart-menu-body a:hover span , .forget-password a:hover , .paira-success-message-title{
+    color: #f1f1f1;
+}
+a:focus, a:hover , footer a:hover , .product a p:hover, .left.carousel-control:hover ,.right.carousel-control:hover, .list-grid button.active {
+    color: #7d7d7d;
+}
+.btn-default, .btn-default.disabled , .modal-content button.close {
+    color: #000;
+    background-color: #f1f1f1;
+    border: none;
+}
+.btn-default.active, .btn-default.focus, .btn-default:active, .btn-default:focus, .btn-default:hover, .open>.dropdown-toggle.btn-default {
+    color: #fff;
+    background-color: #7d7d7d;
+    border-color: transparent;
+}
+.btn-success, .paira-cart-popup .btn-success.updat:hover, .ajax-success-message .btn-success:hover {
+    color: #fff;
+    background-color: #000;
+    border-color: #000;
+}
+.btn-success.active, .btn-success.focus, .btn-success:active, .btn-success:focus, .btn-success:hover, .open>.dropdown-toggle.btn-success, .paira-login-popup .btn-success, .paira-cart-popup .btn-success.updat, .ajax-success-message .btn-success  {
+    color: #fff;
+    background-color: #7d7d7d;
+    border-color: #7d7d7d;
+}
+.color-scheme-1, .image-popup .modal-content button.close:hover, button, .modal-content button.close:hover{
+    background: #fff;
+    color: #000;
+}
+.color-scheme-2:hover, .welcome-newsletter .color-scheme-1, #paira-quick-view .modal-content button.close:hover, .image-popup .modal-content button.close:hover, .paira-search-popup .modal-content button.close:hover, .paira-cart-popup .modal-content button.close:hover,.paira-login-popup .modal-content button.close:hover, .ajax-success-message .modal-content button.close:hover{
+    background: #7d7d7d !important;
+    color: #fff !important;
+}
+.brand-button button:hover, .synconis button:hover{
+    background: transparent !important;
+    color: #7d7d7d !important;
+}
+.color-scheme-1:hover,.color-scheme-2 , #paira-quick-view .modal-content button.close, .modal-content button.close, button:hover, .blog-post-tags li a:hover, .blog-tag-widget li a{
+    background: #000;
+    color: #fff;
+}
+.welcome-newsletter .color-scheme-1:hover, .paira-login-popup .btn-success:hover{
+    background: #000 !important;
+    color: #fff !important;
+}
+.color-scheme-3 {
+    background: transparent;
+    color: #7d7d7d;
+}
+.text-color-1 , .forget-password a , .welcome-newsletter h1 span, figcaption h4.panel-heading, .logo a, .cart-menu-body a span, a.boxclose, .navbar-form .dropdown-menu .form-group i , .box .form-control, .row-5 .remove:hover, .cart-table-inner,.cart-table-inner a,.quantity-fix .btn, .product .quick-view , .product .product-cart-con , .product-page .toggle-button .fa-angle-right, .product-page .toggle-button .fa-angle-left {
+    color: #fff;
+}
+.text-color-2, .cart-table-inner .remove, .row-2 p a:hover , .quantity-fix .btn-success:hover , .quantity-fix .btn-default:hover{
+    color: #f1f1f1;
+}
+.social-li li a i, .btn-image:hover, .carousel-indicators .active, a.boxclose , #paira-quick-view .modal-content, .image-popup .modal-content{
+    background: #f1f1f1;
+}
+.modal-content {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+button, .carousel-indicators li, .btn-border, .form-control , .blog-post-tags li a{
+    border-color: #000;
+}
+.box .navbar-form, .quantity-fix, .quantity-fix .btn-success, .quantity-fix .btn-default, .paira-login-popup .form-control, .popup-search-form .form-control, .paira-login-popup .btn-border, .paira-cart-popup .btn-border{
+    border-color: #fff;
+}
+.modal, .instagram .product .background-overlay1{
+    background: rgba(255, 255, 255, 0.90);
+}
+.blogs1, .blogs {
+    background: rgba(255, 255, 255, 0.8);
+}
+.welcome-newsletter h1 span, figcaption, .logo, .cart-menu-body a span, .carousel-indicators li{
+    background: #000;
+}
+.breadcrumb, .cart, .pro-content, .home-page .banner-small .banner-small-back, .form-group .center-block label, .welcome-newsletter-content .modal-content {
+    background: #fff;
+}
+.form-control:focus {
+    border-color: #7d7d7d;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(125, 125, 125, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(125, 125, 125, 0.6);
+}
+.blog-tag-widget li a:hover {
+    background: #ccc;
+}
+.alert-success, .paira-login-popup .modal-content button.close, .paira-search-popup .modal-content button.close, .paira-cart-popup .modal-content button.close, .ajax-success-message .modal-content button.close {
+    color: #000;
+    background-color: #fff;
+    border-color: #fff;
+}
+.lookbook-content .background-overlay{
+    background: rgba(255, 255, 255, 0.6);
+}
+.dropdown-menu {
+    background: rgba(0, 0, 0, 0.9);
+}
+.product .background-overlay {
+    background: rgba(241, 241, 241, 0.7);
+}
+.product-page .toggle-button .fa-angle-right, .product-page .toggle-button .fa-angle-left {
+    background: rgba(0, 0, 0, 0.51);
+}
+.welcome-newsletter-content{
+    background: rgba(0, 0, 0, 0.9);
+}
+.paira-search-popup .form-control{
+    border-color: #fff !important;
+}
+.collection-item, figure, .cart-item-list {
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.10);
+    -moz-box-shadow: 0 1px 1px rgba(0,0,0,.10);
+    -o-box-shadow: 0 1px 1px rgba(0,0,0,.10);
+    -ms-box-shadow: 0 1px 1px rgba(0,0,0,.10);
+    box-shadow: 0 1px 1px rgba(0,0,0,.10);
+}
+.collection-item:hover {
+    -webkit-box-shadow: 0 0 17px rgba(0,0,0,0.12);
+    -moz-box-shadow: 0 0 17px rgba(0,0,0,0.12);
+    -o-box-shadow: 0 0 17px rgba(0,0,0,0.12);
+    -ms-box-shadow: 0 0 17px rgba(0,0,0,0.12);
+    box-shadow: 0 0 17px rgba(0,0,0,0.12);
+}
+.paira-search-popup ::-webkit-input-placeholder,.popup-login-form  ::-webkit-input-placeholder, .paira-search-popup :-moz-placeholder,.popup-login-form  ::-webkit-input-placeholder, .paira-search-popup ::-moz-placeholder,.popup-login-form  ::-webkit-input-placeholder, .paira-search-popup :-ms-input-placeholder ,.popup-login-form  ::-webkit-input-placeholder , .form-control::-webkit-input-placeholder, .form-control:-moz-placeholder, .form-control::-moz-placeholder, .form-control:-ms-input-placeholder{
+    color: #fff;
+}
+.paira-search-popup .form-control,.popup-login-form .form-control,.paira-search-popup .form-control{
+     color: #fff;
+ }
