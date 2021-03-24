@@ -77,9 +77,21 @@ WSGI_APPLICATION = 'wine_shop_back_app.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+
+        'NAME': 'django_db',
+
+        'USER': 'djangouser',
+
+        'PASSWORD': 'djangouser123231222',
+
+        'HOST': '127.0.0.1',
+
+        'PORT': '5432',
+
     }
+
 }
 
 
