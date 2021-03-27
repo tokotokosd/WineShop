@@ -244,17 +244,10 @@
                                 <div class="col-md-4 col-sm-4 col-xs-4 text-center paira-margin-top-1">
                                     <div class="form-group margin-clear">
                                         <h4 class="font-size-18 bold-font pull-left"><label class="text-uppercase"><b>Sort by:</b></label></h4>
-                                        <select class="sort-by paira-filter-category">
-                                            <option value="/collections/camera">Featured</option>
-                                            <option value="/collections/dslr-camera">DSLR Camera</option>
-                                            <option value="/collections/headphone">Headphone</option>
-                                            <option value="/collections/ipad">iPad</option>
-                                            <option value="/collections/iphone">iPhone</option>
-                                            <option value="/collections/laptop">Laptop</option>
-                                            <option value="/collections/lens">Lens</option>
-                                            <option value="/collections/mobile">Mobile</option>
-                                            <option value="/collections/monitor">Monitor</option>
-                                            <option value="/collections/tabs">Tabs</option>
+                                        <select class="sort-by paira-filter-category" id="product-sort">
+                                            <option value="sort-def">Featured</option>
+                                            <option value="sort-asc" >Ascending</option>
+                                            <option value="sort-desc">Descending</option>
                                         </select>
                                     </div>
                                 </div>
@@ -495,12 +488,13 @@
                         <ul class="pagination list-inline">
                             <li class="pull-left raleway-light letter-spacing-2">Showing : <b>1 - 12</b> Of <b>60</b></li>
                             <li class="pull-right">
-                                <ul class="list-inline">
-                                    <li class="disabled letter-spacing-2"><span>Preview</span></li>
-                                    <li class="active"><span>1</span></li>
-                                    <li><a href="#">2</a></li>
-                                    <li><a href="#">3</a></li>
-                                    <li><a href="#">Next</a></li>
+                                <ul class="list-inline" id="page-numbers">
+                                    <li class="disabled letter-spacing-2" value="prev">Preview</li>
+                                    <li value="ada">1</li>
+                                    <li value="d3ads">2</li>
+                                    <li value="dad2s">3</li>
+                                    <li value="dads`1">4</li>
+                                    <li value="next">Next</li>
                                 </ul>
                             </li>
                         </ul>
