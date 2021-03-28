@@ -10,190 +10,33 @@
  *******************************************************************************************/
 (function($, window, document) {
     "use strict";
-    //PRODUCT OBJECT
-    const json = {
-            "menu": [
-            {
-                "Name": "Viktor",
-                "Cost": "123",
-                "year": "123",
-                "alcoholPercent": "pizda",
-                "color" : "fslisferi",
-                "Region": "123 st. washington",
-                "jilagi": "33",
-                "brand": "FINA LLC",
-                "Type": "Cudi",
-                "description" : "Magari sirobaa ar iyidot",
-                "quantity": "10",
-                "id": "0"
-            },
-            {
-                "Name": "Vik21tor",
-                "Cost": "1323",
-                "Year": "123",
-                "alcoholPercent": "pi31zda",
-                "Color" : "fslisferi",
-                "Region": "123 st. wa131shington",
-                "jilagi": "33",
-                "brand": "FINA LLC",
-                "wineType": "Cudi",
-                "description" : "Magari sirobaa ar iyidot",
-                "quantity": "10",
-                "id": "1"
-            },
-            {
-                "Name": "Vi22ktor",
-                "Cost": "12133",
-                "Year": "123",
-                "alcoholPercent": "piz131da",
-                "Color" : "fslisferi1hington",
-                "jilagi": "33",
-                "brand": "FI131NA LLC",
-                "Type": "Cudi",
-                "description" : "Magari siro131baa ar iyidot",
-                "quantity": "10",
-                "id": "2"
-            },
-            {
-                "Name": "Vik13tor",
-                "Cost": "121313",
-                "Year": "121313",
-                "alcoholPercent": "piz23da",
-                "Color" : "fslisferi",
-                "Region": "123 st. washi1231ngton",
-                "jilagi": "33",
-                "brand": "FINA L131LC",
-                "wineType": "Cu32di",
-                "description" : "Magari sirobaa ar131 iyidot",
-                "quantity": "10",
-                "id": "3"
-            },
-            {
-                "Name": "Vi131ktor",
-                "Cost": "113123",
-                "Year": "12333",
-                "alcoholPercent": "pi131zda",
-                "wineColor" : "fslisferi",
-                "wineRegion": "123 st131. washington",
-                "jilagi": "33",
-                "brand": "FIN131A LLC",
-                "wineType": "Cudi",
-                "description" : "Maga1313ri sirobaa ar iyidot",
-                "quantity": "11310",
-                "id": "4"
-            },
-            {
-                "Name": "Vi1313ktor",
-                "Cost": "123",
-                "Year": "123",
-                "alcoholPercent": "pi131zda",
-                "wineColor" : "fslis131feri",
-                "wineRegion": "123 st. was1313hington",
-                "jilagi": "33",
-                "brand": "FIN131A LLC",
-                "wineType": "Cudi",
-                "description" : "Magari 131sirobaa ar iyidot",
-                "quantity": "11310",
-                "id": "5"
-            },
-            {
-                "Name": "Vik1313tor",
-                "Cost": "123",
-                "Year": "121313",
-                "alcoholPercent": "piz1313da",
-                "Color" : "f1313slisferi",
-                "Region": "121313 st. washington",
-                "jilagi": "313133",
-                "brand": "FI1313NA LLC",
-                "wineType": "Cu1313di",
-                "description" : "Magari sir1313obaa ar iyidot",
-                "quantity": "131310",
-                "id": "6"
-            },
-            {
-                "Name": "Viktor",
-                "Cost": "123",
-                "Year": "123",
-                "alcoholPercent": "pizda",
-                "wineColor" : "fslis1313feri",
-                "wineRegion": "123 st. was1313hington",
-                "jilagi": "33",
-                "brand": "FINA LLC",
-                "wineType": "Cudi",
-                "description" : "Magari sirobaa ar iyidot",
-                "quantity": "10",
-                "id": "7"
-            },
-            {
-                "Name": "Vik1313tor",
-                "Cost": "123",
-                "Year": "123",
-                "alcoholPercent": "1313pizda",
-                "wineColor" : "fslisferi",
-                "wineRegion": "123 st. washington",
-                "jilagi": "33",
-                "brand": "FINA LLC",
-                "wineType": "Cudi",
-                "description" : "Magari si1311robaa ar iyidot",
-                "quantity": "10",
-                "id": "8"
-            },
-            {
-                "Name": "Viktor",
-                "Cost": "123",
-                "wineYear": "1213133",
-                "alcoholPercent": "pizda",
-                "Color" : "fslisferi",
-                "Region": "123 st. washington",
-                "jilagi": "33",
-                "brand": "FINA LLC",
-                "wineType": "Cudi",
-                "description" : "Magari sirobaa ar iyidot",
-                "quantity": "10",
-                "id": "9"
-            },
-            {
-                "Name": "Viktor",
-                "Cost": "11313123",
-                "Year": "123",
-                "alcoholPercent": "pizda",
-                "Color" : "fslisferi",
-                "Region": "123 st. washington",
-                "jilagi": "33",
-                "brand": "FINA LLC",
-                "wineType": "Cudi",
-                "description" : "Magari 13131sirobaa ar iyidot",
-                "quantity": "10",
-                "id": "10"
-            },
-            {
-                "Name": "Vi13131ktor",
-                "Cost": "12131313",
-                "Year": "123",
-                "AlcoholPercent": "pizda",
-                "Color" : "fslisferi",
-                "Region": "123 st. was13131hington",
-                "Jilagi": "33",
-                "Brand": "FIN13131A LLC",
-                "Type": "Cudi",
-                "Description" : "Magari13131 sirobaa ar iyidot",
-                "quantity": "10",
-                "id": "11"
-            }
-        ]
-    }
+    
 
-    let products = null;
-    let a = fetch('http://34.107.74.144:8000/wineproduct/?wine=test')
+    
+    
+    fetch('http://34.107.74.144:8000/wineproduct/?wine=test')
     .then(resp => {
         resp.json()
         .then(data => {
-            console.log(data.menu)
+            productPage.showProducts(data.menu, 12, 1);
+            paira.initDialogBox(data.menu);
+            paira.initProductPagination(data.menu, 1, 12);
+            paira.initProductPageSort(data.menu);
+            // paira.initDialogBox(data.menu);
+            // console.log(data.menu)
+            console.log(data.menu[0].description)
         })
     })
     .catch(function(error){
         console.log(error)
     });
+    
+
+    // async function getData(){
+    //     let data = await getDataRequest(url);
+    //     console.log(data); 
+    // }
+    // getData('http://34.107.74.144:8000/wineproduct/?wine=test');
 
     
     //const products = JSON.parse(JSON.stringify(json));
@@ -218,7 +61,7 @@
             this.initMenu();
             this.initPairaAnimation();
             this.initDomLoadClass();
-            this.initDialogBox();
+            // this.initDialogBox();
         },
         /***************************************************************************************
          * Init Window Ready Function
@@ -230,8 +73,8 @@
             this.initOwlCarousel();
             this.initGoogleMap();
             this.initBxCarousel();
-            this.initProductPageSort(); //mine
-            this.initProductPagination(0, 5); //mine
+            //this.initProductPageSort(); //mine
+            //this.initProductPagination(0, 5); //mine
         },
         /*******************************************************************************
          * Scroll Animation Function - Using Animate.css with jQuery Waypoints
@@ -301,7 +144,7 @@
         /*******************************************************************************
          * Dialog Box
          *******************************************************************************/
-        initDialogBox: function() {
+        initDialogBox: function(json) {
             /***************************************************************************************
              * Modal Dialog (Quick View, Success Message, Welcome Newsletter, Error Massage)
              ***************************************************************************************/
@@ -309,7 +152,9 @@
                 p.stopPropagation();
                 $('#paira-quick-view').modal('show');
                 let elemId = p.target.closest('div[data-product-id]').getAttribute('data-product-id')
-                productPage.displayModalContent(products.menu, elemId);
+                let filteredJson = json.filter(item => item.id == elemId)
+                console.log(filteredJson)
+                productPage.displayModalContent(filteredJson[0], elemId);
             });
             $(document).on('click', '.search-popup', function(p) {
                 p.stopPropagation();
@@ -318,6 +163,62 @@
             $(document).on('click', '.login-popup', function(p) {
                 p.stopPropagation();
                 $('#paira-login').modal('show');
+                
+                let email = document.querySelector('input[type=email]');
+                let password = document.querySelector('input[type=password]');
+                let submit = document.querySelector("#paira-login > div > div > div > div > div > form > div > button");
+
+
+
+                submit.addEventListener('click', (e, data) => {
+                    let emailValue = email.value;
+                    let passwordValue = password.value;
+                    e.preventDefault();
+                    fetch('http://34.107.74.144:8000/token-auth/', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({username: emailValue, password: passwordValue})
+                    })
+                      .then(res => res.json())
+                      .then(json => {
+                        localStorage.setItem('token', json.token);
+                        sessionStorage.setItem('logged_in', true);
+                        sessionStorage.setItem('displayed_form', '');
+                        sessionStorage.setItem('username', json.user.username);
+                      });
+                  });
+
+            });
+            
+            $(document).on('click', '#create-acc', function(p) {
+                p.stopPropagation();
+
+                let firstName = document.querySelector("#first-name");
+                let lastName = document.querySelector("#last-name");
+                let username = document.querySelector("#username");
+                let password = document.querySelector("#register-password");
+
+
+                
+                p.preventDefault();
+                fetch('http://34.107.74.144:8000/users/', {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({username: username.value, password: password.value
+                        , first_name: firstName.value, last_name: lastName.value})
+                })
+                    .then(res => res.json())
+                    .then(json => {
+                    localStorage.setItem('token', json.token);
+                    sessionStorage.setItem('logged_in', true);
+                    sessionStorage.setItem('displayed_form', '');
+                    sessionStorage.setItem('username', json.username);
+                    });
+                
             });
             $(document).on('click', '.cart-menu-body', function(p) {
                 p.stopPropagation();
@@ -329,35 +230,33 @@
             });
             $('#paira-welcome-newsletter').modal('show');
         },
-        initProductPageSort: function(){
+        initProductPageSort: function(json){
             document.querySelector('#product-sort').addEventListener('change', e => {
                 let selectValue = e.target.value
                 if(selectValue === "sort-asc"){
-                    productPage.sortByCost(products, "asc");
+                    productPage.sortByCost(json, "asc");
                 } else if(selectValue === "sort-desc"){
-                    productPage.sortByCost(products, "desc");
+                    productPage.sortByCost(json, "desc");
                 } else if(selectValue === "sort-def"){
-                    productPage.showProducts(products);
+                    console.log(json);
+                    productPage.showProducts(json, 12, 1);
                 }
             })
         },
-        initProductPagination: function(currentPage, recordsPerPage){
-            let total = Math.ceil(products.menu.length / recordsPerPage);
+        initProductPagination: function(json, currentPage, recordsPerPage){
+            let total = Math.ceil(json.length / recordsPerPage);
+            console.log(total);
             document.querySelector("#page-numbers").addEventListener('click', e => {
                 let selectValue = e.target.getAttribute('value');
-                if(selectValue == "prev"){
-                    
-                    if (currentPage < 1) currentPage = total;
-                    productPage.showProducts(products, recordsPerPage, currentPage);
-                    currentPage--;
-                } else if(selectValue == "next"){
-                    
-                    if (currentPage+1 > total) currentPage = 0;
-                    productPage.showProducts(products, recordsPerPage, currentPage);
+                if(selectValue == "next"){
                     currentPage++;
-                } else if(selectValue == "next"){
-
-                }
+                    if(currentPage > total) currentPage = 1;
+                    productPage.showProducts(json, recordsPerPage, currentPage);
+                } else if(selectValue == "prev"){
+                    currentPage--;
+                    if(currentPage < 1) currentPage = total;
+                    productPage.showProducts(json, recordsPerPage, currentPage);
+                } 
             })
         },
         /*******************************************************************************
@@ -744,22 +643,23 @@
             let start = recordsPerPage * page;
             let end = start + recordsPerPage;
             let paginatedJson = json.slice(start, end);
-            console.log(paginatedJson)
+            //console.log(paginatedJson)
 
             for(let i =0; i < paginatedJson.length; i++){
                 let item = paginatedJson[i];
-
+                // http://34.107.74.144:8000/images/${item.image}
+                // images/product/product-2.png
                 product += `
                     <div class="col-sm-3 col-md-3 col-xs-6 paira-margin-top-1" data-product-id="${item.id}">
-                        <div class="product text-center">
+                        <div class="product text-center" >
                             <div class="block-image position-rela">
-                                <a href="#">
+                                <a href="#" >
                                     <div class="background-overlay"></div>
-                                    <img src="images/product/product-2.png" alt="" class="img-responsive">
+                                    <img src="http://34.107.74.144:8000/images/${item.image}" alt="IMAGE NOT FOUND" class="img-responsive"; style="display: inline-block; max-width: 265px; max-height: 426px;">
                                 </a>
                             </div>
-                            <h1 class="font-size-16 paira-margin-top-4 margin-bottom-10"><a href="collection.html">${item.Name}</a></h1>
-                            <span class="money font-size-16"><b>${item.Cost}</b></span>
+                            <h1 class="font-size-16 paira-margin-top-4 margin-bottom-10"><a href="collection.html">${item.name}</a></h1>
+                            <span class="money font-size-16"><b>${item.price}</b><span>&#8382;</span></span>
                             <div class="product-hover">
                                 <div class="paira-wish-compare-con wish-compare-view-cart paira-margin-top-4">
                                     <a href="#paira-quick-view" class="paira-quick-view quick-view  btn color-scheme-2 font-size-18"><i class="fa fa-eye"></i></a>
@@ -774,32 +674,38 @@
         
             productWidget.insertAdjacentHTML('beforeend', product);
         },
-        displayModalContent: function(data, id){
+        displayModalContent: function(data){
             productModalContent.innerHTML="";
             let lol = `
             <div class="pro-conte
             <div class="pro-body product-dtl">
                 <div class="bottom-img">
                     <div class="info">
-                        <h4 class="raleway-sbold full-width">${data[id].Cost}</h4>
-                        <h4 class="raleway-light full-width text-capitalize margin-top-15">${data[id].Name}</h4>
+                        <h4 class="raleway-sbold full-width">${data.price}</h4>
+                        <h4 class="raleway-light full-width text-capitalize margin-top-15">${data.name}</h4>
                         <p class="margin-top-15 letter-spacing-2 font-size-14">
-                            ${data[id].description}
+                            ${data.description}
                         </p>
                         <div class="form-group margin-top-15 col-sm-1 half-width">
-                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>vendor : </b>${data[id].brand}</h4>
+                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>vendor : </b>${data.brand}</h4>
                         </div>
                         <div class="form-group margin-top-15 col-sm-1 half-width">
-                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>year : </b>${data[id].Year}</h4>
+                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>year : </b>${data.year}</h4>
                         </div>
                         <div class="form-group margin-top-15 col-sm-1 half-width">
-                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>alcohol % : </b>${data[id].alcoholPercent}</h4>
+                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>alcohol % : </b>${data.alcoholPercent}</h4>
                         </div>
                         <div class="form-group margin-top-15 col-sm-1 half-width">
-                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>region : </b>${data[id].Region}</h4>
+                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>region : </b>${data.region}</h4>
                         </div>
                         <div class="form-group margin-top-15 col-sm-1 half-width">
-                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>type : </b>${data[id].Type}</h4>
+                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>type : </b>${data.type}</h4>
+                        </div>
+                        <div class="form-group margin-top-15 col-sm-1 half-width">
+                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>color : </b>${data.color}</h4>
+                        </div>
+                        <div class="form-group margin-top-15 col-sm-1 half-width">
+                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>variety : </b>${data.variety}</h4>
                         </div>
                         <div class="form-group margin-top-15 col-sm-1 half-width">
                             <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>size : </b></h4>
@@ -841,11 +747,11 @@
         sortByCost: function(json, by="asc"){
             let sortedJson;
             (by == "asc") ?
-            sortedJson = json.sort((a, b) => parseFloat(a.Cost) - parseFloat(b.Cost))
+            sortedJson = json.sort((a, b) => parseFloat(a.price) - parseFloat(b.price))
             :
-            sortedJson = json.sort((a, b) => parseFloat(b.Cost) - parseFloat(a.Cost))
-
-            this.showProducts(sortedJson, 5, currentPage);
+            sortedJson = json.sort((a, b) => parseFloat(b.price) - parseFloat(a.price))
+            console.log(sortedJson);
+            this.showProducts(sortedJson, 12, currentPage);
         },
 
     }
@@ -883,12 +789,15 @@
     let wrapper = document.querySelector('#page-numbers')
 
     productPage.hideProducts();
-    productPage.showProducts(products, 5, currentPage);
-    if(window.location.href === `http://${window.location.hostname}:${window.location.port}/collection.html`){
-        setupPagination(products, wrapper, 5);
-    }
+    //productPage.showProducts(products, 5, currentPage);
+    // if(window.location.href === `http://${window.location.hostname}:${window.location.port}/collection.html`){
+    //     setupPagination(products, wrapper, 5);
+    // }
 
 
+    let login = document.querySelector('.popup-login-form')
+
+    
 
 }(window.jQuery, window, document));
 /**********************************************************************************************
