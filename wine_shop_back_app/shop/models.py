@@ -14,15 +14,36 @@ class Customer(models.Model):
 
 
 class Product(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200, null=True)
     price = models.FloatField()
-    digital = models.BooleanField(default=False, null=True, blank=False)
-
-    # image
+    year = models.CharField(max_length=200, null=True, blank=True)
+    alcoholPercent = models.CharField(max_length=200, null=True, blank=True)
+    color = models.CharField(max_length=200, null=True, blank=True)
+    region = models.CharField(max_length=200, null=True, blank=True)
+    variety = models.CharField(max_length=200, null=True, blank=True)
+    brand = models.CharField(max_length=200, null=True, blank=True)
+    type = models.CharField(max_length=200, null=True, blank=True)
+    description = models.CharField(max_length=200, null=True, blank=True)
+    image = models.ImageField(null=True, blank=True)
 
     def __str__(self):
         return self.name
 
+    @property
+    def imageURL(self):
+        try:
+            url = self.image.url
+        except:
+            url = ''
+        return url
+
+    def image_tag(self):
+        from django.utils.safestring import mark_safe
+        return mark_safe('<image src="%s" width="60" height="200" />' % self.imageURL)
+
+    image_tag.short_description = 'Image'
+    image_tag.allow_tags = True
 
 class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=True, null=True)
@@ -31,7 +52,7 @@ class Order(models.Model):
     transaction_id = models.CharField(max_length=200, null=True)
 
     def __str__(self):
-        return str(self.id)
+        return str(self.transaction_id)
 
 
 class OrderItem(models.Model):
