@@ -1309,3 +1309,7 @@ footer .list-inline {
     position: absolute;
     width: 95%;
 }
+
+li.active{
+    font-weight: bold;
+}
