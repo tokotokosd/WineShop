@@ -13,25 +13,27 @@
     
 
     
-    
-    fetch('http://spirit.ge:8000/wineproduct/?wine=test')
-    .then(resp => {
-        resp.json()
-        .then(data => {
-            productPage.showProducts(data.menu, 12, 1);
-            paira.initDialogBox(data.menu);
-            if (window.location.href.includes("collection.html" )){
-                paira.initProductPagination(data.menu, 1, 12);
-                paira.initProductPageSort(data.menu);
-                paira.initProductPageFilter(data.menu);
-            }
-            console.log(productPage.state)
-            // paira.initDialogBox(data.menu);
+    if (document.querySelector('.product-widget') != null){
+        fetch('http://spirit.ge:8000/wineproduct/?wine=test')
+        .then(resp => {
+            resp.json()
+            .then(data => {
+                productPage.showProducts(data.menu, 12, 1);
+                paira.initDialogBox(data.menu);
+                if (window.location.href.includes("collection.html" )){
+                    paira.initProductPagination(data.menu, 1, 12);
+                    paira.initProductPageSort(data.menu);
+                    paira.initProductPageFilter(data.menu);
+                }
+                console.log(productPage.state)
+                // paira.initDialogBox(data.menu);
+            })
         })
-    })
-    .catch(function(error){
-        console.log(error)
-    });
+        .catch(function(error){
+            console.log(error)
+        });
+    }
+
 
     // show brands
     if ( document.querySelector('.paira-brand') != null) {
@@ -215,12 +217,13 @@
             });
             
             $(document).on('click', '#create-acc', function(p) {
-                p.stopPropagation();
+                // p.stopPropagation();
 
                 let firstName = document.querySelector("#first-name");
                 let lastName = document.querySelector("#last-name");
                 let username = document.querySelector("#username");
                 let password = document.querySelector("#register-password");
+                let email = document.querySelector("#email");
 
 
                 
@@ -231,7 +234,7 @@
                     'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({username: username.value, password: password.value
-                        , first_name: firstName.value, last_name: lastName.value})
+                        , first_name: firstName.value, last_name: lastName.value, email : email.value})
                 })
                     .then(res => res.json())
                     .then(json => {
