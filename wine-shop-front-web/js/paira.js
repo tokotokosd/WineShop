@@ -20,9 +20,11 @@
         .then(data => {
             productPage.showProducts(data.menu, 12, 1);
             paira.initDialogBox(data.menu);
-            paira.initProductPagination(data.menu, 1, 12);
-            paira.initProductPageSort(data.menu);
-            paira.initProductPageFilter(data.menu);
+            if (window.location.href.includes("collection.html" )){
+                paira.initProductPagination(data.menu, 1, 12);
+                paira.initProductPageSort(data.menu);
+                paira.initProductPageFilter(data.menu);
+            }
             console.log(productPage.state)
             // paira.initDialogBox(data.menu);
         })
@@ -30,7 +32,19 @@
     .catch(function(error){
         console.log(error)
     });
-    
+
+    // show brands
+    if (window.location.href.includes("index.html" )) {
+        fetch('http://www.spirit.ge:8000/brandlist/').then(resp => {
+        resp.json()
+        .then(data => {
+            productPage.showBrands(data.menu);
+            paira.initOwlCarousel();
+            console.log("doneCar")
+            // paira.initDialogBox(data.menu);
+        })
+    })
+    }
 
     // async function getData(){
     //     let data = await getDataRequest(url);
@@ -70,7 +84,6 @@
             this.initToolTip();
             this.initIE10ViewPortHack();
             this.initWindowLoadClass();
-            this.initOwlCarousel();
             this.initGoogleMap();
             this.initBxCarousel();
             //this.initProductPageSort(); //mine
@@ -768,6 +781,8 @@
     };
 
     const productWidget = document.querySelector('.product-widget');
+    const brandWidget = document.querySelector('.paira-brand');
+
     const productModalContent = document.querySelector('.pro-content');
     let currentPage = 1;
     
@@ -818,6 +833,20 @@
                 
         
             productWidget.insertAdjacentHTML('beforeend', product);
+        },
+        showBrands: function(jsonBrands){
+            this.hideProducts();
+            let product = "";
+
+            for(let i =0; i < jsonBrands.length; i++){
+                let item = jsonBrands[i];
+                product += `
+                    <a href="#"><img src="http://spirit.ge:8000/images/${item.image}" " alt=""/></a>
+                    `
+            }
+
+
+            brandWidget.insertAdjacentHTML('beforeend', product);
         },
         displayModalContent: function(data){
             productModalContent.innerHTML="";
