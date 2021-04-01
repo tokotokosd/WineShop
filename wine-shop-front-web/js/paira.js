@@ -34,7 +34,7 @@
     });
 
     // show brands
-    if (window.location.href.includes("index.html" ) || window.location.href.includes("spirit.ge/#" )) {
+    if ( document.querySelector('.paira-brand') != null) {
         fetch('http://www.spirit.ge:8000/brandlist/').then(resp => {
         resp.json()
         .then(data => {
