@@ -14,7 +14,7 @@
 
     
     
-    fetch('http://34.107.74.144:8000/wineproduct/?wine=test')
+    fetch('http://spirit.ge:8000/wineproduct/?wine=test')
     .then(resp => {
         resp.json()
         .then(data => {
@@ -22,9 +22,9 @@
             paira.initDialogBox(data.menu);
             paira.initProductPagination(data.menu, 1, 12);
             paira.initProductPageSort(data.menu);
+            paira.initProductPageFilter(data.menu);
+            console.log(productPage.state)
             // paira.initDialogBox(data.menu);
-            // console.log(data.menu)
-            console.log(data.menu[0].description)
         })
     })
     .catch(function(error){
@@ -153,7 +153,7 @@
                 $('#paira-quick-view').modal('show');
                 let elemId = p.target.closest('div[data-product-id]').getAttribute('data-product-id')
                 let filteredJson = json.filter(item => item.id == elemId)
-                console.log(filteredJson)
+                //console.log(filteredJson)
                 productPage.displayModalContent(filteredJson[0], elemId);
             });
             $(document).on('click', '.search-popup', function(p) {
@@ -163,12 +163,20 @@
             $(document).on('click', '.login-popup', function(p) {
                 p.stopPropagation();
                 $('#paira-login').modal('show');
+
+                let form = document.querySelector('.popup-login-form')
                 
                 let email = document.querySelector('input[type=email]');
                 let password = document.querySelector('input[type=password]');
                 let submit = document.querySelector("#paira-login > div > div > div > div > div > form > div > button");
 
+                let insertLoginText = (response) => {
+                    let div = `<div style="color:#FF4500; font-size:20px; margin-bottom: 10px">${response}</div>`
+                    form.insertAdjacentHTML('afterbegin', div);
 
+                }
+                
+                
 
                 submit.addEventListener('click', (e, data) => {
                     let emailValue = email.value;
@@ -183,6 +191,7 @@
                     })
                       .then(res => res.json())
                       .then(json => {
+                        insertLoginText(json.non_field_errors[0]);
                         localStorage.setItem('token', json.token);
                         sessionStorage.setItem('logged_in', true);
                         sessionStorage.setItem('displayed_form', '');
@@ -233,32 +242,166 @@
         initProductPageSort: function(json){
             document.querySelector('#product-sort').addEventListener('change', e => {
                 let selectValue = e.target.value
-                if(selectValue === "sort-asc"){
-                    productPage.sortByCost(json, "asc");
-                } else if(selectValue === "sort-desc"){
-                    productPage.sortByCost(json, "desc");
-                } else if(selectValue === "sort-def"){
-                    console.log(json);
-                    productPage.showProducts(json, 12, 1);
+                let sortedJson;
+                let state = productPage.state;
+                
+                
+               
+
+
+
+                if(!state.isFiltered){
+                    if(selectValue === "sort-asc"){
+                        sortedJson = productPage.sortByCost(json, "asc");
+                        productPage.showProducts(sortedJson, 12, 1)
+                        state.isSorted = { byAsc: true, byDesc: false }
+                    } else if(selectValue === "sort-desc"){
+                        sortedJson = productPage.sortByCost(json, "desc");
+                        productPage.showProducts(sortedJson, 12, 1)
+                        state.isSorted = { byAsc: false, byDesc: true }
+                    } else if(selectValue === "sort-def"){
+                        console.log(json);
+                        state.isSorted = false;
+                        productPage.showProducts(json, 12, 1);
+                    }
+                } else {
+                    if(state.isFiltered.byRed){
+                        if(selectValue === "sort-asc"){
+                            productPage.showProducts(productPage.sortByCost(productPage.filter(json, "red"), "asc"), 12, 1);
+                            state.isSorted = { byAsc: true, byDesc: false }
+                        } else if(selectValue === "sort-desc"){
+                            productPage.showProducts(productPage.sortByCost(productPage.filter(json, "red"), "desc"), 12, 1);
+                            state.isSorted = { byAsc: false, byDesc: true }
+                        } else if(selectValue === "sort-def"){
+                            state.isSorted = false;
+                            productPage.showProducts(json, 12, 1);
+                        }
+                    }
+                    if(state.isFiltered.byWhite){
+                        if(selectValue === "sort-asc"){
+                            productPage.showProducts(productPage.sortByCost(productPage.filter(json, "white"), "asc"), 12, 1);
+                            state.isSorted = { byAsc: true, byDesc: false }
+                        } else if(selectValue === "sort-desc"){
+                            productPage.showProducts(productPage.sortByCost(productPage.filter(json, "white"), "desc"), 12, 1);
+                            state.isSorted = { byAsc: false, byDesc: true }
+                        } else if(selectValue === "sort-def"){
+                            state.isSorted = false;
+                            productPage.showProducts(json, 12, 1);
+                        }
+                    }
+                    if(state.isFiltered.byOther){
+                        if(selectValue === "sort-asc"){
+                            productPage.showProducts(productPage.sortByCost(productPage.filter(json, "other"), "asc"), 12, 1);
+                            state.isSorted = { byAsc: true, byDesc: false }
+                        } else if(selectValue === "sort-desc"){
+                            productPage.showProducts(productPage.sortByCost(productPage.filter(json, "other"), "desc"), 12, 1);
+                            state.isSorted = { byAsc: false, byDesc: true }
+                        } else if(selectValue === "sort-def"){
+                            state.isSorted = false;
+                            productPage.showProducts(json, 12, 1);
+                        }
+                    }
                 }
+            })
+        },
+        initProductPageFilter: function(json){
+            document.querySelector('#product-filter').addEventListener('change', e => {
+                let selectValue = e.target.value;
+                let state = productPage.state;
+            
+               
+
+                
+
+                if(!state.isSorted){
+                    if(selectValue === "red"){
+                        productPage.showProducts(productPage.filter(json, "red"), 12, 1);
+                        state.isFiltered = { byRed: true, byWhite: false, byOther: false };
+                    } else if(selectValue === "white"){
+                        productPage.showProducts(productPage.filter(json, "white"), 12, 1);
+                        state.isFiltered = { byRed: false, byWhite: true, byOther: false };
+                    } else if(selectValue === "other"){
+                        productPage.showProducts(productPage.filter(json, "other"), 12, 1);
+                        state.isFiltered = { byRed: false, byWhite: false, byOther: true };
+                    } else {
+                        //isFiltered = false;
+                        productPage.showProducts(json, 12, 1)
+                    }
+                } else {
+                    
+                    if(state.isSorted.byAsc){
+                        if(selectValue === "red"){
+                            productPage.showProducts(productPage.sortByCost(productPage.filter(json, "red"), "asc"), 12, 1);
+                            state.isFiltered = { byRed: true, byWhite: false, byOther: false };
+                        } else if(selectValue === "white"){
+                            productPage.showProducts(productPage.sortByCost(productPage.filter(json, "white"), "asc"), 12, 1);
+                            state.isFiltered = { byRed: false, byWhite: true, byOther: false };
+                        } else if(selectValue === "other"){
+                            productPage.showProducts(productPage.sortByCost(productPage.filter(json, "other"), "asc"), 12, 1);
+                            state.isFiltered = { byRed: false, byWhite: false, byOther: true };
+                        } else {
+                            state.isFiltered = false;
+                            productPage.showProducts(json, 12, 1)
+                        }
+                    } else if(state.isSorted.byDesc){
+                        if(selectValue === "red"){
+                            productPage.showProducts(productPage.sortByCost(productPage.filter(json, "red"), "desc"), 12, 1);
+                            state.isFiltered = { byRed: true, byWhite: false, byOther: false };
+                        } else if(selectValue === "white"){
+                            productPage.showProducts(productPage.sortByCost(productPage.filter(json, "white"), "desc"), 12, 1);
+                            state.isFiltered = { byRed: false, byWhite: true, byOther: false };
+                        } else if(selectValue === "other"){
+                            productPage.showProducts(productPage.sortByCost(productPage.filter(json, "other"), "desc"), 12, 1);
+                            state.isFiltered = { byRed: false, byWhite: false, byOther: true };
+                        } else {
+                            state.isFiltered = false;
+                            productPage.showProducts(json, 12, 1)
+                        }
+                    }
+                }
+                
+                
+                
             })
         },
         initProductPagination: function(json, currentPage, recordsPerPage){
             let total = Math.ceil(json.length / recordsPerPage);
-            console.log(total);
-            document.querySelector("#page-numbers").addEventListener('click', e => {
+            let container = document.querySelector("#page-numbers");
+            //container.innerHTML="";
+            let pageNumber = ``;
+            for(let i = 1; i < total + 1; i++){
+                pageNumber += `<li class="" value="${i}" style="cursor: pointer;">${i}</li>`;
+            }
+            let pageStat = document.querySelector("#paging-stat")
+            pageStat.innerHTML = `Showing : <b>${currentPage} - ${recordsPerPage}</b> Of <b>${json.length}</b>`;
+            $("#page-numbers li:first-child").after(pageNumber);
+            container.addEventListener('click', e => {
+                e.preventDefault()
                 let selectValue = e.target.getAttribute('value');
-                if(selectValue == "next"){
+                if(selectValue === "next"){
                     currentPage++;
                     if(currentPage > total) currentPage = 1;
                     productPage.showProducts(json, recordsPerPage, currentPage);
-                } else if(selectValue == "prev"){
+                } else if(selectValue === "prev"){
                     currentPage--;
                     if(currentPage < 1) currentPage = total;
                     productPage.showProducts(json, recordsPerPage, currentPage);
-                } 
+                } else if(typeof(parseInt(selectValue)) === "number" && !NaN){
+                    e.target.previousElementSibling.classList.remove("active");
+                    e.target.nextElementSibling.classList.remove("active");
+                    e.target.classList.add("active");
+                    currentPage=selectValue;
+                    productPage.showProducts(json, recordsPerPage, currentPage);
+                } else {
+                    console.log('lol')
+                }
+                pageStat.innerHTML = `Showing : <b>${currentPage} - ${json.length - recordsPerPage}</b> Of <b>${json.length}</b>`;
             })
+            
+                
+            
         },
+        
         /*******************************************************************************
          * Google Map
          *******************************************************************************/
@@ -631,6 +774,10 @@
 
     
     const productPage = {
+        state:{
+            isFiltered: false,
+            isSorted: false
+        },
         hideProducts: function(){
             productWidget.innerHTML = "";
         },
@@ -643,23 +790,21 @@
             let start = recordsPerPage * page;
             let end = start + recordsPerPage;
             let paginatedJson = json.slice(start, end);
-            //console.log(paginatedJson)
+
 
             for(let i =0; i < paginatedJson.length; i++){
                 let item = paginatedJson[i];
-                // http://34.107.74.144:8000/images/${item.image}
-                // images/product/product-2.png
                 product += `
                     <div class="col-sm-3 col-md-3 col-xs-6 paira-margin-top-1" data-product-id="${item.id}">
                         <div class="product text-center" >
                             <div class="block-image position-rela">
                                 <a href="#" >
                                     <div class="background-overlay"></div>
-                                    <img src="http://34.107.74.144:8000/images/${item.image}" alt="IMAGE NOT FOUND" class="img-responsive"; style="display: inline-block; max-width: 265px; max-height: 426px;">
+                                    <img src="http://spirit.ge:8000/images/${item.image}" alt="IMAGE NOT FOUND" class="img-responsive"; style="display: inline-block; max-width: 265px; max-height: 426px;">
                                 </a>
                             </div>
                             <h1 class="font-size-16 paira-margin-top-4 margin-bottom-10"><a href="collection.html">${item.name}</a></h1>
-                            <span class="money font-size-16"><b>${item.price}</b><span>&#8382;</span></span>
+                            <span class="money font-size-16"><b>${item.price}</b>&#8382;</span>
                             <div class="product-hover">
                                 <div class="paira-wish-compare-con wish-compare-view-cart paira-margin-top-4">
                                     <a href="#paira-quick-view" class="paira-quick-view quick-view  btn color-scheme-2 font-size-18"><i class="fa fa-eye"></i></a>
@@ -676,18 +821,18 @@
         },
         displayModalContent: function(data){
             productModalContent.innerHTML="";
-            let lol = `
+            let modalContent = `
             <div class="pro-conte
             <div class="pro-body product-dtl">
                 <div class="bottom-img">
                     <div class="info">
-                        <h4 class="raleway-sbold full-width">${data.price}</h4>
+                        <h4 class="raleway-sbold full-width">${data.price}&#8382;</h4>
                         <h4 class="raleway-light full-width text-capitalize margin-top-15">${data.name}</h4>
                         <p class="margin-top-15 letter-spacing-2 font-size-14">
                             ${data.description}
                         </p>
                         <div class="form-group margin-top-15 col-sm-1 half-width">
-                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>vendor : </b>${data.brand}</h4>
+                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>vendor : </b>${data.brand_id__name}</h4>
                         </div>
                         <div class="form-group margin-top-15 col-sm-1 half-width">
                             <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>year : </b>${data.year}</h4>
@@ -742,7 +887,8 @@
             </div>
         </div>
             `
-        productModalContent.insertAdjacentHTML('beforeend', lol);
+        productModalContent.insertAdjacentHTML('beforeend', modalContent);
+        document.querySelector(".paira-product.single-varients-product").innerHTML=`<img src="http://spirit.ge:8000/images/${data.image}" style="max-width:374px;max-height:621px;margin-left:90px;margin-top:30px"></img>`
         },
         sortByCost: function(json, by="asc"){
             let sortedJson;
@@ -750,52 +896,65 @@
             sortedJson = json.sort((a, b) => parseFloat(a.price) - parseFloat(b.price))
             :
             sortedJson = json.sort((a, b) => parseFloat(b.price) - parseFloat(a.price))
-            console.log(sortedJson);
-            this.showProducts(sortedJson, 12, currentPage);
+            return sortedJson;
         },
-
-    }
-
-    function setupPagination (json, wrapper, recordsPerPage) {
-        wrapper.innerHTML="";
-    
-        let pageCount = Math.ceil(json.length / recordsPerPage);
-        for (let i = 1; i < pageCount + 1; i++) {
-            let btn = paginationButton(i, json);
-            wrapper.appendChild(btn);
+        filter: function(json, option){
+            console.log('filter----------------')
+            let hasOption = item => {
+                if(item.type !== null){
+                    if(option==="other"){
+                        return !item.type.toLowerCase().includes("red") && !item.type.toLowerCase().includes("white")
+                    }
+                    return item.type.toLowerCase().includes(option)
+                } else {
+                    return false;
+                }
+            }
+            return json.filter(hasOption)
+           
         }
     }
+
+    // function setupPagination (json, wrapper, recordsPerPage) {
+    //     wrapper.innerHTML="";
     
-    function paginationButton (page, json) {
-        let button = document.createElement('button');
-        button.innerText = page;
+    //     let pageCount = Math.ceil(json.length / recordsPerPage);
+    //     for (let i = 1; i < pageCount + 1; i++) {
+    //         let btn = paginationButton(i, json);
+    //         wrapper.appendChild(btn);
+    //     }
+    // }
     
-        if (currentPage == page) button.classList.add('active');
+    // function paginationButton (page, json) {
+    //     let button = document.createElement('button');
+    //     button.innerText = page;
     
-        button.addEventListener('click', function () {
-            currentPage = page;
-            productPage.showProducts(json, 5, currentPage);
+    //     if (currentPage == page) button.classList.add('active');
     
-            let currentBtn = document.querySelector('.page-numbers button.active');
+    //     button.addEventListener('click', function () {
+    //         currentPage = page;
+    //         productPage.showProducts(json, 5, currentPage);
+    
+    //         let currentBtn = document.querySelector('.page-numbers button.active');
             
     
-            button.classList.add('active');
-        });
+    //         button.classList.add('active');
+    //     });
     
-        return button;
-    }
-
-
-    let wrapper = document.querySelector('#page-numbers')
-
-    productPage.hideProducts();
-    //productPage.showProducts(products, 5, currentPage);
-    // if(window.location.href === `http://${window.location.hostname}:${window.location.port}/collection.html`){
-    //     setupPagination(products, wrapper, 5);
+    //     return button;
     // }
 
 
-    let login = document.querySelector('.popup-login-form')
+    // let wrapper = document.querySelector('#page-numbers')
+
+    // productPage.hideProducts();
+    // //productPage.showProducts(products, 5, currentPage);
+    // // if(window.location.href === `http://${window.location.hostname}:${window.location.port}/collection.html`){
+    // //     setupPagination(products, wrapper, 5);
+    // // }
+
+
+    // let login = document.querySelector('.popup-login-form')
 
     
 
