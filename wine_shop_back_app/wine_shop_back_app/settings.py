@@ -26,7 +26,7 @@ SECRET_KEY = ')ugjbdltugc4i(od!$r5z#bgtb2g8=m^65femimr=d9%ig=u+('
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['34.107.74.144']
+ALLOWED_HOSTS = ['34.107.74.144', 'www.spirit.ge', 'spirit.ge']
 
 
 # Application definition
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'shop.apps.ShopConfig',
+    'rest_framework',
     'corsheaders',
 ]
 
@@ -61,6 +62,21 @@ CORS_ORIGIN_WHITELIST = [
 CORS_ORIGIN_REGEX_WHITELIST = [
     'http://localhost:3030',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+}
+
+JWT_AUTH = {
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'wine_shop_back_app.utils.my_jwt_response_handler'
+}
 
 ROOT_URLCONF = 'wine_shop_back_app.urls'
 
