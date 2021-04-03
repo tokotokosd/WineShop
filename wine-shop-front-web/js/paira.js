@@ -61,6 +61,7 @@
             this.initMenu();
             this.initPairaAnimation();
             this.initDomLoadClass();
+            productPage.cartCounter();
             // this.initDialogBox();
         },
         /***************************************************************************************
@@ -232,12 +233,62 @@
             $(document).on('click', '.cart-menu-body', function(p) {
                 p.stopPropagation();
                 $('#paira-ajax-cart').modal('show');
+                productPage.displayCartContent();
+                paira.setInputFilter(document.querySelector(".row-4 div div input"), value => /^\d*$/.test(value));
+                document.querySelector('#cartTableWrapper').addEventListener('click', e => {
+                    if(e.target.id === 'removeItem'){
+                        let json = JSON.parse(localStorage.getItem('cartItems'));
+                        let filteredJson = json.filter(item => {
+                            if(item.id !== +e.target.dataset.id){
+                                return true;
+                            } else {
+                                e.target.closest(`div[data-id="${item.id}"]`).remove();
+                                return false;
+                            }
+                        })
+                        console.log(filteredJson);
+                        localStorage.setItem('cartItems', JSON.stringify(filteredJson))
+                    }
+                    if(e.target.id === "cartDown"){
+                        let inputText = e.target.nextElementSibling
+                        let totalValue = e.target.closest('.row-4').previousElementSibling.querySelector('p br')
+                        if(inputText.value > 1){
+                            inputText.value -= 1;
+                            totalValue.nextSibling.nodeValue = `Total : ${inputText.value* parseInt(totalValue.previousSibling.nodeValue)}`
+                        }
+                    }
+                    if(e.target.id === "cartUp"){
+                        let inputText = e.target.previousElementSibling
+                        let totalValue = e.target.closest('.row-4').previousElementSibling.querySelector('p br')
+                        inputText.value = parseInt(inputText.value) + 1;
+                        totalValue.nextSibling.nodeValue = `Total : ${inputText.value* parseInt(totalValue.previousSibling.nodeValue)}`
+                    }
+                })
+                document.querySelector('#cartUpdate').addEventListener('click', e => {
+                    
+                    let calculate = document.querySelector('#cartCalculate')
+                    let total = 0;
+                    let totalArr = [];
+                    let inputValue = document.querySelector('.row-4 div div input').value;
+                    console.log(document.querySelectorAll('.cartItem'))
+                    document.querySelectorAll('.row-3 p').forEach(item => {
+                        console.log()
+                        totalArr.push(parseInt(item.innerText.match(/\d+/g)[0])* item.closest('.row-3').nextElementSibling.querySelector('div div input').value)
+                    })
+                    console.log(totalArr)
+                    total = totalArr.reduce((accumulator, currentValue) => accumulator + currentValue);
+                    calculate.innerHTML = `Subtotal : <span><b>${total}&#8382;</b></span>`
+                })
             });
             $(document).on('click', '.product-cart-con', function(p) {
                 p.stopPropagation();
                 $('#paira-ajax-success-message').modal('show');
+                let elemId = p.target.closest('div[data-product-id]').getAttribute('data-product-id')
+                let filteredJson = json.filter(item => item.id == elemId)
+                productPage.cartModal(filteredJson[0]);
             });
             $('#paira-welcome-newsletter').modal('show');
+            // zimbabwe
         },
         initProductPageSort: function(json){
             document.querySelector('#product-sort').addEventListener('change', e => {
@@ -401,6 +452,22 @@
                 
             
         },
+        setInputFilter: function(textbox, inputFilter) {
+            ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
+              textbox.addEventListener(event, function() {
+                if (inputFilter(this.value)) {
+                  this.oldValue = this.value;
+                  this.oldSelectionStart = this.selectionStart;
+                  this.oldSelectionEnd = this.selectionEnd;
+                } else if (this.hasOwnProperty("oldValue")) {
+                  this.value = this.oldValue;
+                  this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+                } else {
+                  this.value = "";
+                }
+              });
+            });
+          },
         
         /*******************************************************************************
          * Google Map
@@ -899,7 +966,6 @@
             return sortedJson;
         },
         filter: function(json, option){
-            console.log('filter----------------')
             let hasOption = item => {
                 if(item.type !== null){
                     if(option==="other"){
@@ -912,50 +978,83 @@
             }
             return json.filter(hasOption)
            
+        },
+        cartModal: function(data){
+            let productName = document.querySelector("#cartProductName");
+            let productImage = document.querySelector("#cartProductImg");
+            let productId = data.id;
+            let cartItem = { id: data.id, image: data.image, name: data.name, quantity: 1, price: data.price };
+            productImage.src = `http://spirit.ge:8000/images/${data.image}`;
+            productName.innerHTML = `${data.name}`;
+
+            
+            let existing = localStorage.getItem('cartItems');
+
+            
+            //existing = existing ? JSON.parse(existing) : [];
+            
+            // existing.forEach( (item, i) => {
+                
+            // })
+
+            if(existing){
+                existing = JSON.parse(existing);
+                existing = existing.filter(item => JSON.stringify(item) !== JSON.stringify(cartItem));
+                existing.push(cartItem);
+        
+            } else {
+                existing = []
+                existing.push(cartItem);
+                localStorage.setItem('cartItems', JSON.stringify(existing));
+            }
+
+            localStorage.setItem('cartItems', JSON.stringify(existing))
+            this.cartCounter();
+            
+
+
+
+           
+        },
+        cartCounter: function(){
+            let existing = JSON.parse(localStorage.getItem('cartItems'))
+            let counter = document.querySelector('#cartCounter')
+            if(existing) counter.innerText = existing.length
+        },
+        displayCartContent: function(){
+            let cartContent = JSON.parse(localStorage.getItem('cartItems'))
+            let cartWidget = document.querySelector('#paira-ajax-cart > div > div > div > div > div.col-md-12.col-sm-12.col-xs-12.cart-table > div')
+            cartWidget.innerHTML = '';
+            let cartItem;
+            cartContent.forEach((item,i) => {
+                cartItem += `
+                    <div class="column full-width overflow paira-margin-bottom-4 cartItem" data-id="${item.id}">
+                    <div class="row-1">
+                        <a href="product.html">
+                            <img src="http://spirit.ge:8000/images/${item.image}" alt="" class="img-responsive center-block">
+                        </a>
+                    </div>
+                    <div class="row-2"><p><a href="#">${item.name}</a></p></div>
+                    <div class="row-3"><p>${item.price}&#8382;<br class="totalItem">Total : ${item.price}&#8382</p></div>
+                    <div class="row-4">
+                        <div class="quantity">
+                            <div class="quantity-fix display-inline-b">
+                                <button class="btn-default btn" data-direction="down" id="cartDown" data-id="${item.id}"><i class="fa fa-angle-down"></i></button>
+                                <input type="text" value="1" class="text-center product_quantity_text" id="cartInput" data-id="${item.id}">
+                                <button class="btn-success btn" data-direction="up" id="cartUp" data-id="${item.id}"><i class="fa fa-angle-up"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-5"><p><a href="#" class="remove"><i class="fa fa-trash fa-2x" id="removeItem" data-id="${item.id}"></i></a>
+                    </p></div>
+                    </div>
+                `
+            })
+            cartWidget.insertAdjacentHTML('beforeend', cartItem)
         }
     }
 
-    // function setupPagination (json, wrapper, recordsPerPage) {
-    //     wrapper.innerHTML="";
-    
-    //     let pageCount = Math.ceil(json.length / recordsPerPage);
-    //     for (let i = 1; i < pageCount + 1; i++) {
-    //         let btn = paginationButton(i, json);
-    //         wrapper.appendChild(btn);
-    //     }
-    // }
-    
-    // function paginationButton (page, json) {
-    //     let button = document.createElement('button');
-    //     button.innerText = page;
-    
-    //     if (currentPage == page) button.classList.add('active');
-    
-    //     button.addEventListener('click', function () {
-    //         currentPage = page;
-    //         productPage.showProducts(json, 5, currentPage);
-    
-    //         let currentBtn = document.querySelector('.page-numbers button.active');
-            
-    
-    //         button.classList.add('active');
-    //     });
-    
-    //     return button;
-    // }
-
-
-    // let wrapper = document.querySelector('#page-numbers')
-
-    // productPage.hideProducts();
-    // //productPage.showProducts(products, 5, currentPage);
-    // // if(window.location.href === `http://${window.location.hostname}:${window.location.port}/collection.html`){
-    // //     setupPagination(products, wrapper, 5);
-    // // }
-
-
-    // let login = document.querySelector('.popup-login-form')
-
+   
     
 
 }(window.jQuery, window, document));
