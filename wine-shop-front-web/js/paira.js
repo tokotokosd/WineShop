@@ -169,8 +169,32 @@
                 $('#paira-quick-view').modal('show');
                 let elemId = p.target.closest('div[data-product-id]').getAttribute('data-product-id')
                 let filteredJson = json.filter(item => item.id == elemId)
-                //console.log(filteredJson)
+                filteredJson
                 productPage.displayModalContent(filteredJson[0], elemId);
+
+                let upBtn = document.querySelector("#modalCounterUp");
+                let downBtn = document.querySelector("#modalCounterDown");
+                let counterInput = document.querySelector("#modalInput");
+                let cartBtns = document.querySelectorAll(".addToCartModal");
+                paira.setInputFilter(counterInput, value => /^\d*$/.test(value))
+                counterInput.value = 1;
+
+                upBtn.addEventListener('click', e => {
+                    counterInput.value = parseInt(counterInput.value) + 1;
+                })
+                downBtn.addEventListener('click', e => {
+                    if (counterInput.value > 1) counterInput.value -= 1;
+                })
+                
+                cartBtns.forEach(item => {
+                    item.addEventListener('click', e => {
+                        filteredJson[0].selectedQuantity = counterInput.value
+                        console.log(filteredJson[0])
+                        $('#paira-ajax-success-message').modal('show');
+                        productPage.cartModal(filteredJson[0]);
+                    })
+                })
+                
             });
             $(document).on('click', '.search-popup', function(p) {
                 p.stopPropagation();
@@ -187,9 +211,14 @@
                 let submit = document.querySelector("#paira-login > div > div > div > div > div > form > div > button");
 
                 let insertLoginText = (response) => {
-                    let div = `<div style="color:#FF4500; font-size:20px; margin-bottom: 10px">${response}</div>`
-                    form.insertAdjacentHTML('afterbegin', div);
-
+                    if(!document.querySelector('#serverResponse')){
+                        let div = `<div style="color:#FF4500; font-size:20px; margin-bottom: 10px" id="serverResponse">${response}</div>`
+                        form.insertAdjacentHTML('afterbegin', div);
+                    } else {
+                        document.querySelector('#serverResponse').innerHTML="";
+                        let div = `<div style="color:#FF4500; font-size:20px; margin-bottom: 10px" id="serverResponse">${response}</div>`
+                        form.insertAdjacentHTML('afterbegin', div);
+                    }
                 }
                 
                 
@@ -213,6 +242,7 @@
                         sessionStorage.setItem('displayed_form', '');
                         sessionStorage.setItem('username', json.user.username);
                       });
+
                   });
 
             });
@@ -281,14 +311,14 @@
                     }
                 })
                 document.querySelector('#cartUpdate').addEventListener('click', e => {
-                    
+                    let storageItems = JSON.parse(localStorage.getItem('cartItems'))
+                    console.log(json)
                     let calculate = document.querySelector('#cartCalculate')
                     let total = 0;
                     let totalArr = [];
-                    let inputValue = document.querySelector('.row-4 div div input').value;
+                    
                     console.log(document.querySelectorAll('.cartItem'))
                     document.querySelectorAll('.row-3 p').forEach(item => {
-                        console.log()
                         totalArr.push(parseInt(item.innerText.match(/\d+/g)[0])* item.closest('.row-3').nextElementSibling.querySelector('div div input').value)
                     })
                     console.log(totalArr)
@@ -304,7 +334,6 @@
                 productPage.cartModal(filteredJson[0]);
             });
             $('#paira-welcome-newsletter').modal('show');
-            // zimbabwe
         },
         initProductPageSort: function(json){
             document.querySelector('#product-sort').addEventListener('change', e => {
@@ -965,10 +994,10 @@
                             <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase pull-left"><b>Quantity : </b></label></h4>
                             <div class=" full-width">
                                 <div class="product_quantity_group product-quantity-fix">
-                                    <input type="text" class="form-control text-center pull-left font-size-16" value="2">
+                                    <input type="text" class="form-control text-center pull-left font-size-16" value="1" id="modalInput">
                                     <div class="up-down text-center pull-left overflow">
-                                        <span class="up" data-direction="up"><i class="fa fa-angle-up"></i></span>
-                                        <span class="down" data-direction="down"><i class="fa fa-angle-down"></i></span>
+                                        <span class="up" data-direction="up" id="modalCounterUp"><i class="fa fa-angle-up"></i></span>
+                                        <span class="down" data-direction="down" id="modalCounterDown"><i class="fa fa-angle-down"></i></span>
                                     </div>
                                 </div>
                             </div>
@@ -978,8 +1007,8 @@
                             <h4 class="money margin-left-5">$40.00</h4>
                         </div>
                         <div class="btn-group paira-margin-top-4 full-width pull-left" role="group" aria-label="Basic example">
-                            <button type="button" class="btn btn-default btn-lg btn-image"><img src="images/cart-3.png" alt=""></button>
-                            <button type="button" class="btn btn-default btn-lg color-scheme-2 raleway-light text-uppercase">add to cart</button>
+                            <button type="button" class="btn btn-default btn-lg btn-image addToCartModal"><img src="images/cart-3.png" alt=""></button>
+                            <button type="button" class="btn btn-default btn-lg color-scheme-2 raleway-light text-uppercase addToCartModal">add to cart</button>
                         </div>
                     </div>
                 </div>
@@ -1015,7 +1044,13 @@
             let productName = document.querySelector("#cartProductName");
             let productImage = document.querySelector("#cartProductImg");
             let productId = data.id;
-            let cartItem = { id: data.id, image: data.image, name: data.name, quantity: 1, price: data.price };
+            let quantity = 1
+
+            if (data.selectedQuantity){
+                quantity = data.selectedQuantity
+            }
+
+            let cartItem = { id: data.id, image: data.image, name: data.name, quantity: quantity, price: data.price };
             productImage.src = `http://spirit.ge:8000/images/${data.image}`;
             productName.innerHTML = `${data.name}`;
 
@@ -1072,7 +1107,7 @@
                         <div class="quantity">
                             <div class="quantity-fix display-inline-b">
                                 <button class="btn-default btn" data-direction="down" id="cartDown" data-id="${item.id}"><i class="fa fa-angle-down"></i></button>
-                                <input type="text" value="1" class="text-center product_quantity_text" id="cartInput" data-id="${item.id}">
+                                <input type="text" value="${item.quantity}" class="text-center product_quantity_text" id="cartInput" data-id="${item.id}">
                                 <button class="btn-success btn" data-direction="up" id="cartUp" data-id="${item.id}"><i class="fa fa-angle-up"></i></button>
                             </div>
                         </div>
