@@ -12,15 +12,16 @@
     "use strict";
     
 
+
     
-    if (document.querySelector('.product-widget') != null){
+    if (document.querySelector('.product-widget') != null || undefined){
         fetch('http://spirit.ge:8000/wineproduct/?wine=test')
         .then(resp => {
             resp.json()
             .then(data => {
                 productPage.showProducts(data.menu, 12, 1);
                 paira.initDialogBox(data.menu);
-                if (window.location.href.includes("collection.html" )){
+                if (window.location.href.includes("collection.html")){
                     paira.initProductPagination(data.menu, 1, 12);
                     paira.initProductPageSort(data.menu);
                     paira.initProductPageFilter(data.menu);
@@ -48,14 +49,11 @@
     })
     }
 
-    // async function getData(){
-    //     let data = await getDataRequest(url);
-    //     console.log(data); 
-    // }
-    // getData('http://34.107.74.144:8000/wineproduct/?wine=test');
+    
+    
 
     
-    //const products = JSON.parse(JSON.stringify(json));
+    
     
     /*******************************************************************************
      * Listen For The JQuery Ready Event On The Document
@@ -220,6 +218,7 @@
                         form.insertAdjacentHTML('afterbegin', div);
                     }
                 }
+
                 
                 
 
@@ -236,11 +235,19 @@
                     })
                       .then(res => res.json())
                       .then(json => {
-                        insertLoginText(json.non_field_errors[0]);
-                        localStorage.setItem('token', json.token);
-                        sessionStorage.setItem('logged_in', true);
-                        sessionStorage.setItem('displayed_form', '');
-                        sessionStorage.setItem('username', json.user.username);
+                        if(json.password){
+                            insertLoginText("Password field is blank")
+                            password.style.border = "1px solid red"
+                        } else if(json.username){
+                            insertLoginText("Username field is blank")
+                            email.style.border = "1px solid red"
+                        }
+                        if(json.non_field_errors) insertLoginText(json.non_field_errors[0]);
+                        if(json.token !== undefined || null){
+                            localStorage.setItem('token', json.token);
+                            sessionStorage.setItem('logged_in', true);
+                            sessionStorage.setItem('username', json.user.username); 
+                        }
                       });
 
                   });
