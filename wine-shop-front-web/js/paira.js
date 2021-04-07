@@ -219,36 +219,59 @@
                     }
                 }
 
+                let validateInputs = () => {
+                    if(email.value === "" && password.value === ""){
+                        insertLoginText("Username & passwords field is blank");
+                        email.style.border = "1px solid red";
+                        password.style.border = "1px solid red";
+                        return false;
+                    } else if (email.value === ""){
+                        
+                        insertLoginText("Username field is blank");
+                        email.style.border = "1px solid red";
+                        return false;
+                    } else if (password.value === ""){
+                        
+                        insertLoginText("Password field is blank");
+                        password.style.border = "1px solid red";
+                        return false;
+                    } else {
+                        return true
+                    }
+                }
                 
+                let clearInputs = () => {
+                    email.value = "";
+                    password.value = "";
+                    password.style.border = "";
+                    email.style.border = "";
+                    document.querySelector('#serverResponse').remove();
+                }
                 
-
+ 
                 submit.addEventListener('click', (e, data) => {
                     let emailValue = email.value;
                     let passwordValue = password.value;
                     e.preventDefault();
-                    fetch('http://34.107.74.144:8000/token-auth/', {
-                      method: 'POST',
-                      headers: {
-                        'Content-Type': 'application/json'
-                      },
-                      body: JSON.stringify({username: emailValue, password: passwordValue})
-                    })
-                      .then(res => res.json())
-                      .then(json => {
-                        if(json.password){
-                            insertLoginText("Password field is blank")
-                            password.style.border = "1px solid red"
-                        } else if(json.username){
-                            insertLoginText("Username field is blank")
-                            email.style.border = "1px solid red"
-                        }
-                        if(json.non_field_errors) insertLoginText(json.non_field_errors[0]);
-                        if(json.token !== undefined || null){
-                            localStorage.setItem('token', json.token);
-                            sessionStorage.setItem('logged_in', true);
-                            sessionStorage.setItem('username', json.user.username); 
-                        }
-                      });
+                    if(validateInputs() === true){
+                        fetch('http://spirit.ge:8000/token-auth/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({username: emailValue, password: passwordValue})
+                            })
+                            .then(res => res.json())
+                            .then(json => {
+                                if(json.token !== undefined || null){
+                                    localStorage.setItem('token', json.token);
+                                    sessionStorage.setItem('logged_in', true);
+                                    sessionStorage.setItem('username', json.user.username);
+                                    clearInputs();
+                                }
+                            });
+                    }
+                    
 
                   });
 
