@@ -12,7 +12,7 @@
     "use strict";
     
 
-
+    
     
     if (document.querySelector('.product-widget') != null || undefined){
         fetch('http://spirit.ge:8000/wineproduct/?wine=test')
@@ -48,11 +48,43 @@
         })
     })
     }
+    
+
+    //navbar changes
+    
 
     
     
 
-    
+    let isLoggedIn = () => {
+        if(sessionStorage.getItem('logged_in') === "true") return true;
+    }
+
+    if(isLoggedIn()){
+        let userSection = `
+        <section class="breadcrumb-container paira-padding-bottom-1" id="userSection">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 text-center" style="font-size:16px;">
+                    Welcome back, <b>${sessionStorage.getItem('username')}</b>!
+                    </div>
+                </div>
+            </div>
+        </section>
+        `
+        document.querySelector('#loginBtn').remove()
+        document.querySelector('#registerBtn').remove()
+        document.getElementsByTagName('main')[0].insertAdjacentHTML('afterBegin', userSection)
+        document.querySelector('#registerContainer').innerHTML = '<a href="#" id="logOutBtn">Log Out</a>'
+
+        document.querySelector('#logOutBtn').addEventListener('click', e => {
+            localStorage.removeItem('token');
+            sessionStorage.setItem('logged_in' ,"false")
+            sessionStorage.setItem('username' ,"")
+            location.reload();
+        })
+        
+    }
     
     
     /*******************************************************************************
@@ -221,7 +253,7 @@
 
                 let validateInputs = () => {
                     if(email.value === "" && password.value === ""){
-                        insertLoginText("Username & passwords field is blank");
+                        insertLoginText("Username & password fields are blank");
                         email.style.border = "1px solid red";
                         password.style.border = "1px solid red";
                         return false;
@@ -245,7 +277,7 @@
                     password.value = "";
                     password.style.border = "";
                     email.style.border = "";
-                    document.querySelector('#serverResponse').remove();
+                    if(document.querySelector('#serverResponse')) document.querySelector('#serverResponse').remove();
                 }
                 
  
@@ -263,11 +295,13 @@
                             })
                             .then(res => res.json())
                             .then(json => {
+                                if(json.non_field_errors[0]) insertLoginText('Your credintials are WRONG!')
                                 if(json.token !== undefined || null){
                                     localStorage.setItem('token', json.token);
                                     sessionStorage.setItem('logged_in', true);
                                     sessionStorage.setItem('username', json.user.username);
                                     clearInputs();
+                                    location.reload();
                                 }
                             });
                     }
@@ -358,10 +392,26 @@
             });
             $(document).on('click', '.product-cart-con', function(p) {
                 p.stopPropagation();
-                $('#paira-ajax-success-message').modal('show');
                 let elemId = p.target.closest('div[data-product-id]').getAttribute('data-product-id')
-                let filteredJson = json.filter(item => item.id == elemId)
-                productPage.cartModal(filteredJson[0]);
+                    let filteredJson = json.filter(item => item.id == elemId)
+                if(isLoggedIn() === true){
+                    //TODO POST CART
+                    // console.log(filteredJson)
+                    // fetch('http://www.spirit.ge:8000/cart/', {
+                    //     method: 'POST',
+                    //     headers: {
+                    //         'Content-Type': 'application/json'
+                    //     },
+                    //     body: JSON.stringify({id: filteredJson.id , quantity: 1})
+                    //     })
+                    //     .then(res => res.json())
+                    //     .then(json => console.log(json))
+                    //     .
+                } else {
+                    $('#paira-ajax-success-message').modal('show');
+                    productPage.cartModal(filteredJson[0]);
+                }
+                
             });
             $('#paira-welcome-newsletter').modal('show');
         },
@@ -1087,12 +1137,6 @@
             
             let existing = localStorage.getItem('cartItems');
 
-            
-            //existing = existing ? JSON.parse(existing) : [];
-            
-            // existing.forEach( (item, i) => {
-                
-            // })
 
             if(existing){
                 existing = JSON.parse(existing);
@@ -1120,33 +1164,46 @@
         },
         displayCartContent: function(){
             let cartContent = JSON.parse(localStorage.getItem('cartItems'))
-            let cartWidget = document.querySelector('#paira-ajax-cart > div > div > div > div > div.col-md-12.col-sm-12.col-xs-12.cart-table > div')
-            cartWidget.innerHTML = '';
             let cartItem;
-            cartContent.forEach((item,i) => {
-                cartItem += `
-                    <div class="column full-width overflow paira-margin-bottom-4 cartItem" data-id="${item.id}">
-                    <div class="row-1">
-                        <a href="product.html">
-                            <img src="http://spirit.ge:8000/images/${item.image}" alt="" class="img-responsive center-block">
-                        </a>
-                    </div>
-                    <div class="row-2"><p><a href="#">${item.name}</a></p></div>
-                    <div class="row-3"><p>${item.price}&#8382;<br class="totalItem">Total : ${item.price}&#8382</p></div>
-                    <div class="row-4">
-                        <div class="quantity">
-                            <div class="quantity-fix display-inline-b">
-                                <button class="btn-default btn" data-direction="down" id="cartDown" data-id="${item.id}"><i class="fa fa-angle-down"></i></button>
-                                <input type="text" value="${item.quantity}" class="text-center product_quantity_text" id="cartInput" data-id="${item.id}">
-                                <button class="btn-success btn" data-direction="up" id="cartUp" data-id="${item.id}"><i class="fa fa-angle-up"></i></button>
+            let cartWidget = document.querySelector('#cartTableWrapper')
+            cartWidget.innerHTML = '';
+
+
+            if(cartContent === null || cartContent.length === 0){
+                cartItem = '<div><b>You have no items in your cart!</b></div>'
+            } else {
+                if(isLoggedIn()){
+                    // fetch GET request
+                    console.log('CART: GET REQUEST TODO')
+                } else {
+                    cartContent.forEach((item) => {
+                        cartItem += `
+                            <div class="column full-width overflow paira-margin-bottom-4 cartItem" data-id="${item.id}">
+                            <div class="row-1">
+                                <a href="product.html">
+                                    <img src="http://spirit.ge:8000/images/${item.image}" alt="" class="img-responsive center-block">
+                                </a>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row-5"><p><a href="#" class="remove"><i class="fa fa-trash fa-2x" id="removeItem" data-id="${item.id}"></i></a>
-                    </p></div>
-                    </div>
-                `
-            })
+                            <div class="row-2"><p><a href="#">${item.name}</a></p></div>
+                            <div class="row-3"><p>${item.price}&#8382;<br class="totalItem">Total : ${item.price}&#8382</p></div>
+                            <div class="row-4">
+                                <div class="quantity">
+                                    <div class="quantity-fix display-inline-b">
+                                        <button class="btn-default btn" data-direction="down" id="cartDown" data-id="${item.id}"><i class="fa fa-angle-down"></i></button>
+                                        <input type="text" value="${item.quantity}" class="text-center product_quantity_text" id="cartInput" data-id="${item.id}">
+                                        <button class="btn-success btn" data-direction="up" id="cartUp" data-id="${item.id}"><i class="fa fa-angle-up"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row-5"><p><a href="#" class="remove"><i class="fa fa-trash fa-2x" id="removeItem" data-id="${item.id}"></i></a>
+                            </p></div>
+                            </div>
+                        `
+                    });
+                }
+            }
+            console.log(cartItem);
+            
             cartWidget.insertAdjacentHTML('beforeend', cartItem)
         }
     }
