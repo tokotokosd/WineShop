@@ -12,7 +12,22 @@
     "use strict";
     
 
-    
+    function getCookie(name) {
+        if (!document.cookie) {
+          return null;
+        }
+      
+        const xsrfCookies = document.cookie.split(';')
+          .map(c => c.trim())
+          .filter(c => c.startsWith(name + '='));
+      
+        if (xsrfCookies.length === 0) {
+          return null;
+        }
+        return decodeURIComponent(xsrfCookies[0].split('=')[1]);
+      }
+
+    const csrftoken = getCookie('csrftoken');
     
     if (document.querySelector('.product-widget') != null || undefined){
         fetch('http://spirit.ge:8000/wineproduct/?wine=test')
@@ -295,7 +310,7 @@
                             })
                             .then(res => res.json())
                             .then(json => {
-                                if(json.non_field_errors[0]) insertLoginText('Your credintials are WRONG!')
+                                if(json.non_field_errors) insertLoginText('Your credintials are WRONG!')
                                 if(json.token !== undefined || null){
                                     localStorage.setItem('token', json.token);
                                     sessionStorage.setItem('logged_in', true);
