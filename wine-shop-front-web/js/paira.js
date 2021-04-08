@@ -408,20 +408,23 @@
             $(document).on('click', '.product-cart-con', function(p) {
                 p.stopPropagation();
                 let elemId = p.target.closest('div[data-product-id]').getAttribute('data-product-id')
-                    let filteredJson = json.filter(item => item.id == elemId)
+                let filteredJson = json.filter(item => item.id == elemId)
                 if(isLoggedIn() === true){
-                    //TODO POST CART
-                    // console.log(filteredJson)
-                    // fetch('http://www.spirit.ge:8000/cart/', {
-                    //     method: 'POST',
-                    //     headers: {
-                    //         'Content-Type': 'application/json'
-                    //     },
-                    //     body: JSON.stringify({id: filteredJson.id , quantity: 1})
-                    //     })
-                    //     .then(res => res.json())
-                    //     .then(json => console.log(json))
-                    //     .
+                    console.log('ika')
+                    console.log(csrftoken)
+                    let data = {action: 'add', productId: filteredJson[0].id}
+                    fetch('http://spirit.ge:8000/cart/', {
+                        method: 'POST',
+                        headers: {
+                        'Content-Type': 'application/json;charset=utf-8',
+                        Authorization: `JWT ${localStorage.getItem('token')}`,
+                        'X-CSRFToken':  csrftoken,
+                        }
+                    ,
+                    body: JSON.stringify(data),
+                    credentials: 'include',
+                    })
+                    .then(res => {console.log(res)})
                 } else {
                     $('#paira-ajax-success-message').modal('show');
                     productPage.cartModal(filteredJson[0]);
