@@ -29,26 +29,7 @@
 
     const csrftoken = getCookie('csrftoken');
     
-    if (document.querySelector('.product-widget') != null || undefined){
-        fetch('http://spirit.ge:8000/wineproduct/?wine=test')
-        .then(resp => {
-            resp.json()
-            .then(data => {
-                productPage.showProducts(data.menu, 12, 1);
-                paira.initDialogBox(data.menu);
-                if (window.location.href.includes("collection.html")){
-                    paira.initProductPagination(data.menu, 1, 12);
-                    paira.initProductPageSort(data.menu);
-                    paira.initProductPageFilter(data.menu);
-                }
-                console.log(productPage.state)
-                // paira.initDialogBox(data.menu);
-            })
-        })
-        .catch(function(error){
-            console.log(error)
-        });
-    }
+    
 
 
     // show brands
@@ -66,8 +47,11 @@
     
 
     //navbar changes
-    
 
+    
+    document.querySelector('#searchButton').addEventListener('click', e => {
+        paira.showLoading(document.querySelector('.product-widget'), '#000');
+    })
     
     
 
@@ -318,7 +302,7 @@
                                     clearInputs();
                                     location.reload();
                                 }
-                            });
+                        });
                     }
                     
 
@@ -358,40 +342,89 @@
             $(document).on('click', '.cart-menu-body', function(p) {
                 p.stopPropagation();
                 $('#paira-ajax-cart').modal('show');
-                productPage.displayCartContent();
-                paira.setInputFilter(document.querySelector(".row-4 div div input"), value => /^\d*$/.test(value));
+                productPage.displayCartContent(json);
+                //paira.setInputFilter(document.querySelector(".row-4 div div input"), value => /^\d*$/.test(value));
                 document.querySelector('#cartTableWrapper').addEventListener('click', e => {
                     if(e.target.id === 'removeItem'){
-                        let json = JSON.parse(localStorage.getItem('cartItems'));
-                        let filteredJson = json.filter(item => {
+                        if(isLoggedIn()){
+                            fetch('http://spirit.ge:8000/cart/', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'appliction/json;charset=utf-8',
+                                    Authorization: `JWT ${localStorage.getItem('token')}`,
+                                    'X-CSRFToken':  csrftoken,
+                                },
+                                body: JSON.stringify({action: 'removeAll', productId: +e.target.dataset.id}),
+                                credentials: 'include'
+                            })
+                            .then( res => res.json() )
+                            .then( resJson => {
+                                if(resJson === "item was added"){
+                                    e.target.closest(`div[data-id="${json.filter(item => item.id === +e.target.dataset.id)[0].id}"]`).remove();
+                                    totalPriceUpdate();
+                                }
+                            });
+                        } else {
+                            let json = JSON.parse(localStorage.getItem('cartItems'));
+                            let filteredJson = json.filter(item => {
                             if(item.id !== +e.target.dataset.id){
                                 return true;
                             } else {
                                 e.target.closest(`div[data-id="${item.id}"]`).remove();
+                                totalPriceUpdate();
                                 return false;
                             }
-                        })
-                        console.log(filteredJson);
-                        localStorage.setItem('cartItems', JSON.stringify(filteredJson))
+                            })
+                            console.log(filteredJson);
+                            localStorage.setItem('cartItems', JSON.stringify(filteredJson))
+                        }
                     }
                     if(e.target.id === "cartDown"){
+                        if(isLoggedIn()){
+                            fetch('http://spirit.ge:8000/cart/', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'appliction/json;charset=utf-8',
+                                    Authorization: `JWT ${localStorage.getItem('token')}`,
+                                    'X-CSRFToken':  csrftoken,
+                                },
+                                body: JSON.stringify({action: 'remove', productId: +e.target.dataset.id}),
+                                credentials: 'include'
+                            })
+                            .then( res => res.json() )
+                            .then( json => console.log(json) );
+                        }
                         let inputText = e.target.nextElementSibling
                         let totalValue = e.target.closest('.row-4').previousElementSibling.querySelector('p br')
                         if(inputText.value > 1){
                             inputText.value -= 1;
                             totalValue.nextSibling.nodeValue = `Total : ${inputText.value* parseInt(totalValue.previousSibling.nodeValue)}`
                         }
+                        totalPriceUpdate();
                     }
                     if(e.target.id === "cartUp"){
+                        if(isLoggedIn()){
+                            fetch('http://spirit.ge:8000/cart/', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'appliction/json;charset=utf-8',
+                                    Authorization: `JWT ${localStorage.getItem('token')}`,
+                                    'X-CSRFToken':  csrftoken,
+                                },
+                                body: JSON.stringify({action: 'add', productId: +e.target.dataset.id}),
+                                credentials: 'include'
+                            })
+                            .then( res => res.json() )
+                            .then( json => console.log(json) );
+                        }
                         let inputText = e.target.previousElementSibling
                         let totalValue = e.target.closest('.row-4').previousElementSibling.querySelector('p br')
                         inputText.value = parseInt(inputText.value) + 1;
                         totalValue.nextSibling.nodeValue = `Total : ${inputText.value* parseInt(totalValue.previousSibling.nodeValue)}`
                     }
+                    totalPriceUpdate();
                 })
-                document.querySelector('#cartUpdate').addEventListener('click', e => {
-                    let storageItems = JSON.parse(localStorage.getItem('cartItems'))
-                    console.log(json)
+                function totalPriceUpdate(){
                     let calculate = document.querySelector('#cartCalculate')
                     let total = 0;
                     let totalArr = [];
@@ -400,19 +433,26 @@
                     document.querySelectorAll('.row-3 p').forEach(item => {
                         totalArr.push(parseInt(item.innerText.match(/\d+/g)[0])* item.closest('.row-3').nextElementSibling.querySelector('div div input').value)
                     })
-                    console.log(totalArr)
-                    total = totalArr.reduce((accumulator, currentValue) => accumulator + currentValue);
+                    if(totalArr.length !== 0){
+                        total = totalArr.reduce((accumulator, currentValue) => accumulator + currentValue);
+                    } else {
+                        total = 0;
+                    }
+                    
                     calculate.innerHTML = `Subtotal : <span><b>${total}&#8382;</b></span>`
-                })
+                }
+                    
+                
             });
             $(document).on('click', '.product-cart-con', function(p) {
                 p.stopPropagation();
                 let elemId = p.target.closest('div[data-product-id]').getAttribute('data-product-id')
                 let filteredJson = json.filter(item => item.id == elemId)
-                if(isLoggedIn() === true){
+                if(isLoggedIn()){
                     console.log('ika')
                     console.log(csrftoken)
                     let data = {action: 'add', productId: filteredJson[0].id}
+                    console.log(filteredJson[0].id)
                     fetch('http://spirit.ge:8000/cart/', {
                         method: 'POST',
                         headers: {
@@ -923,15 +963,15 @@
         /***************************************************************************************
          * Show Loading Animation
          ***************************************************************************************/
-        showLoading: function() {
-            $(".paira-loading").show()
-        },
+        // showLoading: function() {
+        //     $(".paira-loading").show()
+        // },
         /***************************************************************************************
          * Hide Loading Animation
          ***************************************************************************************/
-        hideLoading: function() {
-            $(".paira-loading").hide()
-        },
+        // hideLoading: function() {
+        //     $(".paira-loading").hide()
+        // },
         showCommonMessage: function(message) {
             var popup = $('#paira-common-message');
             popup.find('.paira-common-message-details').html(message);
@@ -974,6 +1014,21 @@
 
             
         },
+        showLoading: function(parentNode, color){
+            let circleSvg = `<?xml version="1.0" encoding="utf-8"?>
+            <svg id="loadingSpinner" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; display: block; shape-rendering: auto;" width="137px" height="137px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+            <circle cx="50" cy="50" fill="none" stroke="${color}" stroke-width="11" r="35" stroke-dasharray="164.93361431346415 56.97787143782138">
+            <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" values="0 50 50;360 50 50" keyTimes="0;1"></animateTransform>
+            </circle>
+            <p color="${color}">loading...</p>
+            </svg>`
+            parentNode.insertAdjacentHTML('afterbegin', circleSvg);
+    
+        },
+        hideLoading: function(){
+            let circleSvg = document.querySelector('#loadingSpinner');
+            circleSvg.remove();
+        }
 
     };
 
@@ -983,6 +1038,7 @@
     const productModalContent = document.querySelector('.pro-content');
     let currentPage = 1;
     
+    //paira.loading1();
 
     
     const productPage = {
@@ -1180,19 +1236,62 @@
             let counter = document.querySelector('#cartCounter')
             if(existing) counter.innerText = existing.length
         },
-        displayCartContent: function(){
-            let cartContent = JSON.parse(localStorage.getItem('cartItems'))
+        displayCartContent: function(data){
+            let cartContent = JSON.parse(localStorage.getItem('cartItems'));
             let cartItem;
-            let cartWidget = document.querySelector('#cartTableWrapper')
+            let cartWidget = document.querySelector('#cartTableWrapper');
             cartWidget.innerHTML = '';
-
-
-            if(cartContent === null || cartContent.length === 0){
-                cartItem = '<div><b>You have no items in your cart!</b></div>'
-            } else {
+            paira.showLoading(cartWidget, "#fff")
                 if(isLoggedIn()){
-                    // fetch GET request
-                    console.log('CART: GET REQUEST TODO')
+                    fetch('http://spirit.ge:8000/cart/', {
+                        method: 'GET',
+                        headers: {
+                        'Content-Type': 'application/json;charset=utf-8',
+                        Authorization: `JWT ${localStorage.getItem('token')}`,
+                        'X-CSRFToken':  csrftoken
+                        }
+                    })
+                    .then( res => res.json() )
+                    .then( json => {
+                        console.log(json)
+                        let cart = [];
+                        for(let i of data){
+                            for(let i2 of json.items){
+                                if(i.id === i2.product_id){
+                                    cart.push({id: i.id, image: i.image, name: i.name, quantity: i2.quantity, price: i.price})
+                                }
+                            }
+                        }
+
+                        cart.forEach((item) => {
+                            cartItem += `
+                                <div class="column full-width overflow paira-margin-bottom-4 cartItem" data-id="${item.id}">
+                                <div class="row-1">
+                                    <a href="product.html">
+                                        <img src="http://spirit.ge:8000/images/${item.image}" alt="" class="img-responsive center-block">
+                                    </a>
+                                </div>
+                                <div class="row-2"><p><a href="#">${item.name}</a></p></div>
+                                <div class="row-3"><p>${item.price}&#8382;<br class="totalItem">Total : ${item.price}&#8382</p></div>
+                                <div class="row-4">
+                                    <div class="quantity">
+                                        <div class="quantity-fix display-inline-b">
+                                            <button class="btn-default btn" data-direction="down" id="cartDown" data-id="${item.id}"><i class="fa fa-angle-down"></i></button>
+                                            <input type="text" value="${item.quantity}" class="text-center product_quantity_text" id="cartInput" data-id="${item.id}">
+                                            <button class="btn-success btn" data-direction="up" id="cartUp" data-id="${item.id}"><i class="fa fa-angle-up"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row-5"><p><a href="#" class="remove"><i class="fa fa-trash fa-2x" id="removeItem" data-id="${item.id}"></i></a>
+                                </p></div>
+                                </div>
+                            `
+                        });
+                        paira.hideLoading()
+                        cartWidget.insertAdjacentHTML('beforeend', cartItem)
+                    })
+                
+                console.log(cartContent)
                 } else {
                     cartContent.forEach((item) => {
                         cartItem += `
@@ -1219,13 +1318,34 @@
                         `
                     });
                 }
-            }
-            console.log(cartItem);
+
             
-            cartWidget.insertAdjacentHTML('beforeend', cartItem)
+            //cartWidget.insertAdjacentHTML('beforeend', cartItem)
         }
     }
 
+    if (document.querySelector('.product-widget') != null || undefined){
+        paira.showLoading(document.querySelector('.product-widget'), '#000');
+        fetch('http://spirit.ge:8000/wineproduct/?wine=test')
+        .then(resp => {
+            resp.json()
+            .then(data => {
+                paira.hideLoading();
+                productPage.showProducts(data.menu, 12, 1);
+                paira.initDialogBox(data.menu);
+                if (window.location.href.includes("collection.html")){
+                    paira.initProductPagination(data.menu, 1, 12);
+                    paira.initProductPageSort(data.menu);
+                    paira.initProductPageFilter(data.menu);
+                }
+                console.log(productPage.state)
+                // paira.initDialogBox(data.menu);
+            })
+        })
+        .catch(function(error){
+            console.log(error)
+        });
+    }
    
     
 
