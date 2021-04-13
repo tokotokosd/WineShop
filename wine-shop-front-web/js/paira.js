@@ -32,18 +32,7 @@
     
 
 
-    // show brands
-    if ( document.querySelector('.paira-brand') != null) {
-        fetch('http://www.spirit.ge:8000/brandlist/').then(resp => {
-        resp.json()
-        .then(data => {
-            productPage.showBrands(data.menu);
-            paira.initOwlCarousel();
-            console.log("doneCar")
-            // paira.initDialogBox(data.menu);
-        })
-    })
-    }
+
     
 
     //navbar changes
@@ -341,11 +330,14 @@
             });
             $(document).on('click', '.cart-menu-body', function(p) {
                 p.stopPropagation();
+                
                 $('#paira-ajax-cart').modal('show');
                 productPage.displayCartContent(json);
-                //paira.setInputFilter(document.querySelector(".row-4 div div input"), value => /^\d*$/.test(value));
-                document.querySelector('#cartTableWrapper').addEventListener('click', e => {
+                function cart(e){
+                    e.stopPropagation()
+                    document.querySelector('#cartTableWrapper').setAttribute('listener', 'true');
                     if(e.target.id === 'removeItem'){
+                        console.log('removeitem click')
                         if(isLoggedIn()){
                             fetch('http://spirit.ge:8000/cart/', {
                                 method: 'POST',
@@ -365,6 +357,7 @@
                                 }
                             });
                         } else {
+                            console.log('removeitem click')
                             let json = JSON.parse(localStorage.getItem('cartItems'));
                             let filteredJson = json.filter(item => {
                             if(item.id !== +e.target.dataset.id){
@@ -397,12 +390,16 @@
                         let inputText = e.target.nextElementSibling
                         let totalValue = e.target.closest('.row-4').previousElementSibling.querySelector('p br')
                         if(inputText.value > 1){
+                            console.log()
+                            
+                            console.log(`inputText.value is ${inputText.value}`)
                             inputText.value -= 1;
                             totalValue.nextSibling.nodeValue = `Total : ${inputText.value* parseInt(totalValue.previousSibling.nodeValue)}`
                         }
                         totalPriceUpdate();
                     }
                     if(e.target.id === "cartUp"){
+                        console.log(+e.target.dataset.id)
                         if(isLoggedIn()){
                             fetch('http://spirit.ge:8000/cart/', {
                                 method: 'POST',
@@ -419,17 +416,21 @@
                         }
                         let inputText = e.target.previousElementSibling
                         let totalValue = e.target.closest('.row-4').previousElementSibling.querySelector('p br')
-                        inputText.value = parseInt(inputText.value) + 1;
-                        totalValue.nextSibling.nodeValue = `Total : ${inputText.value* parseInt(totalValue.previousSibling.nodeValue)}`
+                        if(json.filter(item => item.id === +e.target.dataset.id)[0].quantity > inputText.value){
+                            inputText.value = parseInt(inputText.value) + 1;
+                            totalValue.nextSibling.nodeValue = `Total : ${inputText.value* parseInt(totalValue.previousSibling.nodeValue)}`
+                        }
+                        
                     }
                     totalPriceUpdate();
-                })
+                }
+
                 function totalPriceUpdate(){
                     let calculate = document.querySelector('#cartCalculate')
                     let total = 0;
                     let totalArr = [];
                     
-                    console.log(document.querySelectorAll('.cartItem'))
+                    
                     document.querySelectorAll('.row-3 p').forEach(item => {
                         totalArr.push(parseInt(item.innerText.match(/\d+/g)[0])* item.closest('.row-3').nextElementSibling.querySelector('div div input').value)
                     })
@@ -441,8 +442,14 @@
                     
                     calculate.innerHTML = `Subtotal : <span><b>${total}&#8382;</b></span>`
                 }
-                    
-                
+                if (document.querySelector('#cartTableWrapper').getAttribute('listener') !== 'true') {
+                    document.querySelector('#cartTableWrapper').addEventListener('click', cart);
+                    console.log('event listener attached')
+               } else {
+                   console.log('event listener already exists')
+               }
+               
+                //document.querySelector('#cartTableWrapper').addEventListener('click', cart);
             });
             $(document).on('click', '.product-cart-con', function(p) {
                 p.stopPropagation();
@@ -471,7 +478,7 @@
                 }
                 
             });
-            $('#paira-welcome-newsletter').modal('show');
+            //$('#paira-welcome-newsletter').modal('show');
         },
         initProductPageSort: function(json){
             document.querySelector('#product-sort').addEventListener('change', e => {
@@ -1020,7 +1027,6 @@
             <circle cx="50" cy="50" fill="none" stroke="${color}" stroke-width="11" r="35" stroke-dasharray="164.93361431346415 56.97787143782138">
             <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" values="0 50 50;360 50 50" keyTimes="0;1"></animateTransform>
             </circle>
-            <p color="${color}">loading...</p>
             </svg>`
             parentNode.insertAdjacentHTML('afterbegin', circleSvg);
     
@@ -1088,7 +1094,7 @@
             productWidget.insertAdjacentHTML('beforeend', product);
         },
         showBrands: function(jsonBrands){
-            this.hideProducts();
+            //this.hideProducts();
             let product = "";
 
             for(let i =0; i < jsonBrands.length; i++){
@@ -1133,16 +1139,6 @@
                         </div>
                         <div class="form-group margin-top-15 col-sm-1 half-width">
                             <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>variety : </b>${data.variety}</h4>
-                        </div>
-                        <div class="form-group margin-top-15 col-sm-1 half-width">
-                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>size : </b></h4>
-                            <select class="sort-by paira-filter-category">
-                                <option value="/collections/camera">250ml</option>
-                                <option value="/collections/dslr-camera">250ml</option>
-                                <option value="/collections/headphone">250ml</option>
-                                <option value="/collections/ipad">250ml</option>
-                                <option value="/collections/iphone">250ml</option>
-                            </select>
                         </div>
                         <div class="quantity margin-top-15 display-inline-b full-width">
                             <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase pull-left"><b>Quantity : </b></label></h4>
@@ -1238,7 +1234,7 @@
         },
         displayCartContent: function(data){
             let cartContent = JSON.parse(localStorage.getItem('cartItems'));
-            let cartItem;
+            let cartItem = "";
             let cartWidget = document.querySelector('#cartTableWrapper');
             cartWidget.innerHTML = '';
             paira.showLoading(cartWidget, "#fff")
@@ -1253,7 +1249,7 @@
                     })
                     .then( res => res.json() )
                     .then( json => {
-                        console.log(json)
+                        console.log(json.items)
                         let cart = [];
                         for(let i of data){
                             for(let i2 of json.items){
@@ -1277,7 +1273,7 @@
                                     <div class="quantity">
                                         <div class="quantity-fix display-inline-b">
                                             <button class="btn-default btn" data-direction="down" id="cartDown" data-id="${item.id}"><i class="fa fa-angle-down"></i></button>
-                                            <input type="text" value="${item.quantity}" class="text-center product_quantity_text" id="cartInput" data-id="${item.id}">
+                                            <input type="text" value="${item.quantity}" class="text-center product_quantity_text" id="cartInput" data-id="${item.id}" disabled>
                                             <button class="btn-success btn" data-direction="up" id="cartUp" data-id="${item.id}"><i class="fa fa-angle-up"></i></button>
                                         </div>
                                     </div>
@@ -1288,12 +1284,12 @@
                             `
                         });
                         paira.hideLoading()
-                        cartWidget.insertAdjacentHTML('beforeend', cartItem)
+                        cartWidget.insertAdjacentHTML('beforeend', cartItem);
                     })
                 
                 console.log(cartContent)
                 } else {
-                    cartContent.forEach((item) => {
+                    cartContent.forEach((item, i) => {
                         cartItem += `
                             <div class="column full-width overflow paira-margin-bottom-4 cartItem" data-id="${item.id}">
                             <div class="row-1">
@@ -1307,7 +1303,7 @@
                                 <div class="quantity">
                                     <div class="quantity-fix display-inline-b">
                                         <button class="btn-default btn" data-direction="down" id="cartDown" data-id="${item.id}"><i class="fa fa-angle-down"></i></button>
-                                        <input type="text" value="${item.quantity}" class="text-center product_quantity_text" id="cartInput" data-id="${item.id}">
+                                        <input type="text" value="${item.quantity}" class="text-center product_quantity_text" id="cartInput" data-id="${item.id}" disabled>
                                         <button class="btn-success btn" data-direction="up" id="cartUp" data-id="${item.id}"><i class="fa fa-angle-up"></i></button>
                                     </div>
                                 </div>
@@ -1316,14 +1312,146 @@
                             </p></div>
                             </div>
                         `
+                        console.log(cartContent)
+                        console.log(`^index: ${i}^`)
                     });
+                    paira.hideLoading();
+                    cartWidget.insertAdjacentHTML('beforeend', cartItem);
                 }
 
             
-            //cartWidget.insertAdjacentHTML('beforeend', cartItem)
+            
         }
     }
 
+    let blogCardContainer = document.querySelector('#blogCardContainer');
+
+    let blogJson = {
+        item: [
+         {
+            id: 0,
+            img: "images/blog/blog-3.jpg",
+            time: "12 jul",
+            title: 'first blog',
+            content: "We just don't build your website we build your business. We Building Your Business with Strong Branding. Our helpful support team is always on standby to help you with any questions or issues. We have a great team to build your business.We just don't build your website we build your business. We Building Your Business with Strong Branding. Our helpful support team is always on standby to help you with any questions or issues. We have a great team to build your business. We just don't build your website we build your business. We Building Your Business with Strong Branding. Our helpful support team is always on standby to help you with any questions or issues. We have a great team to build your business."
+         },
+         {
+            id: 1,
+            img: "images/blog/blog-4.jpg",
+            time: "13 may",
+            title: 'second blog',
+            content: "We just dondadadad gpsigjsdfpgjps dpaDPpdj aoafjsoadifj sa adpoajdpasjd apsdjaspd ap daspjdapsdapsdpajd poajdpad adadadaa"
+        },
+        {
+            id: 2,
+            img: "images/blog/blog-4.jpg",
+            time: "14 may",
+            title: 'third',
+            content: 'We just dondadadad gpsigjsdfpgjps dpaDPpdj aoafjsoadifj sa adpoajdpasjd apsdjaspd ap daspjdapsdapsdpajd poajdpad adadadaa'
+        },
+        {
+            id: 3,
+            img: "images/blog/blog-4.jpg",
+            time: "15 may",
+            title: 'fourth',
+            content: 'We just dondadadad gpsigjsdfpgjps dpaDPpdj aoafjsoadifj sa adpoajdpasjd apsdjaspd ap daspjdapsdapsdpajd poajdpad adadadaa'
+        },
+        ]
+    }
+    
+    console.dir(blogJson)
+
+    let blogPage = {
+        displayBlogCards: function(data){
+            blogCardContainer.innerHTML="";
+            let cards = ""
+            data.item.forEach((item,i) =>{
+                cards +=`
+                <div class="col-md-6 col-sm-12 col-xs-12 paira-margin-top-1">
+                    <img alt="" src="${item.img}" class="img-responsive">
+                    <div class=${(i%2 === 0) ? "blogs1" : "blogs"}>
+                        <h3 class="text-uppercase margin-bottom-10">${item.time}</h3>
+                        <h4 class="paira-margin-bottom-1"><a href="blog-single.html" class="date raleway-light letter-spacing-2">${item.title}</a></h4>
+                        <a href="blog-single.html#${item.id}" class="btn-border font-size-12">Read More</a>
+                    </div>
+                </div>
+                `
+            })
+            blogCardContainer.insertAdjacentHTML('afterbegin', cards)
+        },
+        displayBlog: function(data){
+            let page = +window.location.hash.substring(1)
+            let filteredJson = data.item.filter(item => item.id === page);
+            console.log(filteredJson)
+            let prev = document.querySelector("#prevBtn");
+            let next = document.querySelector("#nextBtn");
+            let blogContainer = document.querySelector('#singleBlogContainer');
+            blogContainer.innerHTML="";
+            let blogContent = `
+            <div class="col-md-12 col-sm-12 col-xs-12 paira-margin-top-1">
+                <img alt="" src="${filteredJson[0].img}" class="img-responsive margin-bottom-20">
+                <div class="blogs-detail">
+                    <h3 class="text-uppercase margin-top-0 margin-bottom-20">${filteredJson[0].time}</h3>
+                    <h1 class="margin-bottom-20 date letter-spacing-2">${filteredJson[0].title}</h1>
+                    <p class="margin-bottom-20 letter-spacing-2 margin-bottom-0">
+                        ${filteredJson[0].content}
+                    </p>
+                </div>
+            </div>
+            `
+            blogContainer.insertAdjacentHTML('afterbegin', blogContent)
+            
+            prev.href = `blog-single.html#${(page===0) ? page : page-1}`
+            next.href = `blog-single.html#${(page<=data.item.length) ? page+1 : page }`
+
+            prev.addEventListener('click', e => {
+                window.location.hash = `#${(page===0) ? page : page-1}`
+                window.location.reload()
+            })
+            next.addEventListener('click', e => {
+                window.location.hash = `#${(page<=data.item.length) ? page+1 : page }`
+                window.location.reload()
+            })
+            
+        },
+        displayComments: function(){
+            let commentSection = document.querySelector('#commentContainer');
+        },
+        leaveComment: function(){
+            let comment = document.querySelector('#commentArea')
+            let sendBtn = document.querySelector('#sendCommentBtn')
+
+            
+            sendBtn.addEventListener('click', e => {
+                e.preventDefault();
+                console.log(comment.value)
+                // fetch('http://spirit.ge:8000/cart/', {
+                //         method: 'POST',
+                //         headers: {
+                //         'Content-Type': 'application/json;charset=utf-8',
+                //         Authorization: `JWT ${localStorage.getItem('token')}`,
+                //         'X-CSRFToken':  csrftoken,
+                //         }
+                //     ,
+                //     body: JSON.stringify({id: 'smth', comment: 'racxa'}),
+                //     credentials: 'include',
+                //     })
+                //     .then(res => {console.log(res)})
+            })
+        }
+    }
+    // blog page
+    if (window.location.href.includes("blog.html") || window.location.href.includes("index.html")){
+        blogPage.displayBlogCards(blogJson);
+    }
+    // single blog page
+    if (window.location.href.includes("blog-single.html")){
+        blogPage.displayBlog(blogJson);
+        if(isLoggedIn()){
+            blogPage.leaveComment();
+        }
+    }
+    // show products
     if (document.querySelector('.product-widget') != null || undefined){
         paira.showLoading(document.querySelector('.product-widget'), '#000');
         fetch('http://spirit.ge:8000/wineproduct/?wine=test')
@@ -1339,15 +1467,28 @@
                     paira.initProductPageFilter(data.menu);
                 }
                 console.log(productPage.state)
-                // paira.initDialogBox(data.menu);
             })
         })
         .catch(function(error){
             console.log(error)
         });
     }
-   
+    // show brands
+    if ( document.querySelector('.paira-brand') != null ) {
+        fetch('http://www.spirit.ge:8000/brandlist/').then(resp => {
+        resp.json()
+        .then(data => {
+            productPage.showBrands(data.menu);
+            paira.initOwlCarousel();
+            console.log("doneCar")
+            // paira.initDialogBox(data.menu);
+        })
+        })
+    }
+   //show blog
+
     
+   
 
 }(window.jQuery, window, document));
 /**********************************************************************************************
