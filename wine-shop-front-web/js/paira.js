@@ -1356,7 +1356,31 @@
             title: 'fourth',
             content: 'We just dondadadad gpsigjsdfpgjps dpaDPpdj aoafjsoadifj sa adpoajdpasjd apsdjaspd ap daspjdapsdapsdpajd poajdpad adadadaa'
         },
-        ]
+        ],
+        comment: {
+            "0":[
+                {
+                id: 0,
+                comment: "Where is my son",
+                username: "Neo",
+            },
+                {
+                id: 0,
+                comment: "Where is my son",
+                username: "Neo",
+            },
+            ],
+            "1":[{
+                id: 1,
+                comment: "Where is my son1",
+                username: "Neo1",
+            },
+            {
+                id: 2,
+                comment: "Where is my s2on",
+                username: "Neo2",
+            }]
+        }
     }
     
     console.dir(blogJson)
@@ -1414,8 +1438,28 @@
             })
             
         },
-        displayComments: function(){
+        displayComments: function(data){
             let commentSection = document.querySelector('#commentContainer');
+            commentSection.innerHTML="";
+            let page = +window.location.hash.substring(1)
+            let comment = "";
+            //console.log(data.comment);
+            for (const key of Object.keys(data.comment)) {
+                console.log(key, data.comment[key]);
+            }
+                // if(+i === page) i.forEach(item => {
+                //     comment += `
+                //     <div class=" col-md-12 col-sm-12 col-xs-12 paira-margin-top-4">
+                //         <p class="raleway-sbold">${item.username}</p>
+                //         <p class="margin-top-10">${item.comment}</p>
+                //     </div>
+                //     `
+                // })
+
+
+
+
+            commentSection.insertAdjacentHTML('afterbegin', comment)
         },
         leaveComment: function(){
             let comment = document.querySelector('#commentArea')
@@ -1447,6 +1491,7 @@
     // single blog page
     if (window.location.href.includes("blog-single.html")){
         blogPage.displayBlog(blogJson);
+        blogPage.displayComments(blogJson);
         if(isLoggedIn()){
             blogPage.leaveComment();
         }
