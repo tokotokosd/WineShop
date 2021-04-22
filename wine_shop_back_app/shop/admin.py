@@ -5,7 +5,7 @@ from django.contrib import admin
 from .models import *
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name', 'image_tag']
+    list_display = ['id', 'name', 'image_tag']
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):

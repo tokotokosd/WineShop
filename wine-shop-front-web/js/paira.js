@@ -1348,6 +1348,7 @@
             content: "Some Text"
         },
         ],
+<<<<<<< HEAD
         comments: {
             "0": [
                 {
@@ -1383,6 +1384,31 @@
                     username: "test_2"
                 }
             ]
+=======
+        comment: {
+            "0":[
+                {
+                id: 0,
+                comment: "Where is my son",
+                username: "Neo",
+            },
+                {
+                id: 0,
+                comment: "Where is my son",
+                username: "Neo",
+            },
+            ],
+            "1":[{
+                id: 1,
+                comment: "Where is my son1",
+                username: "Neo1",
+            },
+            {
+                id: 2,
+                comment: "Where is my s2on",
+                username: "Neo2",
+            }]
+>>>>>>> 7b71b9ba2326c34289752926943c7dda33a7cb0b
         }
     }
     
@@ -1442,6 +1468,7 @@
         },
         displayComments: function(data){
             let commentSection = document.querySelector('#commentContainer');
+<<<<<<< HEAD
             let page = +window.location.hash.substring(1);
             commentSection.innerHTML = "";
             let commentsJson = data.comments;
@@ -1460,6 +1487,28 @@
                 `      
             })
             commentSection.insertAdjacentHTML('afterbegin', comment);
+=======
+            commentSection.innerHTML="";
+            let page = +window.location.hash.substring(1)
+            let comment = "";
+            //console.log(data.comment);
+            for (const key of Object.keys(data.comment)) {
+                console.log(key, data.comment[key]);
+            }
+                // if(+i === page) i.forEach(item => {
+                //     comment += `
+                //     <div class=" col-md-12 col-sm-12 col-xs-12 paira-margin-top-4">
+                //         <p class="raleway-sbold">${item.username}</p>
+                //         <p class="margin-top-10">${item.comment}</p>
+                //     </div>
+                //     `
+                // })
+
+
+
+
+            commentSection.insertAdjacentHTML('afterbegin', comment)
+>>>>>>> 7b71b9ba2326c34289752926943c7dda33a7cb0b
         },
         leaveComment: function(){
             let comment = document.querySelector('#commentArea')
