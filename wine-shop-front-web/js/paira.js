@@ -39,7 +39,14 @@
 
     
     document.querySelector('#searchButton').addEventListener('click', e => {
-        paira.showLoading(document.querySelector('.product-widget'), '#000');
+        let input = document.querySelector("#custom-search-input").querySelector('input').value;
+        console.log(input)
+        if(window.location.href.includes('collection.html')){
+            window.location.replace(`collection.html#${input}`);
+            window.location.reload();
+        } else {
+            window.location.replace(`collection.html#${input}`);
+        }
     })
     
     
@@ -1263,7 +1270,7 @@
                             cartItem += `
                                 <div class="column full-width overflow paira-margin-bottom-4 cartItem" data-id="${item.id}">
                                 <div class="row-1">
-                                    <a href="product.html">
+                                    <a href="collection.html">
                                         <img src="http://spirit.ge:8000/images/${item.image}" alt="" class="img-responsive center-block">
                                     </a>
                                 </div>
@@ -1312,8 +1319,6 @@
                             </p></div>
                             </div>
                         `
-                        console.log(cartContent)
-                        console.log(`^index: ${i}^`)
                     });
                     paira.hideLoading();
                     cartWidget.insertAdjacentHTML('beforeend', cartItem);
@@ -1331,38 +1336,60 @@
          {
             id: 0,
             img: "images/blog/blog-3.jpg",
-            time: "12 jul",
-            title: 'first blog',
+            time: "12 Jul",
+            title: 'First blog',
             content: "We just don't build your website we build your business. We Building Your Business with Strong Branding. Our helpful support team is always on standby to help you with any questions or issues. We have a great team to build your business.We just don't build your website we build your business. We Building Your Business with Strong Branding. Our helpful support team is always on standby to help you with any questions or issues. We have a great team to build your business. We just don't build your website we build your business. We Building Your Business with Strong Branding. Our helpful support team is always on standby to help you with any questions or issues. We have a great team to build your business."
          },
          {
             id: 1,
             img: "images/blog/blog-4.jpg",
             time: "13 may",
-            title: 'second blog',
-            content: "We just dondadadad gpsigjsdfpgjps dpaDPpdj aoafjsoadifj sa adpoajdpasjd apsdjaspd ap daspjdapsdapsdpajd poajdpad adadadaa"
+            title: 'Second blog',
+            content: "Some Text"
         },
-        {
-            id: 2,
-            img: "images/blog/blog-4.jpg",
-            time: "14 may",
-            title: 'third',
-            content: 'We just dondadadad gpsigjsdfpgjps dpaDPpdj aoafjsoadifj sa adpoajdpasjd apsdjaspd ap daspjdapsdapsdpajd poajdpad adadadaa'
-        },
-        {
-            id: 3,
-            img: "images/blog/blog-4.jpg",
-            time: "15 may",
-            title: 'fourth',
-            content: 'We just dondadadad gpsigjsdfpgjps dpaDPpdj aoafjsoadifj sa adpoajdpasjd apsdjaspd ap daspjdapsdapsdpajd poajdpad adadadaa'
-        },
-        ]
+        ],
+        comments: {
+            "0": [
+                {
+                    id: 0,
+                    comment: "ad kad  hfuadoahoidah?! dojashdas ejjadadad: dapidjaiuodhuioe, adjnadjan, adhujadhbadjhaghda!!!!",
+                    username: "starfish"
+                },
+                {
+                    id: 1,
+                    comment: "agijfsgoifsjigfoi jiadojoadi joaidjaoidad",
+                    username: "gela"
+                },
+                {
+                    id: 2,
+                    comment: "Wada",
+                    username: "test"
+                }
+            ],
+            "1": [
+                {
+                    id: 0,
+                    comment: "ad kad  hfuadoahoidah?! dojashdas ejjadadad: dapidjaiuodhuioe, adjnadjan, adhujadhbadjhaghda!!!!_2",
+                    username: "starfish_2"
+                },
+                {
+                    id: 1,
+                    comment: "agijfsgoifsjigfoi jiadojoadi joaidjaoidad_2",
+                    username: "gela_2"
+                },
+                {
+                    id: 2,
+                    comment: "Wada_2",
+                    username: "test_2"
+                }
+            ]
+        }
     }
     
     console.dir(blogJson)
 
     let blogPage = {
-        displayBlogCards: function(data){
+        displayBlogCards: function(data, quantity=null){
             blogCardContainer.innerHTML="";
             let cards = ""
             data.item.forEach((item,i) =>{
@@ -1380,9 +1407,8 @@
             blogCardContainer.insertAdjacentHTML('afterbegin', cards)
         },
         displayBlog: function(data){
-            let page = +window.location.hash.substring(1)
+            let page = +window.location.hash.substring(1) 
             let filteredJson = data.item.filter(item => item.id === page);
-            console.log(filteredJson)
             let prev = document.querySelector("#prevBtn");
             let next = document.querySelector("#nextBtn");
             let blogContainer = document.querySelector('#singleBlogContainer');
@@ -1402,20 +1428,38 @@
             blogContainer.insertAdjacentHTML('afterbegin', blogContent)
             
             prev.href = `blog-single.html#${(page===0) ? page : page-1}`
-            next.href = `blog-single.html#${(page<=data.item.length) ? page+1 : page }`
+            next.href = `blog-single.html#${(page<data.item.length - 1) ? page+1 : page }`
 
             prev.addEventListener('click', e => {
                 window.location.hash = `#${(page===0) ? page : page-1}`
                 window.location.reload()
             })
             next.addEventListener('click', e => {
-                window.location.hash = `#${(page<=data.item.length) ? page+1 : page }`
+                window.location.hash = `#${(page<data.item.length - 1) ? page+1 : page }`
                 window.location.reload()
             })
             
         },
-        displayComments: function(){
+        displayComments: function(data){
             let commentSection = document.querySelector('#commentContainer');
+            let page = +window.location.hash.substring(1);
+            commentSection.innerHTML = "";
+            let commentsJson = data.comments;
+            let commentsArr = [];
+            let comment = "";
+            for (var key of Object.keys(commentsJson)) {
+                if(page+"" === key) commentsArr = commentsJson[key]
+            }
+            commentsArr.forEach(item => {
+
+                comment += `
+                <div class=" col-md-12 col-sm-12 col-xs-12 paira-margin-top-4">
+                    <p class="raleway-sbold">${item.username}</p>
+                    <p class="margin-top-10">${item.comment}</p>
+                </div>
+                `      
+            })
+            commentSection.insertAdjacentHTML('afterbegin', comment);
         },
         leaveComment: function(){
             let comment = document.querySelector('#commentArea')
@@ -1447,6 +1491,7 @@
     // single blog page
     if (window.location.href.includes("blog-single.html")){
         blogPage.displayBlog(blogJson);
+        blogPage.displayComments(blogJson);
         if(isLoggedIn()){
             blogPage.leaveComment();
         }
@@ -1462,6 +1507,11 @@
                 productPage.showProducts(data.menu, 12, 1);
                 paira.initDialogBox(data.menu);
                 if (window.location.href.includes("collection.html")){
+                    if(window.location.hash.substring(1)){
+                        let searchVal = window.location.hash.substring(1).replace(/%20/g, " ");
+                        let filteredJson = data.menu.filter( item => item.name.toLowerCase().includes(searchVal.toLowerCase()));
+                        productPage.showProducts(filteredJson, 12, 1)
+                    }
                     paira.initProductPagination(data.menu, 1, 12);
                     paira.initProductPageSort(data.menu);
                     paira.initProductPageFilter(data.menu);
@@ -1472,7 +1522,10 @@
         .catch(function(error){
             console.log(error)
         });
+    } else {
+        paira.initDialogBox();
     }
+
     // show brands
     if ( document.querySelector('.paira-brand') != null ) {
         fetch('http://www.spirit.ge:8000/brandlist/').then(resp => {
@@ -1487,8 +1540,6 @@
     }
    //show blog
 
-    
-   
 
 }(window.jQuery, window, document));
 /**********************************************************************************************
