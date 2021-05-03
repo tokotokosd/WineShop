@@ -273,8 +273,14 @@ ul.pagination.list-inline {
     background: transparent;
 }
 .header-top ul .width-li{
-    width: 130px;
+    width: 150px;
+    text-align: center;
 }
+
+.language-change {
+    width: 10%;
+}
+
 .logo{
     padding: 20px 30px;
     text-align: center;
@@ -1312,4 +1318,98 @@ footer .list-inline {
 
 li.active{
     font-weight: bold;
+}
+
+
+/* ===========================================================
+ Navbar main
+============================================================ */
+
+@media only screen and (max-width: 767px) {
+    .navbar-header-section {
+        padding-left: 40px;
+    }
+}
+
+
+.navbar-language-change {
+    min-width: 20px;
+    min-height: 15px;
+    background-image: url('../images/flags/ge.svg');
+    background-repeat: no-repeat;
+}
+
+.navbar-language-change-ge {
+    min-width: 20px;
+    min-height: 15px;
+    background-image: url('../images/flags/en.svg');
+    background-repeat: no-repeat;
+}
+
+.navbar-language-container {
+    margin-top: 15px;
+    max-height: 46px;
+    max-width: 57px;
+    display: flex;
+    flex-direction: row;
+    cursor: pointer; 
+}
+
+.navbar-header-section {
+
+}
+
+
+/* 
+    Order History Page
+*/
+
+.order-items-container {
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    font-size:15px;
+}
+
+.order-status {
+    color: orange;
+}
+
+.row.columns {
+    width: 100%;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.row.item{
+    width: 100%;
+    font-size: 15px;
+    text-align: center;
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.order-number {
+    color:silver
+}
+
+.order-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+
+.list-group-item {
+    margin-bottom: 10px;
+}
+
+.order-status-delivered {
+    color: green;
 }

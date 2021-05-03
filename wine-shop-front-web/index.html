@@ -48,7 +48,7 @@
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         <div class="col-md-2 col-sm-2 col-xs-3 logo">
-                            <a href="index.html" class="text-uppercase">Vine.</a>
+                            <a href="index.html" class="text-uppercase">Spirit.</a>
                         </div>
                         <div class="col-md-8 col-sm-8 col-xs-12">
                             <!--=================== Main Menu ===================-->
@@ -64,7 +64,7 @@
                                     <div id="navbar-collapse" class="navbar-collapse collapse ">
                                         <ul class="nav navbar-nav">
                                             <!--=================== Single Menu ===================-->
-                                            <li class="width-li"><a href="collection.html">shop</a></li>
+                                            <li class="width-li"><a href="collection.html" data-lang="shop">shop</a></li>
                                             <!--=================== Single Menu ===================-->
                                             <!-- <li class="btn-group currencies width-li">
                                                 <button type="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
@@ -78,13 +78,12 @@
                                             <!--=================== Single Menu ===================-->
                                             <!-- <li class="width-li"><a href="#" class="login-popup">login</a></li> -->
                                             <!--=================== Single Menu ===================-->
-                                            <li class="width-li"><a href="blog.html">Blog</a></li>
+                                            <li class="width-li"><a href="blog.html" data-lang="blog">Blog</a></li>
                                             <!--=================== Single Menu ===================-->
                                             
                                             <!--=================== Single Menu ===================-->
-                                            <li class="width-li"><a href="#" class="search-popup">EN</a></li>
-                                            <li class="width-li" id="loginContainer"><a href="#" class="login-popup" id="loginBtn">login</a></li>
-                                            <li class="width-li" id="registerContainer"><a href="register.html" id="registerBtn">register</a></li>
+                                            <li class="width-li" style="margin-right:20px;"><a href="contact.html" data-lang="contact">Contact Us</a></li>
+                                            <li class="width-li" id="loginContainer"><a href="#" class="login-popup" id="loginBtn" data-lang="login/register">login/register</a></li>
                                             <!--=================== Grid Mega Menu ===================-->
                                             
                                             <!--=================== Single Menu DISABLED===================-->
@@ -109,20 +108,25 @@
             
                                             <!--=================== Single Menu ===================-->
                                             
-                                            <li class="row col-md-7">
-                                                <div id="custom-search-input" style="height: 52px; width: 325px;">
+                                            <li class="navbar-header-section" style="width:100%; display: flex; flex-direction: row; justify-content: center;" >
+                                                <div id="custom-search-input" style="width:90%; height: 100%">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control input-lg" placeholder="Search..." style="height: 52px; width: 260px;"/>
+                                                        <input type="text" class="form-control input-lg" placeholder="Search..." style=""/>
                                                         <span class="input-group-btn">
-                                                            <button class="btn btn-info btn-lg" type="button" style="background-color: #000; border: no-border; height: 52px; margin-right:20px" id="searchButton">
+                                                            <button class="btn btn-info btn-lg" type="button" style="background-color: #000; border: no-border; margin-right:20px" id="searchButton">
                                                                 <i class="fa fa-search" aria-hidden="true"></i>
                                                             </button>
                                                         </span>
                                                     </div>
                                                 </div>
+                                                <div style="width:10%; height:100%">
+                                                    <div class="navbar-language-container">
+                                                        <div class="navbar-language-change"></div>
+                                                        <div style='font-weight: 600; font-size: 13px'>GE</div>
+                                                    </div>
+                                                </div>
                                             </li>
-                                            <li class="width-li"><a href="about.html" class="login-popup">About Us</a></li>
-                                            <li class="width-li" style="margin-right:20px;"><a href="contact.html">Contact Us</a></li>
+                                            <!-- <li style="width:20%; height:100%" class="language-change"><a href="#">EN</a></li> -->
                                             <!--=================== Single Menu =================== -->
                 
                                         </ul>
@@ -206,7 +210,7 @@
             </div>
         </section>
         <!--=================== Small Banner Section ===================-->
-        <section class="banner-small paira-padding-bottom-1">
+        <section class="banner-small paira-padding-bottom-1" style="display:none;">
             <div class="container">
                 <div class="row">
                     <div class="col-md-4 col-xs-12 col-sm-6">
@@ -239,157 +243,14 @@
                 <div class="row">
                     <div class="col-md-12">
                         <img alt="" class="paira-margin-bottom-1" src="images/hedding.png">
-                        <h3 class="text-uppercase raleway-light margin-clear paira-margin-bottom-1">latest product</h3>
+                        <h3 class="text-uppercase raleway-light margin-clear paira-margin-bottom-1" data-lang="latest product">latest product</h3>
                     </div>
                     <div class="product-widget">
-                        <div class="col-sm-3 col-md-3 col-xs-6 paira-margin-top-1">
-                            <div class="product text-center">
-                                <div class="block-image position-rela">
-                                    <a href="#">
-                                        <div class="background-overlay"></div>
-                                        <img src="images/product/product-1.png" alt="" class="img-responsive">
-                                    </a>
-                                </div>
-                                <h1 class="font-size-16 paira-margin-top-4 margin-bottom-10"><a href="collection.html">Black wine</a></h1>
-                                <span class="money font-size-16"><b>$10.00</b></span>
-                                <div class="product-hover">
-                                    <div class="paira-wish-compare-con wish-compare-view-cart paira-margin-top-4">
-                                        <a href="#paira-quick-view" class="paira-quick-view quick-view  btn color-scheme-2 font-size-18"><i class="fa fa-eye"></i></a>
-                                        <a href="#" class="product-cart-con margin-left-5  btn color-scheme-2"><img src="images/cart-2.png" alt=""></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3 col-md-3 col-xs-6 paira-margin-top-1">
-                            <div class="product text-center">
-                                <div class="block-image position-rela">
-                                    <a href="#">
-                                        <div class="background-overlay"></div>
-                                        <img src="images/product/product-2.png" alt="" class="img-responsive">
-                                    </a>
-                                </div>
-                                <h1 class="font-size-16 paira-margin-top-4 margin-bottom-10"><a href="collection.html">Finger wine</a></h1>
-                                <span class="money font-size-16"><b>$10.00</b></span>
-                                <div class="product-hover">
-                                    <div class="paira-wish-compare-con wish-compare-view-cart paira-margin-top-4">
-                                        <a href="#paira-quick-view" class="paira-quick-view quick-view  btn color-scheme-2 font-size-18"><i class="fa fa-eye"></i></a>
-                                        <a href="#" class="product-cart-con margin-left-5  btn color-scheme-2"><img src="images/cart-2.png" alt=""></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3 col-md-3 col-xs-6 paira-margin-top-1">
-                            <div class="product text-center">
-                                <div class="block-image position-rela">
-                                    <a href="#">
-                                        <div class="background-overlay"></div>
-                                        <img src="images/product/product-3.png" alt="" class="img-responsive">
-                                    </a>
-                                </div>
-                                <h1 class="font-size-16 paira-margin-top-4 margin-bottom-10"><a href="collection.html">Awesome wine</a></h1>
-                                <span class="money font-size-16"><b>$10.00</b></span>
-                                <div class="product-hover">
-                                    <div class="paira-wish-compare-con wish-compare-view-cart paira-margin-top-4">
-                                        <a href="#paira-quick-view" class="paira-quick-view quick-view  btn color-scheme-2 font-size-18"><i class="fa fa-eye"></i></a>
-                                        <a href="#" class="product-cart-con margin-left-5  btn color-scheme-2"><img src="images/cart-2.png" alt=""></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3 col-md-3 col-xs-6 paira-margin-top-1">
-                            <div class="product text-center">
-                                <div class="block-image position-rela">
-                                    <a href="#">
-                                        <div class="background-overlay"></div>
-                                        <img src="images/product/product-4.png" alt="" class="img-responsive">
-                                    </a>
-                                </div>
-                                <h1 class="font-size-16 paira-margin-top-4 margin-bottom-10"><a href="collection.html">Red wine</a></h1>
-                                <span class="money font-size-16"><b>$10.00</b></span>
-                                <div class="product-hover">
-                                    <div class="paira-wish-compare-con wish-compare-view-cart paira-margin-top-4">
-                                        <a href="#paira-quick-view" class="paira-quick-view quick-view  btn color-scheme-2 font-size-18"><i class="fa fa-eye"></i></a>
-                                        <a href="#" class="product-cart-con margin-left-5  btn color-scheme-2"><img src="images/cart-2.png" alt=""></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3 col-md-3 col-xs-6 paira-margin-top-3">
-                            <div class="product text-center">
-                                <div class="block-image position-rela">
-                                    <a href="#">
-                                        <div class="background-overlay"></div>
-                                        <img src="images/product/product-5.png" alt="" class="img-responsive">
-                                    </a>
-                                </div>
-                                <h1 class="font-size-16 paira-margin-top-4 margin-bottom-10"><a href="collection.html">Black wine</a></h1>
-                                <span class="money font-size-16"><b>$10.00</b></span>
-                                <div class="product-hover">
-                                    <div class="paira-wish-compare-con wish-compare-view-cart paira-margin-top-4">
-                                        <a href="#paira-quick-view" class="paira-quick-view quick-view  btn color-scheme-2 font-size-18"><i class="fa fa-eye"></i></a>
-                                        <a href="#" class="product-cart-con margin-left-5  btn color-scheme-2"><img src="images/cart-2.png" alt=""></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3 col-md-3 col-xs-6 paira-margin-top-3">
-                            <div class="product text-center">
-                                <div class="block-image position-rela">
-                                    <a href="#">
-                                        <div class="background-overlay"></div>
-                                        <img src="images/product/product-6.png" alt="" class="img-responsive">
-                                    </a>
-                                </div>
-                                <h1 class="font-size-16 paira-margin-top-4 margin-bottom-10"><a href="collection.html">Finger wine</a></h1>
-                                <span class="money font-size-16"><b>$10.00</b></span>
-                                <div class="product-hover">
-                                    <div class="paira-wish-compare-con wish-compare-view-cart paira-margin-top-4">
-                                        <a href="#paira-quick-view" class="paira-quick-view quick-view  btn color-scheme-2 font-size-18"><i class="fa fa-eye"></i></a>
-                                        <a href="#" class="product-cart-con margin-left-5  btn color-scheme-2"><img src="images/cart-2.png" alt=""></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3 col-md-3 col-xs-6 paira-margin-top-3">
-                            <div class="product text-center">
-                                <div class="block-image position-rela">
-                                    <a href="#">
-                                        <div class="background-overlay"></div>
-                                        <img src="images/product/product-7.png" alt="" class="img-responsive">
-                                    </a>
-                                </div>
-                                <h1 class="font-size-16 paira-margin-top-4 margin-bottom-10"><a href="collection.html">Awesome wine</a></h1>
-                                <span class="money font-size-16"><b>$10.00</b></span>
-                                <div class="product-hover">
-                                    <div class="paira-wish-compare-con wish-compare-view-cart paira-margin-top-4">
-                                        <a href="#paira-quick-view" class="paira-quick-view quick-view  btn color-scheme-2 font-size-18"><i class="fa fa-eye"></i></a>
-                                        <a href="#" class="product-cart-con margin-left-5  btn color-scheme-2"><img src="images/cart-2.png" alt=""></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3 col-md-3 col-xs-6 paira-margin-top-3">
-                            <div class="product text-center">
-                                <div class="block-image position-rela">
-                                    <a href="#">
-                                        <div class="background-overlay"></div>
-                                        <img src="images/product/product-8.png" alt="" class="img-responsive">
-                                    </a>
-                                </div>
-                                <h1 class="font-size-16 paira-margin-top-4 margin-bottom-10"><a href="collection.html">Red wine</a></h1>
-                                <span class="money font-size-16"><b>$10.00</b></span>
-                                <div class="product-hover">
-                                    <div class="paira-wish-compare-con wish-compare-view-cart paira-margin-top-4">
-                                        <a href="#paira-quick-view" class="paira-quick-view quick-view  btn color-scheme-2 font-size-18"><i class="fa fa-eye"></i></a>
-                                        <a href="#" class="product-cart-con margin-left-5  btn color-scheme-2"><img src="images/cart-2.png" alt=""></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <!-- here goes products -->
                     </div>
                     <div class="col-md-12 col-sm-12 col-xs-12 text-capitalize text-center paira-margin-top-3">
                         <div class="see-more">
-                            <a href="collection.html" class="btn-border font-size-14">See More</a>
+                            <a href="collection.html" class="btn-border font-size-14" data-lang="see more">See More</a>
                         </div>
                     </div>
                 </div>
@@ -432,7 +293,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <img alt="" class="paira-margin-bottom-1" src="images/hedding.png">
-                        <h3 class="text-uppercase raleway-light margin-clear paira-margin-bottom-1">Featured brand</h3>
+                        <h3 class="text-uppercase raleway-light margin-clear paira-margin-bottom-1" data-lang="featured brands">Featured brand</h3>
                     </div>
                     <div class="col-md-12 brand-hover paira-margin-top-1">
                         <div class="paira-brand ">
@@ -452,7 +313,7 @@
                 <div class="row">
                     <div class="col-md-12 text-center">
                         <img alt="" class="paira-margin-bottom-1" src="images/hedding.png">
-                        <h3 class="text-uppercase raleway-light margin-clear paira-margin-bottom-1">instagram</h3>
+                        <h3 class="text-uppercase raleway-light margin-clear paira-margin-bottom-1" data-lang="instagram" data-lang="latest product">instagram</h3>
                     </div>
                     <div class="col-sm-6 col-md-3 col-xs-6 paira-margin-top-1">
                         <div class="product">
@@ -519,25 +380,10 @@
                 <div class="row">
                     <div class="col-md-12 text-center">
                         <img alt="" class="paira-margin-bottom-1" src="images/hedding.png">
-                        <h3 class="text-uppercase raleway-light margin-clear paira-margin-bottom-1">Latest Blog</h3>
+                        <h3 class="text-uppercase raleway-light margin-clear paira-margin-bottom-1" data-lang="latest blog">Latest Blog</h3>
                     </div>
                     <div id="blogCardContainer">
-                        <div class="col-md-6 col-sm-12 col-xs-12 paira-margin-top-1">
-                            <img alt="" src="images/blog/blog-2.jpg" class="img-responsive">
-                            <div class="blogs1">
-                                <h3 class="text-uppercase margin-bottom-10">05 may</h3>
-                                <h4 class="paira-margin-bottom-1"><a href="blog-single.html" class="date raleway-light letter-spacing-2">All customer choosen wine</a></h4>
-                                <a href="blog-single.html" class="btn-border font-size-12">Read More</a>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-12 col-xs-12 paira-margin-top-1">
-                            <img alt="" src="images/blog/blog-1.jpg" class="img-responsive">
-                            <div class="blogs">
-                                <h3 class="text-uppercase margin-bottom-10">15 april</h3>
-                                <h4 class="paira-margin-bottom-1"><a href="blog-single.html" class="date raleway-light letter-spacing-2">Red wine like all people</a></h4>
-                                <a href="blog-single.html" class="btn-border font-size-12">Read More</a>
-                            </div>
-                        </div>
+                        <!-- here goes blog cards -->
                     </div>
                 </div>
             </div>
@@ -554,16 +400,13 @@
                         <div class="pull-left">
                             <ul class="list-inline paira-margin-bottom-1">
                                 <li><a href="#" class="display-inline-b"><i class="fa fa-facebook fa-2x"></i></a></li>
-                                <li><a href="#" class="padding-left-20  display-inline-b"><i class="fa fa-twitter fa-2x"></i></a></li>
-                                <li><a href="#" class="padding-left-20 display-inline-b"><i class="fa fa-google-plus fa-2x"></i></a></li>
-                                <li><a href="#" class="padding-left-20 display-inline-b"><i class="fa fa-pinterest fa-2x"></i></a></li>
+                                <li><a href="#" class="padding-left-20  display-inline-b"><i class="fa fa-instagram fa-2x" aria-hidden="true"></i></a></li>
                             </ul>
                         </div>
                         <div class="pull-right">
                             <ul class="list-inline paira-margin-bottom-1">
                                 <li><a href="#" class="display-inline-b"><img src="images/footer/payment-2.png" alt=""></a></li>
                                 <li><a href="#" class="padding-left-20  display-inline-b"><img src="images/footer/payment-1.png" alt=""></a></li>
-                                <li><a href="#" class="padding-left-20 display-inline-b"><img src="images/footer/payment-3.png" alt=""></a></li>
                             </ul>
                         </div>
                     </div>
@@ -580,15 +423,13 @@
                             <ul class="list-inline footer-list-style footer-nav">
                                 <li><a href="collection.html" class="display-inline-b raleway-light">Shop</a></li>
                                 <li class="text-center"><i class="fa fa-minus raleway-light"></i></li>
-                                <li><a href="product.html" class="display-inline-b raleway-light">Return</a></li>
-                                <li class="text-center"><i class="fa fa-minus raleway-light"></i></li>
-                                <li><a href="product.html" class="display-inline-b raleway-light">Delivery</a></li>
+                                <li><a href="conditions.html" class="display-inline-b raleway-light">Terms & Conditions</a></li>
                                 <li class="text-center"><i class="fa fa-minus raleway-light"></i></li>
                                 <li><a href="contact.html" class="display-inline-b raleway-light">Contact</a></li>
                             </ul>
                         </div>
                         <div class="pull-right">
-                            <p>@ 2018 Vine. Powered by Vine</p>
+                            <p>© 2021 Spirit.ge All Rights Reserved</p>
                         </div>
                     </div>
                 </div>
@@ -622,18 +463,18 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <div class="row">
                     <div class="col-md-12">
-                        <h3 class="margin-bottom-30 text-capitalize">Customer Login</h3>
+                        <h3 class="margin-bottom-30 text-capitalize" data-lang="customer login">Customer Login</h3>
                         <form class="popup-login-form">
                             <input type="email" class="form-control" name="EMAIL" value="" placeholder="Email"/>
                             <input type="password" class="form-control paira-margin-top-1" name="password" value="" placeholder="Password"/>
                             <div class="forget-password text-right">
-                                <a href="reset-password.html" class="text-capitalize position-rela btn-border">Forget Password?</a>
-                                <button class="btn btn-success color-scheme-2 btn-lg text-uppercase paira-margin-top-1">Login</button>
+                                <a href="reset-password.html" class="text-capitalize position-rela btn-border" data-lang="forget password">Forget Password?</a>
+                                <button class="btn btn-success color-scheme-2 btn-lg text-uppercase paira-margin-top-1" data-lang="login">Login</button>
                             </div>
                         </form>
                         <div class="new-customer text-right overflow">
-                            <h3 class="text-capitalize display-inline-b position-rela margin-top-40">New Customer</h3>
-                            <a href="register.html" class="btn btn-default pull-right btn-lg forget-password text-uppercase margin-top-40">Register</a>
+                            <h3 class="text-capitalize display-inline-b position-rela margin-top-40" data-lang="new customer">New Customer</h3>
+                            <a href="register.html" class="btn btn-default pull-right btn-lg forget-password text-uppercase margin-top-40" data-lang="register">Register</a>
                         </div>
                     </div>
                 </div>
@@ -649,18 +490,55 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12 cart-table">
-                        <h3 class="margin-bottom-20 text-capitalize text-color-1">Shopping Cart</h3>
+                        <h3 class="margin-bottom-20 text-capitalize text-color-1" data-lang="shopping cart">Shopping Cart</h3>
                         <div class="cart-table-inner text-center" id="cartTableWrapper">
                             
                         </div>
                     </div>
                     <div class="col-md-12 col-sm-12 col-xs-12 pull-right text-right">
                         <div>
-                            <h3 class="text-color-1" id="cartCalculate">Subtotal : <span><b>0</b></span></h3>
-                            <p class="margin-top-10 text-color-1">Shipping & tax calculate at checkout</p>
-                            <a href="collection.html" class="btn-border text-color-1 text-uppercase margin-top-20">CONTINUE SHOPPING</a>
+                            <h3 class="text-color-1" id="cartCalculate" data-lang="subtotal">Subtotal : <span><b>0</b></span></h3>
+                            <p class="margin-top-10 text-color-1" data-lang="Shipping/tax">Shipping & tax calculate at checkout</p>
+                            <a href="collection.html" class="btn-border text-color-1 text-uppercase margin-top-20" data-lang="continue shopping">CONTINUE SHOPPING</a>
                             <!-- <a href="#" class="btn btn-success updat btn-lg text-uppercase margin-top-20 margin-left-20" id="cartUpdate">update</a> -->
-                            <a href="#" class="btn btn-default btn-lg text-uppercase checkout margin-top-20 margin-left-20" id="cartCheckout" disabled>checkout</a>
+                            <a href="#" class="btn btn-default btn-lg text-uppercase checkout margin-top-20 margin-left-20" id="cartCheckout" data-lang="checkout">checkout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--=================== Checkout Cart Dialog ===================-->
+<div class="modal fade paira-cart-popup" id="paira-checkout-cart" tabindex="-1" role="dialog" aria-hidden="false" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12 cart-table">
+                        <h3 class="margin-bottom-20 text-capitalize text-color-1" data-lang="shopping cart">Checkout</h3>
+                        <div class="cart-table-inner text-center" id="cartTableWrapper">
+                            <form accept-charset="UTF-8" action="#" class="contact-form" method="post">
+                                <div class="row">
+                                    <input name="form_type" type="hidden" value="contact" >
+                                    <input name="utf8" type="hidden" value="✓">
+                                    <div class="form-group col-md-12 col-sm-12 col-xs-12 paira-margin-top-1 margin-bottom-0">
+                                        <input type="email" class="form-control" name="contact[name]" id="first-name" style="border-color: #fff; color:#fff;">
+                                        <span class="center-block" style="color: #000;"><label data-lang="first name">Phone</label></span>
+                                    </div>
+                                    <div class="form-group col-md-12 col-sm-12 col-xs-12 paira-margin-top-1 margin-bottom-0">
+                                        <input type="email" class="form-control" name="contact[name]" id="first-name" style="border-color: #fff; color:#fff;">
+                                        <span class="center-block" style="color: #000;"><label data-lang="first name">Address</label></span>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12 pull-right text-right">
+                        <div>
+                            <h3 class="text-color-1" id="cartCalculate" data-lang="subtotal">Subtotal : <span><b>0</b></span></h3>
+                            <a href="#" class="btn btn-default btn-lg text-uppercase checkout margin-top-20 margin-left-20" id="cartCheckout" disabled data-lang="checkout">proceed</a>
                         </div>
                     </div>
                 </div>
@@ -832,11 +710,11 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <div class="row">
-                    <div class="col-md-4 paira-success-message-img"><img src="images/product/product-3.png" alt="" class="img-responsive"></div>
+                    <div class="col-md-4 paira-success-message-img"><img id="cartProductImg" src="images/product/product-3.png" alt="" class="img-responsive"></div>
                     <div class="col-md-8">
-                        <h4 class="margin-top-15 paira-success-message-title text-capitalize">Deko lorem Ipsum product lorem product</h4>
-                        <a href="#" class="btn btn-success btn-lg text-uppercase btn-block margin-top-20">Continue Shopping</a>
-                        <a href="#" class="btn btn-default btn-lg text-uppercase btn-block margin-top-15 paira-success-message-link">Go To Cart</a>
+                        <h4 class="margin-top-15 paira-success-message-title text-capitalize" id="cartProductName">Something went wrong</h4>
+                        <a href="collection.html" class="btn btn-success btn-lg text-uppercase btn-block margin-top-20">Continue Shopping</a>
+                        <a href="#" class="btn btn-default btn-lg text-uppercase btn-block margin-top-15 paira-success-message-link" id="goToCart" data-dismiss="modal" class="close" aria-label="Close">Go To Cart</a>
                     </div>
                 </div>
                 <div class="row paira-margin-top-5">
@@ -847,6 +725,30 @@
             </div>
         </div>
     </div>
+</div>
+<!-- Messenger Chat Plugin Code -->
+<div id="fb-root"></div>
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      xfbml            : true,
+      version          : 'v10.0'
+    });
+  };
+
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js';
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+</script>
+
+<!-- Your Chat Plugin code -->
+<div class="fb-customerchat"
+  attribution="page_inbox"
+  page_id="100763898835135">
 </div>
 <!--=================== Placed at the end of the document, so the pages load faster ===================-->
 <script src="js/jquery-3.2.1.min.js"></script>

@@ -54,32 +54,6 @@
     let isLoggedIn = () => {
         if(sessionStorage.getItem('logged_in') === "true") return true;
     }
-
-    if(isLoggedIn()){
-        let userSection = `
-        <section class="breadcrumb-container paira-padding-bottom-1" id="userSection">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12 text-center" style="font-size:16px;">
-                    Welcome back, <b>${sessionStorage.getItem('username')}</b>!
-                    </div>
-                </div>
-            </div>
-        </section>
-        `
-        document.querySelector('#loginBtn').remove()
-        document.querySelector('#registerBtn').remove()
-        document.getElementsByTagName('main')[0].insertAdjacentHTML('afterBegin', userSection)
-        document.querySelector('#registerContainer').innerHTML = '<a href="#" id="logOutBtn">Log Out</a>'
-
-        document.querySelector('#logOutBtn').addEventListener('click', e => {
-            localStorage.removeItem('token');
-            sessionStorage.setItem('logged_in' ,"false")
-            sessionStorage.setItem('username' ,"")
-            location.reload();
-        })
-        
-    }
     
     
     /*******************************************************************************
@@ -190,6 +164,7 @@
              * Modal Dialog (Quick View, Success Message, Welcome Newsletter, Error Massage)
              ***************************************************************************************/
             $(document).on('click', '.paira-quick-view', function(p) {
+                ///////
                 p.stopPropagation();
                 $('#paira-quick-view').modal('show');
                 let elemId = p.target.closest('div[data-product-id]').getAttribute('data-product-id')
@@ -248,18 +223,18 @@
 
                 let validateInputs = () => {
                     if(email.value === "" && password.value === ""){
-                        insertLoginText("Username & password fields are blank");
+                        insertLoginText(t("Username & password fields are blank"));
                         email.style.border = "1px solid red";
                         password.style.border = "1px solid red";
                         return false;
                     } else if (email.value === ""){
                         
-                        insertLoginText("Username field is blank");
+                        insertLoginText(t("Username field is blank"));
                         email.style.border = "1px solid red";
                         return false;
                     } else if (password.value === ""){
                         
-                        insertLoginText("Password field is blank");
+                        insertLoginText(t("Password field is blank"));
                         password.style.border = "1px solid red";
                         return false;
                     } else {
@@ -290,7 +265,7 @@
                             })
                             .then(res => res.json())
                             .then(json => {
-                                if(json.non_field_errors) insertLoginText('Your credintials are WRONG!')
+                                if(json.non_field_errors) insertLoginText(t('Your password & username is wrong!'))
                                 if(json.token !== undefined || null){
                                     localStorage.setItem('token', json.token);
                                     sessionStorage.setItem('logged_in', true);
@@ -342,7 +317,7 @@
                 productPage.displayCartContent(json);
                 function cart(e){
                     e.stopPropagation()
-                    document.querySelector('#cartTableWrapper').setAttribute('listener', 'true');
+                    
                     if(e.target.id === 'removeItem'){
                         console.log('removeitem click')
                         if(isLoggedIn()){
@@ -401,7 +376,7 @@
                             
                             console.log(`inputText.value is ${inputText.value}`)
                             inputText.value -= 1;
-                            totalValue.nextSibling.nodeValue = `Total : ${inputText.value* parseInt(totalValue.previousSibling.nodeValue)}`
+                            totalValue.nextSibling.nodeValue = `${t('Total')} : ${inputText.value* parseInt(totalValue.previousSibling.nodeValue)}`
                         }
                         totalPriceUpdate();
                     }
@@ -425,7 +400,7 @@
                         let totalValue = e.target.closest('.row-4').previousElementSibling.querySelector('p br')
                         if(json.filter(item => item.id === +e.target.dataset.id)[0].quantity > inputText.value){
                             inputText.value = parseInt(inputText.value) + 1;
-                            totalValue.nextSibling.nodeValue = `Total : ${inputText.value* parseInt(totalValue.previousSibling.nodeValue)}`
+                            totalValue.nextSibling.nodeValue = `${t('Total')} : ${inputText.value* parseInt(totalValue.previousSibling.nodeValue)}`
                         }
                         
                     }
@@ -451,6 +426,7 @@
                 }
                 if (document.querySelector('#cartTableWrapper').getAttribute('listener') !== 'true') {
                     document.querySelector('#cartTableWrapper').addEventListener('click', cart);
+                    document.querySelector('#cartTableWrapper').setAttribute('listener', 'true');
                     console.log('event listener attached')
                } else {
                    console.log('event listener already exists')
@@ -1028,9 +1004,9 @@
 
             
         },
-        showLoading: function(parentNode, color){
+        showLoading: function(parentNode, color, id){
             let circleSvg = `<?xml version="1.0" encoding="utf-8"?>
-            <svg id="loadingSpinner" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; display: block; shape-rendering: auto;" width="137px" height="137px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+            <svg id="${id}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; display: block; shape-rendering: auto;" width="137px" height="137px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
             <circle cx="50" cy="50" fill="none" stroke="${color}" stroke-width="11" r="35" stroke-dasharray="164.93361431346415 56.97787143782138">
             <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" values="0 50 50;360 50 50" keyTimes="0;1"></animateTransform>
             </circle>
@@ -1038,8 +1014,8 @@
             parentNode.insertAdjacentHTML('afterbegin', circleSvg);
     
         },
-        hideLoading: function(){
-            let circleSvg = document.querySelector('#loadingSpinner');
+        hideLoading: function(id){
+            let circleSvg = document.querySelector(`#${id}`);
             circleSvg.remove();
         }
 
@@ -1072,21 +1048,22 @@
             let end = start + recordsPerPage;
             let paginatedJson = json.slice(start, end);
 
+            /////
 
             for(let i =0; i < paginatedJson.length; i++){
                 let item = paginatedJson[i];
                 product += `
-                    <div class="col-sm-3 col-md-3 col-xs-6 paira-margin-top-1" data-product-id="${item.id}">
+                    <div class="col-sm-3 col-md-3 col-xs-6 paira-margin-top-1" data-product-id="${item.id}" >
                         <div class="product text-center" >
                             <div class="block-image position-rela">
-                                <a href="#" >
+                                <a href="#" class="paira-quick-view">
                                     <div class="background-overlay"></div>
                                     <img src="http://spirit.ge:8000/images/${item.image}" alt="IMAGE NOT FOUND" class="img-responsive"; style="display: inline-block; max-width: 265px; max-height: 426px;">
                                 </a>
                             </div>
-                            <h1 class="font-size-16 paira-margin-top-4 margin-bottom-10"><a href="collection.html">${item.name}</a></h1>
+                            <h1 class="font-size-16 paira-margin-top-4 margin-bottom-10"><a href="#" class="paira-quick-view">${item.name}</a></h1>
                             <span class="money font-size-16"><b>${item.price}</b>&#8382;</span>
-                            <div class="product-hover">
+                            <div class="product-hover" class="paira-quick-view">
                                 <div class="paira-wish-compare-con wish-compare-view-cart paira-margin-top-4">
                                     <a href="#paira-quick-view" class="paira-quick-view quick-view  btn color-scheme-2 font-size-18"><i class="fa fa-eye"></i></a>
                                     <a href="#" class="product-cart-con margin-left-5  btn color-scheme-2"><img src="images/cart-2.png" alt=""></a>
@@ -1107,7 +1084,7 @@
             for(let i =0; i < jsonBrands.length; i++){
                 let item = jsonBrands[i];
                 product += `
-                    <a href="#"><img src="http://spirit.ge:8000/images/${item.image}" " alt=""/></a>
+                    <a href="collection.html#${item.name}"><img src="http://spirit.ge:8000/images/${item.image}" " alt=""/></a>
                     `
             }
 
@@ -1127,28 +1104,28 @@
                             ${data.description}
                         </p>
                         <div class="form-group margin-top-15 col-sm-1 half-width">
-                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>vendor : </b>${data.brand_id__name}</h4>
+                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>${t('vendor')} : </b>${data.brand_id__name}</h4>
                         </div>
                         <div class="form-group margin-top-15 col-sm-1 half-width">
-                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>year : </b>${data.year}</h4>
+                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>${t('year')} : </b>${data.year}</h4>
                         </div>
                         <div class="form-group margin-top-15 col-sm-1 half-width">
-                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>alcohol % : </b>${data.alcoholPercent}</h4>
+                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>${t('alcohol')} % : </b>${data.alcoholPercent}</h4>
                         </div>
                         <div class="form-group margin-top-15 col-sm-1 half-width">
-                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>region : </b>${data.region}</h4>
+                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>${t('region')} : </b>${data.region}</h4>
                         </div>
                         <div class="form-group margin-top-15 col-sm-1 half-width">
-                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>type : </b>${data.type}</h4>
+                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>${t('type')} : </b>${data.type}</h4>
                         </div>
                         <div class="form-group margin-top-15 col-sm-1 half-width">
-                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>color : </b>${data.color}</h4>
+                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>${t('color')} : </b>${data.color}</h4>
                         </div>
                         <div class="form-group margin-top-15 col-sm-1 half-width">
-                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>variety : </b>${data.variety}</h4>
+                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>${t('variety')} : </b>${data.variety}</h4>
                         </div>
                         <div class="quantity margin-top-15 display-inline-b full-width">
-                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase pull-left"><b>Quantity : </b></label></h4>
+                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase pull-left"><b>${t('Quantity')} : </b></label></h4>
                             <div class=" full-width">
                                 <div class="product_quantity_group product-quantity-fix">
                                     <input type="text" class="form-control text-center pull-left font-size-16" value="1" id="modalInput">
@@ -1160,12 +1137,12 @@
                             </div>
                         </div>
                         <div class="sub-totals margin-top-15 full-width">
-                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase pull-left margin-right-10"><b>Subtotal : </b></label></h4>
+                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase pull-left margin-right-10"><b>${t("Subtotal")} : </b></label></h4>
                             <h4 class="money margin-left-5">$40.00</h4>
                         </div>
                         <div class="btn-group paira-margin-top-4 full-width pull-left" role="group" aria-label="Basic example">
                             <button type="button" class="btn btn-default btn-lg btn-image addToCartModal"><img src="images/cart-3.png" alt=""></button>
-                            <button type="button" class="btn btn-default btn-lg color-scheme-2 raleway-light text-uppercase addToCartModal">add to cart</button>
+                            <button type="button" class="btn btn-default btn-lg color-scheme-2 raleway-light text-uppercase addToCartModal">${t('add to cart')}</button>
                         </div>
                     </div>
                 </div>
@@ -1203,6 +1180,8 @@
             let productId = data.id;
             let quantity = 1
 
+            let goToCartBtn = document.querySelector("#goToCart");
+
             if (data.selectedQuantity){
                 quantity = data.selectedQuantity
             }
@@ -1230,8 +1209,20 @@
             this.cartCounter();
             
 
+            const handleGoToCart = (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                
+                $("#paira-ajax-success-message .close").click()
+                $(".cart-menu-body").click()
+                
+            }
 
-
+            ////
+            if(goToCartBtn.getAttribute('listener') !== 'true'){
+                goToCartBtn.setAttribute('listener', 'true');   
+                goToCartBtn.addEventListener('click', handleGoToCart);
+            }
            
         },
         cartCounter: function(){
@@ -1244,7 +1235,7 @@
             let cartItem = "";
             let cartWidget = document.querySelector('#cartTableWrapper');
             cartWidget.innerHTML = '';
-            paira.showLoading(cartWidget, "#fff")
+            paira.showLoading(cartWidget, "#fff", 'cartWidgetLoading')
                 if(isLoggedIn()){
                     fetch('http://spirit.ge:8000/cart/', {
                         method: 'GET',
@@ -1290,7 +1281,7 @@
                                 </div>
                             `
                         });
-                        paira.hideLoading()
+                        paira.hideLoading('cartWidgetLoading')
                         cartWidget.insertAdjacentHTML('beforeend', cartItem);
                     })
                 
@@ -1305,7 +1296,7 @@
                                 </a>
                             </div>
                             <div class="row-2"><p><a href="#">${item.name}</a></p></div>
-                            <div class="row-3"><p>${item.price}&#8382;<br class="totalItem">Total : ${item.price}&#8382</p></div>
+                            <div class="row-3"><p>${item.price}&#8382;<br class="totalItem">${t("Total")} : ${item.price}&#8382</p></div>
                             <div class="row-4">
                                 <div class="quantity">
                                     <div class="quantity-fix display-inline-b">
@@ -1320,7 +1311,7 @@
                             </div>
                         `
                     });
-                    paira.hideLoading();
+                    paira.hideLoading('cartWidgetLoading');
                     cartWidget.insertAdjacentHTML('beforeend', cartItem);
                 }
 
@@ -1331,94 +1322,58 @@
 
     let blogCardContainer = document.querySelector('#blogCardContainer');
 
-    let blogJson = {
-        item: [
-         {
-            id: 0,
-            img: "images/blog/blog-3.jpg",
-            time: "12 Jul",
-            title: 'First blog',
-            content: "We just don't build your website we build your business. We Building Your Business with Strong Branding. Our helpful support team is always on standby to help you with any questions or issues. We have a great team to build your business.We just don't build your website we build your business. We Building Your Business with Strong Branding. Our helpful support team is always on standby to help you with any questions or issues. We have a great team to build your business. We just don't build your website we build your business. We Building Your Business with Strong Branding. Our helpful support team is always on standby to help you with any questions or issues. We have a great team to build your business."
-         },
-         {
-            id: 1,
-            img: "images/blog/blog-4.jpg",
-            time: "13 may",
-            title: 'Second blog',
-            content: "Some Text"
-        },
-        ],
-        comments: {
-            "0": [
-                {
-                    id: 0,
-                    comment: "ad kad  hfuadoahoidah?! dojashdas ejjadadad: dapidjaiuodhuioe, adjnadjan, adhujadhbadjhaghda!!!!",
-                    username: "starfish"
-                },
-                {
-                    id: 1,
-                    comment: "agijfsgoifsjigfoi jiadojoadi joaidjaoidad",
-                    username: "gela"
-                },
-                {
-                    id: 2,
-                    comment: "Wada",
-                    username: "test"
-                }
-            ],
-            "1": [
-                {
-                    id: 0,
-                    comment: "ad kad  hfuadoahoidah?! dojashdas ejjadadad: dapidjaiuodhuioe, adjnadjan, adhujadhbadjhaghda!!!!_2",
-                    username: "starfish_2"
-                },
-                {
-                    id: 1,
-                    comment: "agijfsgoifsjigfoi jiadojoadi joaidjaoidad_2",
-                    username: "gela_2"
-                },
-                {
-                    id: 2,
-                    comment: "Wada_2",
-                    username: "test_2"
-                }
-            ]
-        }
-    }
     
-    console.dir(blogJson)
 
     let blogPage = {
         displayBlogCards: function(data, quantity=null){
             blogCardContainer.innerHTML="";
             let cards = ""
-            data.item.forEach((item,i) =>{
+            data.forEach((item,i) =>{
+                let date = new Date(item.time.split('T')[0])
+                let month = date.toLocaleString('default', { month: 'short' });
+                let day = date.getDate();
                 cards +=`
                 <div class="col-md-6 col-sm-12 col-xs-12 paira-margin-top-1">
-                    <img alt="" src="${item.img}" class="img-responsive">
+                    <img alt="" src="http://spirit.ge:8000/images/${item.image}" class="img-responsive">
                     <div class=${(i%2 === 0) ? "blogs1" : "blogs"}>
-                        <h3 class="text-uppercase margin-bottom-10">${item.time}</h3>
-                        <h4 class="paira-margin-bottom-1"><a href="blog-single.html" class="date raleway-light letter-spacing-2">${item.title}</a></h4>
-                        <a href="blog-single.html#${item.id}" class="btn-border font-size-12">Read More</a>
+                        <h3 class="text-uppercase margin-bottom-10">${day} ${month}</h3>
+                        <h4 class="paira-margin-bottom-1"><a href="blog-single.html" class="date raleway-light letter-spacing-2">${item.tittle}</a></h4>
+                        <a href="blog-single.html#${item.id}" class="btn-border font-size-12">${t("Read More")}</a>
                     </div>
                 </div>
                 `
             })
             blogCardContainer.insertAdjacentHTML('afterbegin', cards)
         },
-        displayBlog: function(data){
-            let page = +window.location.hash.substring(1) 
-            let filteredJson = data.item.filter(item => item.id === page);
+        displayBlog: function(json){
+            let data = json.blog
+            console.log('CURRENT PAGE IS ')
+            let page = (+window.location.hash.substring(1)) ? +window.location.hash.substring(1) : 1;
+            let currentPage;
+            let filteredJson = data.filter( (item,i) => {
+                    if(item.id === page){
+                        currentPage = i;
+                        return true;
+                    }
+                });
             let prev = document.querySelector("#prevBtn");
             let next = document.querySelector("#nextBtn");
             let blogContainer = document.querySelector('#singleBlogContainer');
+            console.log(filteredJson[0])
+            let date = new Date(filteredJson[0].time.split('T')[0])
+            let month = date.toLocaleString('default', { month: 'short' });
+            let day = date.getDate();
+
+
+            
+
             blogContainer.innerHTML="";
             let blogContent = `
             <div class="col-md-12 col-sm-12 col-xs-12 paira-margin-top-1">
-                <img alt="" src="${filteredJson[0].img}" class="img-responsive margin-bottom-20">
+                <img alt="" src="http://spirit.ge:8000/images/${filteredJson[0].image}" class="img-responsive margin-bottom-20">
                 <div class="blogs-detail">
-                    <h3 class="text-uppercase margin-top-0 margin-bottom-20">${filteredJson[0].time}</h3>
-                    <h1 class="margin-bottom-20 date letter-spacing-2">${filteredJson[0].title}</h1>
+                    <h3 class="text-uppercase margin-top-0 margin-bottom-20">${day} ${month}</h3>
+                    <h1 class="margin-bottom-20 date letter-spacing-2">${filteredJson[0].tittle}</h1>
                     <p class="margin-bottom-20 letter-spacing-2 margin-bottom-0">
                         ${filteredJson[0].content}
                     </p>
@@ -1427,15 +1382,23 @@
             `
             blogContainer.insertAdjacentHTML('afterbegin', blogContent)
             
-            prev.href = `blog-single.html#${(page===0) ? page : page-1}`
-            next.href = `blog-single.html#${(page<data.item.length - 1) ? page+1 : page }`
+                
 
-            prev.addEventListener('click', e => {
-                window.location.hash = `#${(page===0) ? page : page-1}`
+            console.log(currentPage)
+            next.addEventListener('click', e => {
+                if(data.length-1 !== data.indexOf(data[currentPage])){
+                    window.location.hash = `#${data[currentPage + 1].id}`
+                } else {
+                    window.location.hash = `#${data[0].id}`
+                }
                 window.location.reload()
             })
-            next.addEventListener('click', e => {
-                window.location.hash = `#${(page<data.item.length - 1) ? page+1 : page }`
+            prev.addEventListener('click', e => {
+                if(0 !== data.indexOf(data[currentPage])){
+                    window.location.hash = `#${data[currentPage - 1].id}`
+                } else {
+                    window.location.hash = `#${data[data.length-1].id}`
+                }
                 window.location.reload()
             })
             
@@ -1444,13 +1407,10 @@
             let commentSection = document.querySelector('#commentContainer');
             let page = +window.location.hash.substring(1);
             commentSection.innerHTML = "";
-            let commentsJson = data.comments;
-            let commentsArr = [];
+            let commentsJson = data.filter(item => item.blog_id === page);
             let comment = "";
-            for (var key of Object.keys(commentsJson)) {
-                if(page+"" === key) commentsArr = commentsJson[key]
-            }
-            commentsArr.forEach(item => {
+            
+            commentsJson.forEach(item => {
 
                 comment += `
                 <div class=" col-md-12 col-sm-12 col-xs-12 paira-margin-top-4">
@@ -1469,41 +1429,45 @@
             sendBtn.addEventListener('click', e => {
                 e.preventDefault();
                 console.log(comment.value)
-                // fetch('http://spirit.ge:8000/cart/', {
-                //         method: 'POST',
-                //         headers: {
-                //         'Content-Type': 'application/json;charset=utf-8',
-                //         Authorization: `JWT ${localStorage.getItem('token')}`,
-                //         'X-CSRFToken':  csrftoken,
-                //         }
-                //     ,
-                //     body: JSON.stringify({id: 'smth', comment: 'racxa'}),
-                //     credentials: 'include',
-                //     })
-                //     .then(res => {console.log(res)})
             })
         }
     }
     // blog page
     if (window.location.href.includes("blog.html") || window.location.href.includes("index.html")){
-        blogPage.displayBlogCards(blogJson);
+        paira.showLoading(blogCardContainer, "#000", 'blogCardContainerLoading');
+        fetch('http://spirit.ge:8000/blog/')
+        .then(resp => resp.json())
+        .then(json => {
+            //console.log(json.blog)
+            paira.hideLoading('blogCardContainerLoading');
+            blogPage.displayBlogCards(json.blog);
+        })
     }
     // single blog page
     if (window.location.href.includes("blog-single.html")){
-        blogPage.displayBlog(blogJson);
-        blogPage.displayComments(blogJson);
-        if(isLoggedIn()){
-            blogPage.leaveComment();
-        }
+        paira.showLoading(document.querySelector('#singleBlogContainer'), '#000', 'singleBlogLoading');
+        fetch('http://spirit.ge:8000/blog/')
+        .then(resp => resp.json())
+        .then(json => {
+            paira.hideLoading('singleBlogLoading');
+            blogPage.displayBlog(json);
+            blogPage.displayComments(json.comments);
+        })
+        // blogPage.displayBlog(blogJson);
+        // blogPage.displayComments(blogJson);
+        // if(isLoggedIn()){
+        //     blogPage.leaveComment();
+        // }
     }
+    
     // show products
     if (document.querySelector('.product-widget') != null || undefined){
-        paira.showLoading(document.querySelector('.product-widget'), '#000');
+        paira.showLoading(document.querySelector('.product-widget'), '#000', 'productsLoading');
         fetch('http://spirit.ge:8000/wineproduct/?wine=test')
         .then(resp => {
             resp.json()
             .then(data => {
-                paira.hideLoading();
+                paira.hideLoading('productsLoading');
                 productPage.showProducts(data.menu, 12, 1);
                 paira.initDialogBox(data.menu);
                 if (window.location.href.includes("collection.html")){
@@ -1528,10 +1492,13 @@
 
     // show brands
     if ( document.querySelector('.paira-brand') != null ) {
+        paira.showLoading(document.querySelector('.paira-brand'), '#000', 'brandCarLoading');
         fetch('http://www.spirit.ge:8000/brandlist/').then(resp => {
         resp.json()
         .then(data => {
+            paira.hideLoading('brandCarLoading')
             productPage.showBrands(data.menu);
+            console.log(data.menu)
             paira.initOwlCarousel();
             console.log("doneCar")
             // paira.initDialogBox(data.menu);
@@ -1539,7 +1506,302 @@
         })
     }
    //show blog
+//    fetch('http://spirit.ge:8000/blog/')
+//     .then(resp => resp.json())
+//     .then(json => {
 
+//     })
+
+
+
+
+
+// i18n
+
+    const geo = {
+        "index":{
+            // navbar
+            "shop": "მაღაზია",
+            "blog": "ბლოგი",
+            "contact": "დაგვიკავშირდით",
+            "login/register": "ავტორიზაცია/რეგისტრაცია",
+            "latest product": "ახალი პროდუქცია",
+            //index specific
+            "see more": "მეტის ნახვა",
+            "featured brands": "პარტნიორი ბრენდები",
+            "instagram": "ინსტაგრამი",
+            "latest blog": "უახლესი ბლოგები",
+            //modals
+            //login
+            "customer login": "მომხმარებლის ავტორიზაცია",
+            "forget password": "დაგავიწყდათ პაროლი?",
+            "login": "ავტორიზაცია",
+            "new customer": "ახალი მომხმარებელი",
+            "register": "რეგისტრაცია",
+            //cart
+            "shopping cart": "სასყიდლების კალათა",
+            "subtotal": "სულ:",
+            "Shipping/tax": "მიტანის & გადასახადების დაანგარიშება შეკვეთისას",
+            "continue shopping": "ყიდვების გაგრძელება",
+            "checkout": "შეკვეთა",
+        },
+        "shop":{
+            // navbar
+            "shop": "მაღაზია",
+            "blog": "ბლოგი",
+            "contact": "დაგვიკავშირდით",
+            "login/register": "ავტორიზაცია/რეგისტრაცია",
+            "latest product": "ახალი პროდუქცია",
+            // shop specific
+            "products": "პროდუქტები",
+            "shop": "მაღაზია",
+            "home": "მთავარი",
+            // filter
+            "filter by": "გაფილტრვა: ",
+            "no filter": "უფილტრო",
+            "red wine": "წითელი ღვინო",
+            "white wine": "თეთრი ღვინო",
+            "other": "სხვა",
+            // sort
+            "sort by": "დაწყობა: ",
+            "not sorted": "დაუწყობელი",
+            "asc": "\uf176 ზრდით",
+            "desc": "\uf175 კლებით",
+            //pagination
+            "prev": "წინა",
+            "next": "მომდევნო",
+            //login
+            "customer login": "მომხმარებლის ავტორიზაცია",
+            "forget password": "დაგავიწყდათ პაროლი?",
+            "login": "ავტორიზაცია",
+            "new customer": "ახალი მომხმარებელი",
+            "register": "რეგისტრაცია",
+            //cart
+            "shopping cart": "სასყიდლების კალათა",
+            "subtotal": "სულ:",
+            "Shipping/tax": "მიტანის & გადასახადების დაანგარიშება შეკვეთისას",
+            "continue shopping": "ყიდვების გაგრძელება",
+            "checkout": "შეკვეთა",
+        },
+        "blog":{
+            // navbar
+            "shop": "მაღაზია",
+            "blog": "ბლოგი",
+            "contact": "დაგვიკავშირდით",
+            "login/register": "ავტორიზაცია/რეგისტრაცია",
+            "latest product": "ახალი პროდუქცია",
+            //blog specific
+            "home": "მთავარი",
+            //login
+            "customer login": "მომხმარებლის ავტორიზაცია",
+            "forget password": "დაგავიწყდათ პაროლი?",
+            "login": "ავტორიზაცია",
+            "new customer": "ახალი მომხმარებელი",
+            "register": "რეგისტრაცია",
+            //cart
+            "shopping cart": "სასყიდლების კალათა",
+            "subtotal": "სულ:",
+            "Shipping/tax": "მიტანის & გადასახადების დაანგარიშება შეკვეთისას",
+            "continue shopping": "ყიდვების გაგრძელება",
+            "checkout": "შეკვეთა",
+        },
+        "contact": {
+            // navbar
+            "shop": "მაღაზია",
+            "blog": "ბლოგი",
+            "contact": "დაგვიკავშირდით",
+            "login/register": "ავტორიზაცია/რეგისტრაცია",
+            "latest product": "ახალი პროდუქცია",
+            //contact specific
+            "home": "მთავარი",
+            "get in touch": "შეგვეხმიანეთ",
+            "email": "ელ.ფოსტა:",
+            "phone": "ტელეფონი:",
+            "instagram": "ინსტაგრამი:",
+            "facebook": "ფეისბუკი:",
+
+            //login
+            "customer login": "მომხმარებლის ავტორიზაცია",
+            "forget password": "დაგავიწყდათ პაროლი?",
+            "login": "ავტორიზაცია",
+            "new customer": "ახალი მომხმარებელი",
+            "register": "რეგისტრაცია",
+            //cart
+            "shopping cart": "სასყიდლების კალათა",
+            "subtotal": "სულ:",
+            "Shipping/tax": "მიტანის & გადასახადების დაანგარიშება შეკვეთისას",
+            "continue shopping": "ყიდვების გაგრძელება",
+            "checkout": "შეკვეთა",
+        },
+        "blog-single": {
+            // navbar
+            "shop": "მაღაზია",
+            "blog": "ბლოგი",
+            "contact": "დაგვიკავშირდით",
+            "login/register": "ავტორიზაცია/რეგისტრაცია",
+            "latest product": "ახალი პროდუქცია",
+            //contact specific
+            "home": "მთავარი",
+            "prev post": "წინა პოსტი",
+            "next post": "მომდევნო პოსტი",
+            "comments": "კომენტარები",
+            "comment": "კომენტარი",
+            "leave a comment": "კომენტარის გაკეთება",
+            "send comment": "კომენტარის გაგზავნა",
+
+            //login
+            "customer login": "მომხმარებლის ავტორიზაცია",
+            "forget password": "დაგავიწყდათ პაროლი?",
+            "login": "ავტორიზაცია",
+            "new customer": "ახალი მომხმარებელი",
+            "register": "რეგისტრაცია",
+            //cart
+            "shopping cart": "სასყიდლების კალათა",
+            "subtotal": "სულ:",
+            "Shipping/tax": "მიტანის & გადასახადების დაანგარიშება შეკვეთისას",
+            "continue shopping": "ყიდვების გაგრძელება",
+            "checkout": "შეკვეთა",
+        },
+        "register": {
+            // navbar
+            "shop": "მაღაზია",
+            "blog": "ბლოგი",
+            "contact": "დაგვიკავშირდით",
+            "login/register": "ავტორიზაცია/რეგისტრაცია",
+            "latest product": "ახალი პროდუქცია",
+            //contact specific
+            "home": "მთავარი",
+            "register": "რეგისტრაცია",
+            "create an account": "ანგარიშის შექმნა",
+            "first name": "სახელი",
+            "last name": "გვარი",
+            "email": "ელ.ფოსტა",
+            "username": "მომხ. სახელი",
+            "password": "პაროლი",
+
+            //login
+            "customer login": "მომხმარებლის ავტორიზაცია",
+            "forget password": "დაგავიწყდათ პაროლი?",
+            "login": "ავტორიზაცია",
+            "new customer": "ახალი მომხმარებელი",
+            "register": "რეგისტრაცია",
+            //cart
+            "shopping cart": "სასყიდლების კალათა",
+            "subtotal": "სულ:",
+            "Shipping/tax": "მიტანის & გადასახადების დაანგარიშება შეკვეთისას",
+            "continue shopping": "ყიდვების გაგრძელება",
+            "checkout": "შეკვეთა",
+        },
+        "dynamic": {
+            //ee
+            "Read More": "მეტის წაკითხვა",
+            "Total": "სულ",
+            "Subtotal": "მთლიანობაში",
+            "vendor": "მწარმოებელი",
+            "year": "წელი",
+            "alcohol": "ალკოჰოლის",
+            "region": "რეგიონი",
+            "type": "ტიპი",
+            "color": "ფერი",
+            "variety": "ჯიში",
+            "Quantity": "რაოდენობა",
+            "Username & password fields are blank": "მომხმარებლის სახელის და პაროლის ველი ცარიელია",
+            "Username field is blank": "მომხმარებლის სახელის ველი ცარიელია",
+            "Password field is blank": "პაროლის ველი ცარიელია",
+            "add to cart": "კალათაში დამატება",
+            "Your password & username is wrong!": "თქვენი პაროლი ან მომხმარებლის სახელი არასწორია!",
+            "Log Out": "ანგარიშიდან გამოსვლა"
+        },
+
+    }
+    
+    const t = (text) => {
+        if(localStorage.getItem('language') === 'ge' && localStorage.getItem('language') !== null){
+            return geo['dynamic'][text];
+        } else {
+            return text;
+        }
+    }
+
+
+
+
+    const handleLanguageChange = (e) => {
+        let currentPath = window.location.pathname;
+        let language = document.querySelector('.navbar-language-container').querySelector(".navbar-language-change");
+
+        const handlePageTranslation = page => {
+            document.querySelectorAll('*[data-lang]').forEach(item => {
+                item.innerText = geo[page][`${item.getAttribute('data-lang')}`]; 
+            })
+        } 
+
+
+        if(language){
+            switch(currentPath){
+                case "/index.html":
+                    handlePageTranslation("index");
+                    break;
+                case "/collection.html":
+                    handlePageTranslation("shop");
+                    break;
+                case "/blog.html":
+                    handlePageTranslation("blog");
+                    break;
+                case "/blog-single.html":
+                    handlePageTranslation("blog-single");
+                    break;
+                case "/contact.html":
+                    handlePageTranslation("contact");
+                    break;
+                case "/register.html":
+                    handlePageTranslation("register");
+                    break;
+            }
+
+            language.classList.add('navbar-language-change-ge');
+            language.classList.remove('navbar-language-change');
+
+            localStorage.setItem('language', 'ge')
+
+        } else {
+            window.location.reload();
+            localStorage.setItem('language', 'en')
+        }
+
+    }
+
+    document.querySelector('.navbar-language-container').addEventListener('click', (e) => handleLanguageChange(e) );
+    if(localStorage.getItem('language') === 'ge' && localStorage.getItem('language') !== null){
+        handleLanguageChange();
+    }
+
+    if(isLoggedIn()){
+        let userSection = `
+        <section class="breadcrumb-container paira-padding-bottom-1" id="userSection">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 text-center" style="font-size:16px;">
+                    Welcome back, <a href="order-history.html"><i class="fa fa-user-circle" aria-hidden="true" style="margin-right:3px;"></i><b>${sessionStorage.getItem('username')}</b></a>!
+                    </div>
+                </div>
+            </div>
+        </section>
+        `
+        document.querySelector('#loginBtn').remove()
+        document.getElementsByTagName('main')[0].insertAdjacentHTML('afterBegin', userSection)
+        document.querySelector('#loginContainer').innerHTML = `<a href="#" id="logOutBtn">${t("Log Out")}</a>`
+
+        document.querySelector('#logOutBtn').addEventListener('click', e => {
+            localStorage.removeItem('token');
+            sessionStorage.setItem('logged_in' ,"false")
+            sessionStorage.setItem('username' ,"")
+            location.reload();
+        })
+        
+    }
+
+    document.querySelector('#cartCheckout').addEventListener('click', ()=> $('#paira-checkout-cart').modal('show'))
 
 }(window.jQuery, window, document));
 /**********************************************************************************************

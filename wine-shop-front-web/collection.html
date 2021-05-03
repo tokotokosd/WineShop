@@ -46,7 +46,7 @@
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         <div class="col-md-2 col-sm-2 col-xs-3 logo">
-                            <a href="index.html" class="text-uppercase">Vine.</a>
+                            <a href="index.html" class="text-uppercase">Spirit.</a>
                         </div>
                         <div class="col-md-8 col-sm-8 col-xs-12">
                             <!--=================== Main Menu ===================-->
@@ -62,7 +62,7 @@
                                     <div id="navbar-collapse" class="navbar-collapse collapse ">
                                         <ul class="nav navbar-nav">
                                             <!--=================== Single Menu ===================-->
-                                            <li class="width-li"><a href="collection.html">shop</a></li>
+                                            <li class="width-li"><a href="collection.html" data-lang="shop">shop</a></li>
                                             <!--=================== Single Menu ===================-->
                                             <!-- <li class="btn-group currencies width-li">
                                                 <button type="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
@@ -76,13 +76,12 @@
                                             <!--=================== Single Menu ===================-->
                                             <!-- <li class="width-li"><a href="#" class="login-popup">login</a></li> -->
                                             <!--=================== Single Menu ===================-->
-                                            <li class="width-li"><a href="blog.html">Blog</a></li>
+                                            <li class="width-li"><a href="blog.html" data-lang="blog">Blog</a></li>
                                             <!--=================== Single Menu ===================-->
                                             
                                             <!--=================== Single Menu ===================-->
-                                            <li class="width-li"><a href="#" class="search-popup">EN</a></li>
-                                            <li class="width-li" id="loginContainer"><a href="#" class="login-popup" id="loginBtn">login</a></li>
-                                            <li class="width-li" id="registerContainer"><a href="register.html" id="registerBtn">register</a></li>
+                                            <li class="width-li" style="margin-right:20px;"><a href="contact.html" data-lang="contact">Contact Us</a></li>
+                                            <li class="width-li" id="loginContainer"><a href="#" class="login-popup" id="loginBtn" data-lang="login/register">login/register</a></li>
                                             <!--=================== Grid Mega Menu ===================-->
                                             
                                             <!--=================== Single Menu DISABLED===================-->
@@ -107,20 +106,25 @@
             
                                             <!--=================== Single Menu ===================-->
                                             
-                                            <li class="row col-md-7">
-                                                <div id="custom-search-input" style="height: 52px; width: 325px;">
+                                            <li class="navbar-header-section" style="width:100%; display: flex; flex-direction: row; justify-content: center;" >
+                                                <div id="custom-search-input" style="width:90%; height: 100%">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control input-lg" placeholder="Search..." style="height: 52px; width: 260px;"/>
+                                                        <input type="text" class="form-control input-lg" placeholder="Search..." style=""/>
                                                         <span class="input-group-btn">
-                                                            <button class="btn btn-info btn-lg" type="button" style="background-color: #000; border: no-border; height: 52px; margin-right:20px" id="searchButton">
+                                                            <button class="btn btn-info btn-lg" type="button" style="background-color: #000; border: no-border; margin-right:20px" id="searchButton">
                                                                 <i class="fa fa-search" aria-hidden="true"></i>
                                                             </button>
                                                         </span>
                                                     </div>
                                                 </div>
+                                                <div style="width:10%; height:100%">
+                                                    <div class="navbar-language-container">
+                                                        <div class="navbar-language-change"></div>
+                                                        <div style='font-weight: 600; font-size: 13px'>GE</div>
+                                                    </div>
+                                                </div>
                                             </li>
-                                            <li class="width-li"><a href="about.html" class="login-popup">About Us</a></li>
-                                            <li class="width-li" style="margin-right:20px;"><a href="contact.html">Contact Us</a></li>
+                                            <!-- <li style="width:20%; height:100%" class="language-change"><a href="#">EN</a></li> -->
                                             <!--=================== Single Menu =================== -->
                 
                                         </ul>
@@ -152,8 +156,8 @@
                     <div class="col-md-12 text-center">
                         <div class="breadcrumb">
                             <ul class="list-inline">
-                                <li><a href="#" class="raleway-light">Home <i class="fa fa-angle-right"></i></a></li>
-                                <li class="raleway-sbold">Collection</li>
+                                <li><a href="index.html" class="raleway-light"><span data-lang="home">Home</span><i class="fa fa-angle-right"></i></a></li>
+                                <li class="raleway-sbold"><span data-lang="shop">Collection</span></li>
                             </ul>
                         </div>
                     </div>
@@ -164,7 +168,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <img alt="" class="paira-margin-bottom-1" src="images/hedding.png">
-                    <h3 class="text-uppercase raleway-light margin-clear paira-margin-bottom-1">products</h3>
+                    <h3 class="text-uppercase raleway-light margin-clear paira-margin-bottom-1" data-lang="products">products</h3>
                 </div>
             </div>
         </div>
@@ -188,22 +192,22 @@
                             <div class="row">
                                 <div class="col-md-4 col-sm-4 col-xs-4 paira-margin-top-1">
                                     <div class="form-group margin-clear pull-left float-0">
-                                        <h4 class="font-size-18 bold-font pull-left"><label class="text-uppercase"><b>FILTER BY:</b></label></h4>
+                                        <h4 class="font-size-18 bold-font pull-left"><label class="text-uppercase"><b data-lang="filter by">FILTER BY:</b></label></h4>
                                         <select class="sort-by paira-filter-category" id="product-filter">
-                                            <option value ="none">No Filter</option>
-                                            <option value="red">Red wine</option>
-                                            <option value="white">White wine</option>
-                                            <option value="other">Other</option>
+                                            <option value ="none" data-lang="no filter">No Filter</option>
+                                            <option value="red" data-lang="red wine">Red wine</option>
+                                            <option value="white" data-lang="white wine">White wine</option>
+                                            <option value="other" data-lang="other">Other</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-sm-4 col-xs-4 text-center paira-margin-top-1">
                                     <div class="form-group margin-clear">
-                                        <h4 class="font-size-18 bold-font pull-left"><label class="text-uppercase"><b>Sort by:</b></label></h4>
-                                        <select class="sort-by paira-filter-category" id="product-sort">
-                                            <option value="sort-def">Not Sorted</option>
-                                            <option value="sort-asc" >Ascending</option>
-                                            <option value="sort-desc">Descending</option>
+                                        <h4 class="font-size-18 bold-font pull-left"><label class="text-uppercase"><b data-lang="sort by">Sort by:</b></label></h4>
+                                        <select class="sort-by paira-filter-category" id="product-sort" style="font-family: 'FontAwesome', 'Raleway'">
+                                            <option value="sort-def" data-lang="not sorted">Not Sorted</option>
+                                            <option value="sort-asc" data-lang="asc">&#xf176; Asc</option>
+                                            <option value="sort-desc" data-lang="desc">&#xf175; Desc</option>
                                         </select>
                                     </div>
                                 </div>
@@ -232,8 +236,8 @@
                             <li class="pull-left raleway-light letter-spacing-2" id="paging-stat">Showing : <b>1 - 12</b> Of <b>60</b></li>
                             <li class="pull-right">
                                 <ul class="list-inline" id="page-numbers">
-                                    <li class="disabled letter-spacing-2" value="prev" style="cursor: pointer;">Previous</li>
-                                    <li value="next" style="cursor: pointer;">Next</li>
+                                    <li class="disabled letter-spacing-2" value="prev" style="cursor: pointer;" data-lang="prev">Previous</li>
+                                    <li value="next" style="cursor: pointer;" data-lang="next">Next</li>
                                 </ul>
                             </li>
                         </ul>
@@ -296,7 +300,7 @@
     </footer>
 </div>
 <!--=================== Search Dialog ===================-->
-<div class="modal fade paira-search-popup" id="paira-search" tabindex="-1" role="dialog" aria-hidden="false" data-backdrop="static" data-keyboard="false">
+<!-- <div class="modal fade paira-search-popup" id="paira-search" tabindex="-1" role="dialog" aria-hidden="false" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
@@ -312,7 +316,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 <!--=================== Login Dialog ===================-->
 <div class="modal fade paira-login-popup" id="paira-login" tabindex="-1" role="dialog" aria-hidden="false" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg">
@@ -321,18 +325,18 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <div class="row">
                     <div class="col-md-12">
-                        <h3 class="margin-bottom-30 text-capitalize">Customer Login</h3>
+                        <h3 class="margin-bottom-30 text-capitalize" data-lang="customer login">Customer Login</h3>
                         <form class="popup-login-form">
                             <input type="email" class="form-control" name="EMAIL" value="" placeholder="Email"/>
                             <input type="password" class="form-control paira-margin-top-1" name="password" value="" placeholder="Password"/>
                             <div class="forget-password text-right">
-                                <a href="reset-password.html" class="text-capitalize position-rela btn-border">Forget Password?</a>
-                                <button id="submit-" class="btn btn-success color-scheme-2 btn-lg text-uppercase paira-margin-top-1">Login</button>
+                                <a href="reset-password.html" class="text-capitalize position-rela btn-border" data-lang="forget password">Forget Password?</a>
+                                <button class="btn btn-success color-scheme-2 btn-lg text-uppercase paira-margin-top-1" data-lang="login">Login</button>
                             </div>
                         </form>
                         <div class="new-customer text-right overflow">
-                            <h3 class="text-capitalize display-inline-b position-rela margin-top-40">New Customer</h3>
-                            <a href="register.html" class="btn btn-default pull-right btn-lg forget-password text-uppercase margin-top-40">Register</a>
+                            <h3 class="text-capitalize display-inline-b position-rela margin-top-40" data-lang="new customer">New Customer</h3>
+                            <a href="register.html" class="btn btn-default pull-right btn-lg forget-password text-uppercase margin-top-40" data-lang="register">Register</a>
                         </div>
                     </div>
                 </div>
@@ -348,18 +352,18 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12 cart-table">
-                        <h3 class="margin-bottom-20 text-capitalize text-color-1">Shopping Cart</h3>
+                        <h3 class="margin-bottom-20 text-capitalize text-color-1" data-lang="shopping cart">Shopping Cart</h3>
                         <div class="cart-table-inner text-center" id="cartTableWrapper">
                             
                         </div>
                     </div>
                     <div class="col-md-12 col-sm-12 col-xs-12 pull-right text-right">
                         <div>
-                            <h3 class="text-color-1" id="cartCalculate">Subtotal : <span><b>0</b></span></h3>
-                            <p class="margin-top-10 text-color-1">Shipping & tax calculate at checkout</p>
-                            <a href="collection.html" class="btn-border text-color-1 text-uppercase margin-top-20">CONTINUE SHOPPING</a>
+                            <h3 class="text-color-1" id="cartCalculate" data-lang="subtotal">Subtotal : <span><b>0</b></span></h3>
+                            <p class="margin-top-10 text-color-1" data-lang="Shipping/tax">Shipping & tax calculate at checkout</p>
+                            <a href="collection.html" class="btn-border text-color-1 text-uppercase margin-top-20" data-lang="continue shopping">CONTINUE SHOPPING</a>
                             <!-- <a href="#" class="btn btn-success updat btn-lg text-uppercase margin-top-20 margin-left-20" id="cartUpdate">update</a> -->
-                            <a href="#" class="btn btn-default btn-lg text-uppercase checkout margin-top-20 margin-left-20" id="cartCheckout" disabled>checkout</a>
+                            <a href="#" class="btn btn-default btn-lg text-uppercase checkout margin-top-20 margin-left-20" id="cartCheckout" disabled data-lang="checkout">checkout</a>
                         </div>
                     </div>
                 </div>
