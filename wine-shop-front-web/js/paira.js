@@ -1742,6 +1742,9 @@
                 case "/index.html":
                     handlePageTranslation("index");
                     break;
+                case "":
+                    handlePageTranslation("index");
+                    break;
                 case "/collection.html":
                     handlePageTranslation("shop");
                     break;
