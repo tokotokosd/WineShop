@@ -501,7 +501,7 @@
                             <p class="margin-top-10 text-color-1" data-lang="Shipping/tax">Shipping & tax calculate at checkout</p>
                             <a href="collection.html" class="btn-border text-color-1 text-uppercase margin-top-20" data-lang="continue shopping">CONTINUE SHOPPING</a>
                             <!-- <a href="#" class="btn btn-success updat btn-lg text-uppercase margin-top-20 margin-left-20" id="cartUpdate">update</a> -->
-                            <a href="#" class="btn btn-default btn-lg text-uppercase checkout margin-top-20 margin-left-20" id="cartCheckout" data-lang="checkout">checkout</a>
+                            <a href="checkout.html" class="btn btn-default btn-lg text-uppercase checkout margin-top-20 margin-left-20" id="11cartCheckout" data-lang="checkout">checkout</a>
                         </div>
                     </div>
                 </div>
@@ -510,35 +510,66 @@
     </div>
 </div>
 <!--=================== Checkout Cart Dialog ===================-->
-<div class="modal fade paira-cart-popup" id="paira-checkout-cart" tabindex="-1" role="dialog" aria-hidden="false" data-backdrop="static" data-keyboard="false">
+<div class="modal fade paira-checkout-popup" id="paira-checkout-cart" tabindex="-1" role="dialog" aria-hidden="false" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-body">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12 cart-table">
-                        <h3 class="margin-bottom-20 text-capitalize text-color-1" data-lang="shopping cart">Checkout</h3>
+                        <a class="margin-bottom-20 text-capitalize text-color-1" data-lang="shopping cart"><i class="fa fa-long-arrow-left" aria-hidden="true"></i> Back to cart</a>
+                        <h3 class="margin-bottom-20 text-capitalize text-color-1" data-lang="shopping cart">Your order list</h3>
                         <div class="cart-table-inner text-center" id="cartTableWrapper">
                             <form accept-charset="UTF-8" action="#" class="contact-form" method="post">
                                 <div class="row">
                                     <input name="form_type" type="hidden" value="contact" >
                                     <input name="utf8" type="hidden" value="✓">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead class="order-table">
+                                              <tr>
+                                                <th>Item</th>
+                                                <th>Quantity</th>
+                                                <th>Price</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody id="orderListTable">
+                                              
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-12 col-sm-12 col-xs-12 pull-right text-right">
+                                        <div>
+                                            <h3 class="text-color-1" data-lang="subtotal">Subtotal : <span><b id="orderCalculateTotal">0</b></span>₾</h3>
+                                        </div>
+                                    </div>
+                                    <h3 class="margin-bottom-20 text-capitalize text-color-1 text-left" style="margin: 15px;" data-lang="shopping cart">Please, fill shipping details</h3>
                                     <div class="form-group col-md-12 col-sm-12 col-xs-12 paira-margin-top-1 margin-bottom-0">
-                                        <input type="email" class="form-control" name="contact[name]" id="first-name" style="border-color: #fff; color:#fff;">
-                                        <span class="center-block" style="color: #000;"><label data-lang="first name">Phone</label></span>
+                                        <input type="email" class="form-control" name="contact[name]" id="orderCustomerName" style="border-color: #fff; color:#fff;">
+                                        <span class="center-block" style="color: #000;"><label style="min-width: 200px;" data-lang="phone">First Name & Last Name</label></span>
                                     </div>
                                     <div class="form-group col-md-12 col-sm-12 col-xs-12 paira-margin-top-1 margin-bottom-0">
-                                        <input type="email" class="form-control" name="contact[name]" id="first-name" style="border-color: #fff; color:#fff;">
-                                        <span class="center-block" style="color: #000;"><label data-lang="first name">Address</label></span>
+                                        <input type="email" class="form-control" name="contact[name]" id="orderCustomerPhone" style="border-color: #fff; color:#fff;">
+                                        <span class="center-block" style="color: #000;"><label data-lang="phone">Phone</label></span>
                                     </div>
+                                    <div class="form-group col-md-12 col-sm-12 col-xs-12 paira-margin-top-1 margin-bottom-0">
+                                        <input type="text" class="form-control" name="contact[name]" id="orderCustomerAddress" style="border-color: #fff; color:#fff;">
+                                        <span class="center-block" style="color: #000;"><label for="orderCustomerAddress" data-lang="address">Address</label></span>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="invalidCheck" style="-webkit-appearance: checkbox; margin-top: 15px;">
+                                        <label class="form-check-label" for="invalidCheck">
+                                          I Agree to the <a href="conditions.html" target="_blank" style="color:palegoldenrod">terms and conditions</a>
+                                        </label>
+                                      </div>
+                                    <div class="col-md-12 col-sm-12 col-xs-12 pull-right text-right">
+                                        <div>
+                                            <a href="#" class="btn btn-default btn-lg text-uppercase checkout margin-top-20 margin-left-20" id="placeOrder" data-lang="checkout">Place Order</a>
+                                        </div>
+                                    </div>
+                                    
                                 </div>
                             </form>
-                        </div>
-                    </div>
-                    <div class="col-md-12 col-sm-12 col-xs-12 pull-right text-right">
-                        <div>
-                            <h3 class="text-color-1" id="cartCalculate" data-lang="subtotal">Subtotal : <span><b>0</b></span></h3>
-                            <a href="#" class="btn btn-default btn-lg text-uppercase checkout margin-top-20 margin-left-20" id="cartCheckout" disabled data-lang="checkout">proceed</a>
                         </div>
                     </div>
                 </div>

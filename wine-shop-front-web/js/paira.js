@@ -176,14 +176,26 @@
                 let downBtn = document.querySelector("#modalCounterDown");
                 let counterInput = document.querySelector("#modalInput");
                 let cartBtns = document.querySelectorAll(".addToCartModal");
+                let total = document.querySelector('#modalTotalCost');
+
+                console.log(filteredJson)
+
+                const calculateSum = () => {
+                    total.innerText = +counterInput.value * +filteredJson[0].price
+                }
+
                 paira.setInputFilter(counterInput, value => /^\d*$/.test(value))
                 counterInput.value = 1;
+                calculateSum()
+                
 
                 upBtn.addEventListener('click', e => {
                     counterInput.value = parseInt(counterInput.value) + 1;
+                    calculateSum()
                 })
                 downBtn.addEventListener('click', e => {
                     if (counterInput.value > 1) counterInput.value -= 1;
+                    calculateSum()
                 })
                 
                 cartBtns.forEach(item => {
@@ -1128,7 +1140,7 @@
                             <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase pull-left"><b>${t('Quantity')} : </b></label></h4>
                             <div class=" full-width">
                                 <div class="product_quantity_group product-quantity-fix">
-                                    <input type="text" class="form-control text-center pull-left font-size-16" value="1" id="modalInput">
+                                    <input type="text" class="form-control text-center pull-left font-size-16" value="1" id="modalInput" style="width: 45px" disabled>
                                     <div class="up-down text-center pull-left overflow">
                                         <span class="up" data-direction="up" id="modalCounterUp"><i class="fa fa-angle-up"></i></span>
                                         <span class="down" data-direction="down" id="modalCounterDown"><i class="fa fa-angle-down"></i></span>
@@ -1138,7 +1150,7 @@
                         </div>
                         <div class="sub-totals margin-top-15 full-width">
                             <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase pull-left margin-right-10"><b>${t("Subtotal")} : </b></label></h4>
-                            <h4 class="money margin-left-5">$40.00</h4>
+                            <h4 class="money margin-left-5"><span id="modalTotalCost">0</span>&#8382;</h4>
                         </div>
                         <div class="btn-group paira-margin-top-4 full-width pull-left" role="group" aria-label="Basic example">
                             <button type="button" class="btn btn-default btn-lg btn-image addToCartModal"><img src="images/cart-3.png" alt=""></button>
@@ -1262,7 +1274,7 @@
                                 <div class="column full-width overflow paira-margin-bottom-4 cartItem" data-id="${item.id}">
                                 <div class="row-1">
                                     <a href="collection.html">
-                                        <img src="http://spirit.ge:8000/images/${item.image}" alt="" class="img-responsive center-block">
+                                        <img src="http://spirit.ge:8000/images/${item.image}" alt="" class="img-responsive center-block" style="max-width: 62px; max-height:77px">
                                     </a>
                                 </div>
                                 <div class="row-2"><p><a href="#">${item.name}</a></p></div>
@@ -1407,28 +1419,54 @@
             let commentSection = document.querySelector('#commentContainer');
             let page = +window.location.hash.substring(1);
             commentSection.innerHTML = "";
-            let commentsJson = data.filter(item => item.blog_id === page);
+            let commentsJson = data.filter(item => item.blog === page);
             let comment = "";
             
+            console.log(commentsJson)
             commentsJson.forEach(item => {
-
+                
                 comment += `
                 <div class=" col-md-12 col-sm-12 col-xs-12 paira-margin-top-4">
-                    <p class="raleway-sbold">${item.username}</p>
+                    <p class="raleway-sbold">${item.username__name}</p>
                     <p class="margin-top-10">${item.comment}</p>
                 </div>
                 `      
             })
             commentSection.insertAdjacentHTML('afterbegin', comment);
         },
-        leaveComment: function(){
+        leaveComment: function(data){
             let comment = document.querySelector('#commentArea')
             let sendBtn = document.querySelector('#sendCommentBtn')
 
+            let page = +window.location.hash.substring(1);
             
             sendBtn.addEventListener('click', e => {
                 e.preventDefault();
-                console.log(comment.value)
+
+                let filteredJson = data.filter(item => item.id === page)
+
+                
+
+                let commentJson = {
+                    comment: comment.value,
+                    blog: filteredJson[0].id
+                }
+
+                console.log(commentJson)
+
+                fetch('http://spirit.ge:8000/blog_comment/', {
+                        method: 'POST',
+                        headers: {
+                        'Content-Type': 'application/json;charset=utf-8',
+                        Authorization: `JWT ${localStorage.getItem('token')}`,
+                        'X-CSRFToken':  csrftoken
+                        },
+                        body: JSON.stringify(commentJson)
+                    })
+                    .then( resp => console.log(resp))
+                    .then( json => console.log(json));
+
+                
             })
         }
     }
@@ -1450,14 +1488,12 @@
         .then(resp => resp.json())
         .then(json => {
             paira.hideLoading('singleBlogLoading');
+            console.log(json)
             blogPage.displayBlog(json);
             blogPage.displayComments(json.comments);
+            blogPage.leaveComment(json.blog);
         })
-        // blogPage.displayBlog(blogJson);
-        // blogPage.displayComments(blogJson);
-        // if(isLoggedIn()){
-        //     blogPage.leaveComment();
-        // }
+        
     }
     
     // show products
@@ -1692,6 +1728,38 @@
             "continue shopping": "ყიდვების გაგრძელება",
             "checkout": "შეკვეთა",
         },
+        "checkout": {
+            // navbar
+            "shop": "მაღაზია",
+            "blog": "ბლოგი",
+            "contact": "დაგვიკავშირდით",
+            "login/register": "ავტორიზაცია/რეგისტრაცია",
+            "latest product": "ახალი პროდუქცია",
+            //contact specific
+            "home": "მთავარი",
+            "item": "პროდუქტი",
+            "quantity": "რაოდენობა",
+            "price": "ღირებულება",
+            "order details": "შეკვეთის დეტალები",
+            "first & last name": "სახელი & გვარი",
+            "address": "მისამართი",
+            "i agree": "ვეთანხმები",
+            "phone": "ტელ. ნომერი",
+            "terms and conditions": "წესებს და პირობებებს",
+            "place order": "შეკვეთის გაკეთება", 
+            //login
+            "customer login": "მომხმარებლის ავტორიზაცია",
+            "forget password": "დაგავიწყდათ პაროლი?",
+            "login": "ავტორიზაცია",
+            "new customer": "ახალი მომხმარებელი",
+            "register": "რეგისტრაცია",
+            //cart
+            "shopping cart": "სასყიდლების კალათა",
+            "subtotal": "სულ:",
+            "Shipping/tax": "მიტანის & გადასახადების დაანგარიშება შეკვეთისას",
+            "continue shopping": "ყიდვების გაგრძელება",
+            "checkout": "შეკვეთა",
+        },
         "dynamic": {
             //ee
             "Read More": "მეტის წაკითხვა",
@@ -1712,6 +1780,7 @@
             "Your password & username is wrong!": "თქვენი პაროლი ან მომხმარებლის სახელი არასწორია!",
             "Log Out": "ანგარიშიდან გამოსვლა"
         },
+    
 
     }
     
@@ -1742,9 +1811,6 @@
                 case "/index.html":
                     handlePageTranslation("index");
                     break;
-                case "":
-                    handlePageTranslation("index");
-                    break;
                 case "/collection.html":
                     handlePageTranslation("shop");
                     break;
@@ -1759,6 +1825,12 @@
                     break;
                 case "/register.html":
                     handlePageTranslation("register");
+                    break;
+                case "/checkout.html":
+                    handlePageTranslation("checkout");
+                    break;
+                default:
+                    handlePageTranslation("index");
                     break;
             }
 
@@ -1804,7 +1876,94 @@
         
     }
 
-    document.querySelector('#cartCheckout').addEventListener('click', ()=> $('#paira-checkout-cart').modal('show'))
+    // * checkout
+
+    if(window.location.pathname.includes("checkout")){
+    
+        let orderList = document.querySelector("#orderListTable");
+        let table = "";
+        let orderCalculateTotal = document.querySelector('#orderCalculateTotal');
+        let total = 0;
+        let customerName = document.querySelector('input[id="orderCustomerName"]');
+        let customerPhone = document.querySelector('input[id="orderCustomerPhone"]');
+        let customerAddress = document.querySelector('input[id="orderCustomerAddress"]');
+        let checkbox = document.querySelector('#invalidCheck');
+        let orderBtn = document.querySelector('#placeOrder');
+        let checkoutForm = document.querySelector('#checkoutForm');
+        let errorMsg = document.querySelector("#errorMsg");
+        
+
+        if(!isLoggedIn()){
+            let cartItems = JSON.parse(localStorage.getItem('cartItems'));
+            let orderData = { name: "", phone: "", address: "", date: "", order: []}
+    
+            cartItems.forEach( item => {
+                table += `
+                <tr>
+                    <td>${item.name}</td>
+                    <td>${item.quantity}</td>
+                    <td>${item.price}</td>
+                </tr>
+                `
+                total += item.quantity * item.price;
+                orderData.order.push({ id: item.id, quantity: item.quantity });
+            })
+            orderList.insertAdjacentHTML('afterbegin', table)
+            orderCalculateTotal.innerText = total;
+            
+
+            let printErrorMsg = (text) => {
+                errorMsg.innerText=text
+            }
+            
+
+            let handleFormData = (e) => {
+                e.preventDefault();
+                
+                let i = 0;
+                document.querySelectorAll('#checkoutForm input').forEach(x =>{
+                    console.log(i++)
+                    switch(x){
+                        case customerName:
+                            if(x.value === ""){
+                                x.style.border = "1px solid red"
+                                printErrorMsg("Please, enter all fields");
+                            }
+                            break;
+                        case customerPhone:
+                            if(x.value === ""){
+                                x.style.border = "1px solid red"
+                            }
+                            break;
+                        case customerAddress:
+                            if(x.value === ""){
+                                x.style.border = "1px solid red"
+                            }
+                            break;
+                        case invalidCheck:
+                            if(!x.checked){
+                                x.style.border = "1px solid red"
+                            }
+                            break;
+                    }
+                })
+                
+                // orderData.name = customerName.value;
+                // orderData.phone = customerPhone.value;
+                // orderData.address = customerAddress.value;
+                // orderData.date = new Date().toISOString();
+                // console.log(orderData);
+            }
+
+            if(!orderBtn.getAttribute('listener')){
+                orderBtn.addEventListener('click', handleFormData);
+                orderBtn.setAttribute('listener', 'true');
+            }
+            
+        }
+    
+    }
+    
 
 }(window.jQuery, window, document));
 /**********************************************************************************************

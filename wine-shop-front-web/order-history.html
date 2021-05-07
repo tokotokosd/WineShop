@@ -9,14 +9,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--=================== The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags ===================-->
-    <meta name="description" content="Blog Vine Responsive HTML Template">
-    <meta name="author" content="Blog Vine Responsive HTML Template">
+    <meta name="description" content="Home Vine Responsive HTML Template">
+    <meta name="author" content="Home Vine Responsive HTML Template">
     <link rel="shortcut icon" href="images/favicon.png" type="image/png"/>
-    <title>Blog Vine Responsive HTML Template</title>
+    <title>Home Vine Responsive HTML Template</title>
     <!--=================== Bootstrap core CSS ===================-->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <!--=================== Animate CSS ===================-->
     <link href="css/animate.min.css" rel="stylesheet">
+    <!--=================== Bx Slider CSS ===================-->
+    <link href="css/jquery.bxslider.css" rel="stylesheet">
+    <!--=================== OWL Carousel CSS ===================-->
+    <link href="css/owl.carousel.css" rel="stylesheet">
     <!--=================== Paira Framework Main CSS ===================-->
     <link href="css/paira.css" rel="stylesheet">
     <!--=================== Paira Framework Font and Color CSS ===================-->
@@ -60,7 +64,7 @@
                                     <div id="navbar-collapse" class="navbar-collapse collapse ">
                                         <ul class="nav navbar-nav">
                                             <!--=================== Single Menu ===================-->
-                                            <li class="width-li"><a href="collection.html" data-lang="shop">shop</a></li>
+                                            <li class="width-li"><a href="collection.html">shop</a></li>
                                             <!--=================== Single Menu ===================-->
                                             <!-- <li class="btn-group currencies width-li">
                                                 <button type="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
@@ -74,12 +78,12 @@
                                             <!--=================== Single Menu ===================-->
                                             <!-- <li class="width-li"><a href="#" class="login-popup">login</a></li> -->
                                             <!--=================== Single Menu ===================-->
-                                            <li class="width-li"><a href="blog.html" data-lang="blog">Blog</a></li>
+                                            <li class="width-li"><a href="blog.html">Blog</a></li>
                                             <!--=================== Single Menu ===================-->
                                             
                                             <!--=================== Single Menu ===================-->
-                                            <li class="width-li" style="margin-right:20px;"><a href="contact.html" data-lang="contact">Contact Us</a></li>
-                                            <li class="width-li" id="loginContainer"><a href="#" class="login-popup" id="loginBtn" data-lang="login/register">login/register</a></li>
+                                            <li class="width-li" style="margin-right:20px;"><a href="contact.html">Contact Us</a></li>
+                                            <li class="width-li" id="loginContainer"><a href="#" class="login-popup" id="loginBtn">login/register</a></li>
                                             <!--=================== Grid Mega Menu ===================-->
                                             
                                             <!--=================== Single Menu DISABLED===================-->
@@ -146,7 +150,7 @@
         </section>
     </header>
     <!--=================== Main Content Container ===================-->
-    <main class="blog-page">
+    <main class="home-page">
         <!--=================== Breadcrumb Section ===================-->
         <section class="breadcrumb-container paira-padding-bottom-1">
             <div class="container">
@@ -154,24 +158,177 @@
                     <div class="col-md-12 text-center">
                         <div class="breadcrumb">
                             <ul class="list-inline">
-                                <li><a href="#" class="raleway-light"><span data-lang="home">Home</span> <i class="fa fa-angle-right"></i></a></li>
-                                <li class="raleway-sbold" data-lang="blog">Blog</li>
+                                <li><a href="index.html" class="raleway-light">Home <i class="fa fa-angle-right"></i></a></li>
+                                <li class="raleway-sbold">History</li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-        <!--=================== Blog Section ===================-->
-        <section class="blog paira-padding-bottom-1">
+        <!--=================== Order History Section ===================-->
+        <section>
             <div class="container">
+                <div class="blog-post-comments paira-padding-bottom-2">
+                    <h3 class="text-uppercase raleway-sbold">Ongoing orders</h3>
+                </div>
                 <div class="row">
-                    <div class="col-md-12 text-center">
-                        <img alt="" class="paira-margin-bottom-1" src="images/hedding.png">
-                        <h3 class="text-uppercase raleway-light margin-clear paira-margin-bottom-1" data-lang="blog">Blog</h3>
+                    <div class="col-md-12">
+                        <ul class="list-group paira-padding-bottom-1">
+                            <li class="list-group-item">
+                                <div class="order-header">
+                                    <div class="order-id">Order No.
+                                        <span class="order-number">
+                                            123
+                                        </span>
+                                    </div>
+                                    <div class="order-status-container">Status:
+                                        <span class="order-status">
+                                            Ongoing
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="order-items-container">
+                                    <div class="container">
+                                        <div class="row columns">
+                                            <div class="col-xs-5">Item Name</div>
+                                            <div class="col-xs-3">Quantity</div>
+                                            <div class="col-xs-4">Price</div>
+                                        </div>
+                                    </div>
+                                    <div class="container">
+                                        <div class="row item">
+                                            <div class="col-xs-5">Blue wine</div>
+                                            <div class="col-xs-3">2</div>
+                                            <div class="col-xs-4">2500000</div>
+                                        </div>
+                                        <div class="row item">
+                                            <div class="col-xs-5">Red Wine</div>
+                                            <div class="col-xs-3">345</div>
+                                            <div class="col-xs-4">100000</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="order-footer">
+                                    <div class="order-date">
+                                        Ordered on:
+                                        <span>
+                                            15.03.2021
+                                        </span>
+                                    </div>
+                                    <div class="order-total-price">
+                                        Total Price:
+                                        <span>12300</span>
+                                    </div>
+                                </div>
+                                
+                            </li>
+                            <li class="list-group-item">
+                                <div class="order-header">
+                                    <div class="order-id">Order No.
+                                        <span class="order-number">
+                                            123
+                                        </span>
+                                    </div>
+                                    <div class="order-status-container">Status:
+                                        <span class="order-status">
+                                            Ongoing
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="order-items-container">
+                                    <div class="container">
+                                        <div class="row columns">
+                                            <div class="col-xs-5">Item Name</div>
+                                            <div class="col-xs-3">Quantity</div>
+                                            <div class="col-xs-4">Price</div>
+                                        </div>
+                                    </div>
+                                    <div class="container">
+                                        <div class="row item">
+                                            <div class="col-xs-5">Blue wine</div>
+                                            <div class="col-xs-3">2</div>
+                                            <div class="col-xs-4">2500000</div>
+                                        </div>
+                                        <div class="row item">
+                                            <div class="col-xs-5">Red Wine</div>
+                                            <div class="col-xs-3">345</div>
+                                            <div class="col-xs-4">100000</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="order-footer">
+                                    <div class="order-date">
+                                        Ordered on:
+                                        <span>
+                                            15.03.2021
+                                        </span>
+                                    </div>
+                                    <div class="order-total-price">
+                                        Total Price:
+                                        <span>12300</span>
+                                    </div>
+                                </div>
+                                
+                            </li>
+                        </ul>
                     </div>
-                    <div id="blogCardContainer">
-                        <!-- here goes blog cards -->
+                    
+                </div>
+                <div class="blog-post-comments paira-padding-bottom-2">
+                    <h3 class="text-uppercase raleway-sbold">Delivered orders</h3>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <ul class="list-group paira-padding-bottom-1">
+                            <li class="list-group-item">
+                                <div class="order-header">
+                                    <div class="order-id">Order No.
+                                        <span class="order-number">
+                                            123
+                                        </span>
+                                    </div>
+                                    <div class="order-status-container">Status:
+                                        <span class="order-status-delivered">
+                                            Delivered
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="order-items-container">
+                                    <div class="container">
+                                        <div class="row columns">
+                                            <div class="col-xs-5">Item Name</div>
+                                            <div class="col-xs-3">Quantity</div>
+                                            <div class="col-xs-4">Price</div>
+                                        </div>
+                                    </div>
+                                    <div class="container">
+                                        <div class="row item">
+                                            <div class="col-xs-5">Blue wine</div>
+                                            <div class="col-xs-3">2</div>
+                                            <div class="col-xs-4">2500000</div>
+                                        </div>
+                                        <div class="row item">
+                                            <div class="col-xs-5">Red Wine</div>
+                                            <div class="col-xs-3">345</div>
+                                            <div class="col-xs-4">100000</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="order-footer">
+                                    <div class="order-date">
+                                        Ordered on:
+                                        <span>
+                                            15.03.2021
+                                        </span>
+                                    </div>
+                                    <div class="order-total-price">
+                                        Total Price:
+                                        <span>12300</span>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -188,13 +345,16 @@
                         <div class="pull-left">
                             <ul class="list-inline paira-margin-bottom-1">
                                 <li><a href="#" class="display-inline-b"><i class="fa fa-facebook fa-2x"></i></a></li>
-                                <li><a href="#" class="padding-left-20  display-inline-b"><i class="fa fa-instagram fa-2x" aria-hidden="true"></i></a></li>
+                                <li><a href="#" class="padding-left-20  display-inline-b"><i class="fa fa-twitter fa-2x"></i></a></li>
+                                <li><a href="#" class="padding-left-20 display-inline-b"><i class="fa fa-google-plus fa-2x"></i></a></li>
+                                <li><a href="#" class="padding-left-20 display-inline-b"><i class="fa fa-pinterest fa-2x"></i></a></li>
                             </ul>
                         </div>
                         <div class="pull-right">
                             <ul class="list-inline paira-margin-bottom-1">
                                 <li><a href="#" class="display-inline-b"><img src="images/footer/payment-2.png" alt=""></a></li>
                                 <li><a href="#" class="padding-left-20  display-inline-b"><img src="images/footer/payment-1.png" alt=""></a></li>
+                                <li><a href="#" class="padding-left-20 display-inline-b"><img src="images/footer/payment-3.png" alt=""></a></li>
                             </ul>
                         </div>
                     </div>
@@ -211,13 +371,15 @@
                             <ul class="list-inline footer-list-style footer-nav">
                                 <li><a href="collection.html" class="display-inline-b raleway-light">Shop</a></li>
                                 <li class="text-center"><i class="fa fa-minus raleway-light"></i></li>
-                                <li><a href="#" class="display-inline-b raleway-light">Terms & Conditions</a></li>
+                                <li><a href="product.html" class="display-inline-b raleway-light">Return</a></li>
+                                <li class="text-center"><i class="fa fa-minus raleway-light"></i></li>
+                                <li><a href="product.html" class="display-inline-b raleway-light">Delivery</a></li>
                                 <li class="text-center"><i class="fa fa-minus raleway-light"></i></li>
                                 <li><a href="contact.html" class="display-inline-b raleway-light">Contact</a></li>
                             </ul>
                         </div>
                         <div class="pull-right">
-                            <p>© 2021 Spirit.ge All Rights Reserved</p>
+                            <p>@ 2018 Vine. Powered by Vine</p>
                         </div>
                     </div>
                 </div>
@@ -226,7 +388,7 @@
     </footer>
 </div>
 <!--=================== Search Dialog ===================-->
-<!-- <div class="modal fade paira-search-popup" id="paira-search" tabindex="-1" role="dialog" aria-hidden="false" data-backdrop="static" data-keyboard="false">
+<div class="modal fade paira-search-popup" id="paira-search" tabindex="-1" role="dialog" aria-hidden="false" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
@@ -243,7 +405,7 @@
         </div>
     </div>
 </div>
-=================== Login Dialog =================== -->
+<!--=================== Login Dialog ===================-->
 <div class="modal fade paira-login-popup" id="paira-login" tabindex="-1" role="dialog" aria-hidden="false" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -251,18 +413,18 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <div class="row">
                     <div class="col-md-12">
-                        <h3 class="margin-bottom-30 text-capitalize" data-lang="customer login">Customer Login</h3>
+                        <h3 class="margin-bottom-30 text-capitalize">Customer Login</h3>
                         <form class="popup-login-form">
                             <input type="email" class="form-control" name="EMAIL" value="" placeholder="Email"/>
                             <input type="password" class="form-control paira-margin-top-1" name="password" value="" placeholder="Password"/>
                             <div class="forget-password text-right">
-                                <a href="reset-password.html" class="text-capitalize position-rela btn-border" data-lang="forget password">Forget Password?</a>
-                                <button class="btn btn-success color-scheme-2 btn-lg text-uppercase paira-margin-top-1" data-lang="login">Login</button>
+                                <a href="reset-password.html" class="text-capitalize position-rela btn-border">Forget Password?</a>
+                                <button class="btn btn-success color-scheme-2 btn-lg text-uppercase paira-margin-top-1">Login</button>
                             </div>
                         </form>
                         <div class="new-customer text-right overflow">
-                            <h3 class="text-capitalize display-inline-b position-rela margin-top-40" data-lang="new customer">New Customer</h3>
-                            <a href="register.html" class="btn btn-default pull-right btn-lg forget-password text-uppercase margin-top-40" data-lang="register">Register</a>
+                            <h3 class="text-capitalize display-inline-b position-rela margin-top-40">New Customer</h3>
+                            <a href="register.html" class="btn btn-default pull-right btn-lg forget-password text-uppercase margin-top-40">Register</a>
                         </div>
                     </div>
                 </div>
@@ -278,18 +440,18 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12 cart-table">
-                        <h3 class="margin-bottom-20 text-capitalize text-color-1" data-lang="shopping cart">Shopping Cart</h3>
+                        <h3 class="margin-bottom-20 text-capitalize text-color-1">Shopping Cart</h3>
                         <div class="cart-table-inner text-center" id="cartTableWrapper">
                             
                         </div>
                     </div>
                     <div class="col-md-12 col-sm-12 col-xs-12 pull-right text-right">
                         <div>
-                            <h3 class="text-color-1" id="cartCalculate" data-lang="subtotal">Subtotal : <span><b>0</b></span></h3>
-                            <p class="margin-top-10 text-color-1" data-lang="Shipping/tax">Shipping & tax calculate at checkout</p>
-                            <a href="collection.html" class="btn-border text-color-1 text-uppercase margin-top-20" data-lang="continue shopping">CONTINUE SHOPPING</a>
+                            <h3 class="text-color-1" id="cartCalculate">Subtotal : <span><b>0</b></span></h3>
+                            <p class="margin-top-10 text-color-1">Shipping & tax calculate at checkout</p>
+                            <a href="collection.html" class="btn-border text-color-1 text-uppercase margin-top-20">CONTINUE SHOPPING</a>
                             <!-- <a href="#" class="btn btn-success updat btn-lg text-uppercase margin-top-20 margin-left-20" id="cartUpdate">update</a> -->
-                            <a href="#" class="btn btn-default btn-lg text-uppercase checkout margin-top-20 margin-left-20" id="cartCheckout" disabled data-lang="checkout">checkout</a>
+                            <a href="#" class="btn btn-default btn-lg text-uppercase checkout margin-top-20 margin-left-20" id="cartCheckout" disabled>checkout</a>
                         </div>
                     </div>
                 </div>
@@ -297,18 +459,27 @@
         </div>
     </div>
 </div>
-<!-- Your Chat Plugin code -->
-<div class="fb-customerchat"
-  attribution="page_inbox"
-  page_id="100763898835135">
+<!--=================== Loading Image ===================-->
+<div class="paira-loading ajax-loading margin-clear text-center" style="display: none;">
+    <img src="images/AjaxLoader.gif" alt="" class="padding-clear margin-top-10">
+    <p><b>Loading...</b></p>
 </div>
+<!--=================== Quick View Dialog ===================-->
+<!--=================== Welcome Newsletter Dialog ===================-->
+<!--=================== Error Dialog Box ===================-->
+
+<!--=================== Ajax Success Message ===================-->
+
 <!--=================== Placed at the end of the document, so the pages load faster ===================-->
 <script src="js/jquery-3.2.1.min.js"></script>
 <script src="js/jquery-migrate-3.0.0.min.js"></script>
 <script src="js/jquery.easing.1.3.js"></script>
 <script src="js/jquery.waypoints.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/owl.carousel.min.js"></script>
+<script src="js/jquery.bxslider.min.js"></script>
 <script src="js/jquery.mousewheel.min.js"></script>
+<script src="js/jquery.parallax-1.1.3.js" type="text/javascript"></script>
 <!--=================== Paira Framework Main Javascript ===================-->
 <script src="js/paira.js"></script>
 </body>

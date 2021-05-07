@@ -9,14 +9,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--=================== The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags ===================-->
-    <meta name="description" content="Blog Vine Responsive HTML Template">
-    <meta name="author" content="Blog Vine Responsive HTML Template">
+    <meta name="description" content="Home Vine Responsive HTML Template">
+    <meta name="author" content="Home Vine Responsive HTML Template">
     <link rel="shortcut icon" href="images/favicon.png" type="image/png"/>
-    <title>Blog Vine Responsive HTML Template</title>
+    <title>Home Vine Responsive HTML Template</title>
     <!--=================== Bootstrap core CSS ===================-->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <!--=================== Animate CSS ===================-->
     <link href="css/animate.min.css" rel="stylesheet">
+    <!--=================== Bx Slider CSS ===================-->
+    <link href="css/jquery.bxslider.css" rel="stylesheet">
+    <!--=================== OWL Carousel CSS ===================-->
+    <link href="css/owl.carousel.css" rel="stylesheet">
     <!--=================== Paira Framework Main CSS ===================-->
     <link href="css/paira.css" rel="stylesheet">
     <!--=================== Paira Framework Font and Color CSS ===================-->
@@ -146,7 +150,7 @@
         </section>
     </header>
     <!--=================== Main Content Container ===================-->
-    <main class="blog-page">
+    <main class="home-page">
         <!--=================== Breadcrumb Section ===================-->
         <section class="breadcrumb-container paira-padding-bottom-1">
             <div class="container">
@@ -154,24 +158,138 @@
                     <div class="col-md-12 text-center">
                         <div class="breadcrumb">
                             <ul class="list-inline">
-                                <li><a href="#" class="raleway-light"><span data-lang="home">Home</span> <i class="fa fa-angle-right"></i></a></li>
-                                <li class="raleway-sbold" data-lang="blog">Blog</li>
+                                <li><a href="index.html" class="raleway-light" data-lang="home">Home <i class="fa fa-angle-right"></i></a></li>
+                                <li class="raleway-sbold" data-lang="checkout">Checkout</li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-        <!--=================== Blog Section ===================-->
-        <section class="blog paira-padding-bottom-1">
+        <!--=================== Order History Section ===================-->
+        <!-- <div class="col-md-12 col-sm-12 col-xs-12 cart-table">
+            <a class="margin-bottom-20 text-capitalize text-color-1" data-lang="shopping cart"><i class="fa fa-long-arrow-left" aria-hidden="true"></i> Back to cart</a>
+            <h3 class="margin-bottom-20 text-capitalize text-color-1" data-lang="shopping cart">Your order list</h3>
+            <div class="cart-table-inner text-center" id="cartTableWrapper">
+                <form accept-charset="UTF-8" action="#" class="contact-form" method="post">
+                    <div class="row">
+                        <input name="form_type" type="hidden" value="contact" >
+                        <input name="utf8" type="hidden" value="✓">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead class="order-table">
+                                  <tr>
+                                    <th>Item</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                  </tr>
+                                </thead>
+                                <tbody id="orderListTable">
+                                  
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12 pull-right text-right">
+                            <div>
+                                <h3 class="text-color-1" data-lang="subtotal">Subtotal : <span><b id="orderCalculateTotal">0</b></span>₾</h3>
+                            </div>
+                        </div>
+                        <h3 class="margin-bottom-20 text-capitalize text-color-1 text-left" style="margin: 15px;" data-lang="shopping cart">Please, fill shipping details</h3>
+                        <div class="form-group col-md-12 col-sm-12 col-xs-12 paira-margin-top-1 margin-bottom-0">
+                            <input type="email" class="form-control" name="contact[name]" id="last-name">
+                            <span class="center-block"><label data-lang="last name">Last Name</label></span>
+                        <div class="form-group col-md-12 col-sm-12 col-xs-12 paira-margin-top-1 margin-bottom-0">
+                            <input type="email" class="form-control" name="contact[name]" id="orderCustomerName" style="border-color: #000; color:#000;">
+                            <span class="center-block" style="color: #fff;"><label style="min-width: 200px;" data-lang="phone">First Name & Last Name</label></span>
+                        </div>
+                        <div class="form-group col-md-12 col-sm-12 col-xs-12 paira-margin-top-1 margin-bottom-0">
+                            <input type="email" class="form-control" name="contact[name]" id="orderCustomerPhone" style="border-color: #000; color:#000;">
+                            <span class="center-block" style="color: #fff;"><label data-lang="phone">Phone</label></span>
+                        </div>
+                        <div class="form-group col-md-12 col-sm-12 col-xs-12 paira-margin-top-1 margin-bottom-0">
+                            <input type="text" class="form-control" name="contact[name]" id="orderCustomerAddress" style="border-color: #000; color:#000;">
+                            <span class="center-block" style="color: #fff;"><label for="orderCustomerAddress" data-lang="address" style="color: #000">Address</label></span>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="invalidCheck" style="-webkit-appearance: checkbox; margin-top: 15px;">
+                            <label class="form-check-label" for="invalidCheck">
+                              I Agree to the <a href="conditions.html" target="_blank" style="color:palegoldenrod">terms and conditions</a>
+                            </label>
+                          </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12 pull-right text-right">
+                            <div>
+                                <a href="#" class="btn btn-default btn-lg text-uppercase checkout margin-top-20 margin-left-20" id="placeOrder" data-lang="checkout">Place Order</a>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </form>
+            </div>
+        </div> -->
+        <section class="login-content paira-padding-bottom-1">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 text-center">
                         <img alt="" class="paira-margin-bottom-1" src="images/hedding.png">
-                        <h3 class="text-uppercase raleway-light margin-clear paira-margin-bottom-1" data-lang="blog">Blog</h3>
+                        <h3 class="text-uppercase raleway-light margin-clear paira-margin-bottom-1" data-lang="checkout">Checkout</h3>
                     </div>
-                    <div id="blogCardContainer">
-                        <!-- here goes blog cards -->
+                    <div class="col-md-12 col-xs-12 col-sm-12">
+                        <div class="form-contact">
+                            <div class="row">
+                                <div>   
+                                    <h3 class="margin-bottom-20 text-capitalize" data-lang="shopping cart">Your order list</h3>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead class="order-table">
+                                            <tr>
+                                                <th data-lang="item">Item</th>
+                                                <th data-lang="quantity">Quantity</th>
+                                                <th data-lang="price">Price</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="orderListTable" style="text-align: center;">
+                                            
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-sm-12 col-xs-12 pull-right text-right">
+                                    <div>
+                                        <h3> <span data-lang="subtotal">Subtotal :</span> <span><b id="orderCalculateTotal">0</b></span>₾</h3>
+                                    </div>
+                                </div>
+                                <h3 class="margin-bottom-20 text-capitalize" data-lang="order details" style="margin-top: 50px;">Order details</h3>
+                                <div class="col-xs-12 col-sm-12 col-md-12">
+                                    <!--=================== Contact Us Form Section ===================-->
+                                    <form id="checkoutForm" accept-charset="UTF-8" action="#" class="contact-form" method="post">
+                                        <div class="row">
+                                            <div id="errorMsg" style="color: red;"></div>
+                                            <div class="form-group col-md-12 col-sm-12 col-xs-12 paira-margin-top-1 margin-bottom-0">
+                                                <input type="email" class="form-control" name="contact[name]" id="orderCustomerName">
+                                                <span class="center-block"><label for="orderCustomerName" data-lang="first & last name" style="min-width: 200px;">First name & Last name</label></span>
+                                            </div>
+                                            <div class="form-group col-md-12 col-sm-12 col-xs-12 paira-margin-top-1 margin-bottom-0">
+                                                <input type="phone" class="form-control" name="contact[name]" id="orderCustomerPhone">
+                                                <span class="center-block"><label for="orderCustomerPhone" data-lang="phone">Phone</label></span>
+                                            </div>
+                                            <div class="form-group col-md-12 col-sm-12 col-xs-12 paira-margin-top-1 margin-bottom-0">
+                                                <input type="address" class="form-control" name="contact[email]" id="orderCustomerAddress">
+                                                <span class="center-block"><label for="orderCustomerAddress" data-lang="address">Address</label></span>
+                                            </div>
+                                            <div class="form-check" style="margin-left: 15px;">
+                                                <input class="form-check-input" type="checkbox" value="" id="invalidCheck" style="-webkit-appearance: checkbox; margin-top: 25px;">
+                                                <label class="form-check-label" for="invalidCheck">
+                                                  <span data-lang="i agree">I Agree to the</span> <a href="conditions.html" target="_blank" style="text-decoration: underline;" data-lang="terms and conditions"><b>terms and conditions</b></a>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="text-right paira-margin-top-1">
+                                            <a href="#" class="btn btn-default btn-lg color-scheme-2 text-uppercase raleway-light margin-left-25 acc-nt" id="placeOrder" data-lang="place order">Place Order</a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -211,7 +329,7 @@
                             <ul class="list-inline footer-list-style footer-nav">
                                 <li><a href="collection.html" class="display-inline-b raleway-light">Shop</a></li>
                                 <li class="text-center"><i class="fa fa-minus raleway-light"></i></li>
-                                <li><a href="#" class="display-inline-b raleway-light">Terms & Conditions</a></li>
+                                <li><a href="conditions.html" class="display-inline-b raleway-light">Terms & Conditions</a></li>
                                 <li class="text-center"><i class="fa fa-minus raleway-light"></i></li>
                                 <li><a href="contact.html" class="display-inline-b raleway-light">Contact</a></li>
                             </ul>
@@ -225,25 +343,7 @@
         </section>
     </footer>
 </div>
-<!--=================== Search Dialog ===================-->
-<!-- <div class="modal fade paira-search-popup" id="paira-search" tabindex="-1" role="dialog" aria-hidden="false" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <div class="row">
-                    <div class="col-md-12">
-                        <form class="popup-search-form">
-                            <input type="text" class="form-control padding-clear" name="q" value="" placeholder="Search..."/>
-                            <button class="btn btn-default btn-lg text-uppercase paira-margin-top-1 font-size-14">go to search</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-=================== Login Dialog =================== -->
+<!--=================== Login Dialog ===================-->
 <div class="modal fade paira-login-popup" id="paira-login" tabindex="-1" role="dialog" aria-hidden="false" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -297,6 +397,16 @@
         </div>
     </div>
 </div>
+<!--=================== Loading Image ===================-->
+<div class="paira-loading ajax-loading margin-clear text-center" style="display: none;">
+    <img src="images/AjaxLoader.gif" alt="" class="padding-clear margin-top-10">
+    <p><b>Loading...</b></p>
+</div>
+<!--=================== Quick View Dialog ===================-->
+<!--=================== Welcome Newsletter Dialog ===================-->
+<!--=================== Error Dialog Box ===================-->
+
+<!--=================== Ajax Success Message ===================-->
 <!-- Your Chat Plugin code -->
 <div class="fb-customerchat"
   attribution="page_inbox"
@@ -308,8 +418,35 @@
 <script src="js/jquery.easing.1.3.js"></script>
 <script src="js/jquery.waypoints.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/owl.carousel.min.js"></script>
+<script src="js/jquery.bxslider.min.js"></script>
 <script src="js/jquery.mousewheel.min.js"></script>
+<script src="js/jquery.parallax-1.1.3.js" type="text/javascript"></script>
 <!--=================== Paira Framework Main Javascript ===================-->
 <script src="js/paira.js"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

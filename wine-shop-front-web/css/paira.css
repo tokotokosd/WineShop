@@ -862,7 +862,7 @@ a.boxclose {
 .sort-by {
     border: none;
     outline: none;
-    width: 136px;
+    width: 150px;
     font-size: 18px;
     letter-spacing: 2px;
     appearance: none;
@@ -1413,3 +1413,17 @@ li.active{
 .order-status-delivered {
     color: green;
 }
+
+/* 
+    Checkout modal
+*/
+
+.order-table > tr > th {
+    text-align: center;
+}
+
+.tbody {
+    max-height: 400px;
+    overflow-x: auto;
+}
+
