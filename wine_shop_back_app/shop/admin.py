@@ -5,7 +5,7 @@ from django.contrib import admin
 from .models import *
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name', 'image_tag']
+    list_display = ['id', 'name', 'image_tag']
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
@@ -15,6 +15,13 @@ class OrderAdmin(admin.ModelAdmin):
 class OrderItemAdmin(admin.ModelAdmin):
     list_display = ['product', 'order', 'quantity', 'date_added']
 
+@admin.register(Blog)
+class BlogAdmin(admin.ModelAdmin):
+    list_display = ['tittle', 'content', 'time']
+
+@admin.register(BlogComments)
+class BlogCommentsAdmin(admin.ModelAdmin):
+    list_display = ['blog', 'username', 'comment']
 
 admin.site.register(Customer)
 admin.site.register(ShippingAddress)

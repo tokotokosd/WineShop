@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from shop.models import Product
+from shop.models import Product, Brand, Order, Customer, OrderItem, Blog, BlogComments
 from django.http import JsonResponse, HttpResponse
 from django.core import serializers
 import json
@@ -10,8 +10,21 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import UserSerializer, UserSerializerWithToken
+from django.core.serializers.json import DjangoJSONEncoder
+
 
 # Create your views here.
+def blog(request):
+    data = {'blog': ''}
+    if request.method == 'GET':
+        try:
+            data['blog'] = list(Blog.objects.all().values())
+            data['comments'] = list(BlogComments.objects.all().values('blog', 'comment', 'username__name'))
+        except:
+            data['menu'] = ' does not exists.'
+    return HttpResponse(json.dumps(data, sort_keys=True, indent=1, cls=DjangoJSONEncoder),
+                        content_type="application/json")
+
 
 def wineproduct(request):
     data = {'menu': ''}
@@ -27,12 +40,23 @@ def wineproduct(request):
     return HttpResponse(json.dumps(data), content_type="application/json")
 
 
+def brandlist(request):
+    data = {'menu': ''}
+    if request.method == 'GET':
+        try:
+            data['menu'] = list(Brand.objects.all().values())
+        except:
+            data['menu'] = 'does not exists.'
+    return HttpResponse(json.dumps(data), content_type="application/json")
+
+
 @api_view(['GET'])
 def current_user(request):
     """
     Determine the current user by their token, and return their data
     """
     serializer = UserSerializer(request.user)
+    print(serializer.data)
     return Response(serializer.data)
 
 
@@ -50,3 +74,65 @@ class UserList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET', 'POST'])
+def cart(request):
+    serializer = UserSerializer(request.user)
+    user = User.objects.get(username=serializer['username'].value)
+    if request.method == 'GET':
+        try:
+            customer = user.customer
+        except:
+            customer = Customer.objects.get_or_create(user=user, name=user.first_name,
+                                                      email=user.email)
+        print(customer)
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        items = list(order.orderitem_set.all().values())
+
+        context = {"items": items}
+
+        return HttpResponse(json.dumps(context, indent=1, cls=DjangoJSONEncoder), content_type="application/json")
+    if request.method == 'POST':
+        body = json.loads(request.body)
+        action = body['action']
+        productId = body['productId']
+
+        print('action', action)
+        print('productID', productId)
+        customer = user.customer
+        product = Product.objects.get(id=productId)
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+
+        orderItem, created = OrderItem.objects.get_or_create(order=order, product=product)
+
+        if action == 'add':
+            orderItem.quantity = (orderItem.quantity + 1)
+            orderItem.save()
+        elif action == 'remove':
+            orderItem.quantity = (orderItem.quantity - 1)
+            orderItem.save()
+        elif action == 'removeAll':
+            orderItem.delete()
+
+        if orderItem.quantity <= 0:
+            orderItem.delete()
+
+        return JsonResponse('item was added', safe=False)
+
+
+@api_view(['POST'])
+def post_comment(request):
+    serializer = UserSerializer(request.user)
+    user = User.objects.get(username=serializer['username'].value)
+
+    if request.method == 'POST':
+        body = json.loads(request.body)
+        comment = body['comment']
+        blog_id = body['blog']
+
+        blog = Blog.objects.get(id=blog_id)
+        customer = user.customer
+        BlogComments.objects.create(blog=blog, username=customer, comment=comment)
+
+        return Response('Succefuly Commented')

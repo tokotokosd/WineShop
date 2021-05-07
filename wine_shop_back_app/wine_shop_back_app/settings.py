@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+import datetime
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -75,8 +76,12 @@ REST_FRAMEWORK = {
 }
 
 JWT_AUTH = {
-    'JWT_RESPONSE_PAYLOAD_HANDLER': 'wine_shop_back_app.utils.my_jwt_response_handler'
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'wine_shop_back_app.utils.my_jwt_response_handler',
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
 }
+
+
 
 ROOT_URLCONF = 'wine_shop_back_app.urls'
 

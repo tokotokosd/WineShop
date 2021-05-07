@@ -95,3 +95,22 @@ class ShippingAddress(models.Model):
 
     def __str__(self):
         return self.address
+
+
+class Blog(models.Model):
+    id = models.AutoField(primary_key=True)
+    image = models.ImageField(null=True, blank=True)
+    time = models.DateTimeField(auto_now_add=True)
+    tittle = models.CharField(max_length=100, null=True)
+    content = models.CharField(max_length=999, null=True)
+
+    def __str__(self):
+        return self.tittle
+
+class BlogComments(models.Model):
+    blog = models.ForeignKey(Blog, on_delete=models.SET_NULL, blank=True, null=True)
+    comment = models.CharField(max_length=400, null=True)
+    username = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=True, null=True)
+
+    def __str__(self):
+        return self.username.name
