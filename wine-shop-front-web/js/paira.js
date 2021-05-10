@@ -166,10 +166,11 @@
             $(document).on('click', '.paira-quick-view', function(p) {
                 ///////
                 p.stopPropagation();
+                p.preventDefault();
                 $('#paira-quick-view').modal('show');
-                let elemId = p.target.closest('div[data-product-id]').getAttribute('data-product-id')
-                let filteredJson = json.filter(item => item.id == elemId)
-                filteredJson
+                let elemId = p.target.closest('div[data-product-id]').getAttribute('data-product-id');
+                let filteredJson = json.filter(item => item.id == elemId);
+                
                 productPage.displayModalContent(filteredJson[0], elemId);
 
                 let upBtn = document.querySelector("#modalCounterUp");
@@ -190,8 +191,19 @@
                 
 
                 upBtn.addEventListener('click', e => {
-                    counterInput.value = parseInt(counterInput.value) + 1;
-                    calculateSum()
+                    if(counterInput.value < filteredJson[0].quantity){
+                
+                        counterInput.value = +counterInput.value + 1;
+                        calculateSum();
+                    } else {
+                        //////////
+                        document.querySelector('#modalQuantityText').innerHTML = `
+                        <i class="fa fa-exclamation" aria-hidden="true" style="color: red"></i><span style="color: red";> ${t("Unfortunately, required quantity is out of stock.")}</span>
+                        `
+                        setTimeout(() => {
+                            document.querySelector('#modalQuantityText').innerHTML = "";
+                        }, 5000);
+                    }
                 })
                 downBtn.addEventListener('click', e => {
                     if (counterInput.value > 1) counterInput.value -= 1;
@@ -556,6 +568,15 @@
                     } else if(selectValue === "white"){
                         productPage.showProducts(productPage.filter(json, "white"), 12, 1);
                         state.isFiltered = { byRed: false, byWhite: true, byOther: false };
+                    } else if(selectValue === "dry"){
+                        productPage.showProducts(productPage.filter(json, "dry"), 12, 1);
+                        state.isFiltered = { byRed: false, byWhite: false, byOther: false };
+                    } else if(selectValue === "sweet"){
+                        productPage.showProducts(productPage.filter(json, "sweet"), 12, 1);
+                        state.isFiltered = { byRed: false, byWhite: false, byOther: false };
+                    } else if(selectValue === "semi-dry"){
+                        productPage.showProducts(productPage.filter(json, "semi-dry"), 12, 1);
+                        state.isFiltered = { byRed: false, byWhite: false, byOther: false };
                     } else if(selectValue === "other"){
                         productPage.showProducts(productPage.filter(json, "other"), 12, 1);
                         state.isFiltered = { byRed: false, byWhite: false, byOther: true };
@@ -1075,7 +1096,7 @@
                             </div>
                             <h1 class="font-size-16 paira-margin-top-4 margin-bottom-10"><a href="#" class="paira-quick-view">${item.name}</a></h1>
                             <span class="money font-size-16"><b>${item.price}</b>&#8382;</span>
-                            <div class="product-hover" class="paira-quick-view">
+                            <div class="paira-quick-view product-hover" style="cursor: pointer";>
                                 <div class="paira-wish-compare-con wish-compare-view-cart paira-margin-top-4">
                                     <a href="#paira-quick-view" class="paira-quick-view quick-view  btn color-scheme-2 font-size-18"><i class="fa fa-eye"></i></a>
                                     <a href="#" class="product-cart-con margin-left-5  btn color-scheme-2"><img src="images/cart-2.png" alt=""></a>
@@ -1115,28 +1136,31 @@
                         <p class="margin-top-15 letter-spacing-2 font-size-14">
                             ${data.description}
                         </p>
-                        <div class="form-group margin-top-15 col-sm-1 half-width">
+                        <div class="form-group margin-top-15 col-sm-1 full-width">
                             <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>${t('vendor')} : </b>${data.brand_id__name}</h4>
                         </div>
-                        <div class="form-group margin-top-15 col-sm-1 half-width">
+                        <div class="form-group margin-top-15 col-sm-1 full-width">
                             <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>${t('year')} : </b>${data.year}</h4>
                         </div>
-                        <div class="form-group margin-top-15 col-sm-1 half-width">
+                        <div class="form-group margin-top-15 col-sm-1 full-width">
                             <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>${t('alcohol')} % : </b>${data.alcoholPercent}</h4>
                         </div>
-                        <div class="form-group margin-top-15 col-sm-1 half-width">
+                        <div class="form-group margin-top-15 col-sm-1 full-width">
                             <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>${t('region')} : </b>${data.region}</h4>
                         </div>
-                        <div class="form-group margin-top-15 col-sm-1 half-width">
+                        <div class="form-group margin-top-15 col-sm-1 full-width">
                             <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>${t('type')} : </b>${data.type}</h4>
                         </div>
-                        <div class="form-group margin-top-15 col-sm-1 half-width">
+                        <div class="form-group margin-top-15 col-sm-1 full-width">
                             <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>${t('color')} : </b>${data.color}</h4>
                         </div>
-                        <div class="form-group margin-top-15 col-sm-1 half-width">
+                        <div class="form-group margin-top-15 col-sm-1 full-width">
                             <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>${t('variety')} : </b>${data.variety}</h4>
                         </div>
                         <div class="quantity margin-top-15 display-inline-b full-width">
+                            <h1 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase pull-left" style="font-size: 12px;" id="modalQuantityText"></label></h1>
+                        </div>
+                        <div class="quantity margin-top-15 display-inline-b half-width">
                             <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase pull-left"><b>${t('Quantity')} : </b></label></h4>
                             <div class=" full-width">
                                 <div class="product_quantity_group product-quantity-fix">
@@ -1274,7 +1298,7 @@
                                 <div class="column full-width overflow paira-margin-bottom-4 cartItem" data-id="${item.id}">
                                 <div class="row-1">
                                     <a href="collection.html">
-                                        <img src="http://spirit.ge:8000/images/${item.image}" alt="" class="img-responsive center-block" style="max-width: 62px; max-height:77px">
+                                        <img src="http://spirit.ge:8000/images/${item.image}" alt="" class="img-responsive center-block">
                                     </a>
                                 </div>
                                 <div class="row-2"><p><a href="#">${item.name}</a></p></div>
@@ -1339,8 +1363,9 @@
     let blogPage = {
         displayBlogCards: function(data, quantity=null){
             blogCardContainer.innerHTML="";
-            let cards = ""
-            data.forEach((item,i) =>{
+            let cards = "";
+
+            const createBlogCards = (item, i) => {
                 let date = new Date(item.time.split('T')[0])
                 let month = date.toLocaleString('default', { month: 'short' });
                 let day = date.getDate();
@@ -1354,6 +1379,27 @@
                     </div>
                 </div>
                 `
+            }
+
+            if(quantity !== null && data.length !== quantity){
+                blogCardContainer.insertAdjacentHTML('afterend',`
+                <div class="col-md-12 col-sm-12 col-xs-12 text-capitalize text-center paira-margin-top-3">
+                    <div class="see-more">
+                        <a href="#" class="btn-border font-size-14" data-lang="see more" id="moreseeid">See More</a>
+                    </div>
+                </div>
+                `)
+                document.querySelector('#moreseeid').addEventListener('click', e => {
+                    data = data.slice(quantity, 2*quantity);
+                    console.log(data)
+                    // data.forEach((item,i) => {
+                    //     createBlogCards(item, i);
+                    // })
+                })
+            }
+
+            data.forEach((item,i) => {
+                createBlogCards(item, i);
             })
             blogCardContainer.insertAdjacentHTML('afterbegin', cards)
         },
@@ -1470,6 +1516,109 @@
             })
         }
     }
+
+    let checkoutPage = {
+        init: function(data){
+
+        
+        let orderList = document.querySelector("#orderListTable");
+        let table = "";
+        let orderCalculateTotal = document.querySelector('#orderCalculateTotal');
+        let total = 0;
+        let customerName = document.querySelector('input[id="orderCustomerName"]');
+        let customerPhone = document.querySelector('input[id="orderCustomerPhone"]');
+        let customerAddress = document.querySelector('input[id="orderCustomerAddress"]');
+        let checkbox = document.querySelector('#invalidCheck');
+        let orderBtn = document.querySelector('#placeOrder');
+        let checkoutForm = document.querySelector('#checkoutForm');
+        let errorMsg = document.querySelector("#errorMsg");
+        
+
+        if(!isLoggedIn()){
+            let cartItems = JSON.parse(localStorage.getItem('cartItems'));
+            let orderData = { name: "", phone: "", address: "", date: "", order: []}
+    
+            cartItems.forEach( item => {
+                table += `
+                <tr>
+                    <td>${item.name}</td>
+                    <td>${item.quantity}</td>
+                    <td>${item.price}</td>
+                </tr>
+                `
+                total += item.quantity * item.price;
+                orderData.order.push({ id: item.id, quantity: item.quantity });
+            })
+            orderList.insertAdjacentHTML('afterbegin', table)
+            orderCalculateTotal.innerText = total;
+            
+
+            let printErrorMsg = (text) => {
+                errorMsg.innerText=text
+            }
+            
+
+            let handleFormData = (e) => {
+                e.preventDefault();
+                
+                let i = 0;
+                document.querySelectorAll('#checkoutForm input').forEach(x =>{
+                    console.log(i++)
+                    switch(x){
+                        case customerName:
+                            if(x.value === ""){
+                                x.style.border = "1px solid red"
+                                printErrorMsg("Please, enter all fields");
+                            }
+                            break;
+                        case customerPhone:
+                            if(x.value === ""){
+                                x.style.border = "1px solid red"
+                            }
+                            break;
+                        case customerAddress:
+                            if(x.value === ""){
+                                x.style.border = "1px solid red"
+                            }
+                            break;
+                        case invalidCheck:
+                            if(!x.checked){
+                                x.style.border = "1px solid red"
+                            }
+                            break;
+                    }
+                })
+                
+                // orderData.name = customerName.value;
+                // orderData.phone = customerPhone.value;
+                // orderData.address = customerAddress.value;
+                // orderData.date = new Date().toISOString();
+                // console.log(orderData);
+            }
+
+            if(!orderBtn.getAttribute('listener')){
+                orderBtn.addEventListener('click', handleFormData);
+                orderBtn.setAttribute('listener', 'true');
+            }
+            
+        }
+
+            if(isLoggedIn()){
+                
+                fetch('http://spirit.ge:8000/buy_process', {
+                            method: 'GET',
+                            headers: {
+                            'Content-Type': 'application/json;charset=utf-8',
+                            Authorization: `JWT ${localStorage.getItem('token')}`,
+                            'X-CSRFToken':  csrftoken
+                            }
+                        })
+                        .then( res => res.json() )
+                        .then( json => console.log(json))
+                }
+        }
+    }
+
     // blog page
     if (window.location.href.includes("blog.html") || window.location.href.includes("index.html")){
         paira.showLoading(blogCardContainer, "#000", 'blogCardContainerLoading');
@@ -1542,17 +1691,28 @@
         })
     }
    //show blog
-//    fetch('http://spirit.ge:8000/blog/')
-//     .then(resp => resp.json())
-//     .then(json => {
+        //    fetch('http://spirit.ge:8000/blog/')
+        //     .then(resp => resp.json())
+        //     .then(json => {
 
-//     })
-
-
+        //     })
 
 
+    // * checkout
 
-// i18n
+    if(window.location.pathname.includes("checkout")){
+        checkoutPage.init()
+    }
+
+
+
+
+
+
+
+
+
+// i18n object
 
     const geo = {
         "index":{
@@ -1597,6 +1757,9 @@
             "no filter": "უფილტრო",
             "red wine": "წითელი ღვინო",
             "white wine": "თეთრი ღვინო",
+            "dry wine": "მშრალი ღვინო",
+            "sweet wine": "ტკბილი ღვინო",
+            "semi-dry wine": "ნახევრად მშრალი",
             "other": "სხვა",
             // sort
             "sort by": "დაწყობა: ",
@@ -1778,7 +1941,8 @@
             "Password field is blank": "პაროლის ველი ცარიელია",
             "add to cart": "კალათაში დამატება",
             "Your password & username is wrong!": "თქვენი პაროლი ან მომხმარებლის სახელი არასწორია!",
-            "Log Out": "ანგარიშიდან გამოსვლა"
+            "Log Out": "ანგარიშიდან გამოსვლა",
+            "Unfortunately, required quantity is out of stock": "სამწუხაროდ ეს ღვინო მოთხოვნილ რაოდენობაში არ გვაქ"
         },
     
 
@@ -1808,6 +1972,7 @@
 
         if(language){
             switch(currentPath){
+                case "/":
                 case "/index.html":
                     handlePageTranslation("index");
                     break;
@@ -1829,13 +1994,11 @@
                 case "/checkout.html":
                     handlePageTranslation("checkout");
                     break;
-                default:
-                    handlePageTranslation("index");
-                    break;
             }
 
             language.classList.add('navbar-language-change-ge');
             language.classList.remove('navbar-language-change');
+            language.nextElementSibling.innerText = "EN";
 
             localStorage.setItem('language', 'ge')
 
@@ -1876,93 +2039,7 @@
         
     }
 
-    // * checkout
-
-    if(window.location.pathname.includes("checkout")){
     
-        let orderList = document.querySelector("#orderListTable");
-        let table = "";
-        let orderCalculateTotal = document.querySelector('#orderCalculateTotal');
-        let total = 0;
-        let customerName = document.querySelector('input[id="orderCustomerName"]');
-        let customerPhone = document.querySelector('input[id="orderCustomerPhone"]');
-        let customerAddress = document.querySelector('input[id="orderCustomerAddress"]');
-        let checkbox = document.querySelector('#invalidCheck');
-        let orderBtn = document.querySelector('#placeOrder');
-        let checkoutForm = document.querySelector('#checkoutForm');
-        let errorMsg = document.querySelector("#errorMsg");
-        
-
-        if(!isLoggedIn()){
-            let cartItems = JSON.parse(localStorage.getItem('cartItems'));
-            let orderData = { name: "", phone: "", address: "", date: "", order: []}
-    
-            cartItems.forEach( item => {
-                table += `
-                <tr>
-                    <td>${item.name}</td>
-                    <td>${item.quantity}</td>
-                    <td>${item.price}</td>
-                </tr>
-                `
-                total += item.quantity * item.price;
-                orderData.order.push({ id: item.id, quantity: item.quantity });
-            })
-            orderList.insertAdjacentHTML('afterbegin', table)
-            orderCalculateTotal.innerText = total;
-            
-
-            let printErrorMsg = (text) => {
-                errorMsg.innerText=text
-            }
-            
-
-            let handleFormData = (e) => {
-                e.preventDefault();
-                
-                let i = 0;
-                document.querySelectorAll('#checkoutForm input').forEach(x =>{
-                    console.log(i++)
-                    switch(x){
-                        case customerName:
-                            if(x.value === ""){
-                                x.style.border = "1px solid red"
-                                printErrorMsg("Please, enter all fields");
-                            }
-                            break;
-                        case customerPhone:
-                            if(x.value === ""){
-                                x.style.border = "1px solid red"
-                            }
-                            break;
-                        case customerAddress:
-                            if(x.value === ""){
-                                x.style.border = "1px solid red"
-                            }
-                            break;
-                        case invalidCheck:
-                            if(!x.checked){
-                                x.style.border = "1px solid red"
-                            }
-                            break;
-                    }
-                })
-                
-                // orderData.name = customerName.value;
-                // orderData.phone = customerPhone.value;
-                // orderData.address = customerAddress.value;
-                // orderData.date = new Date().toISOString();
-                // console.log(orderData);
-            }
-
-            if(!orderBtn.getAttribute('listener')){
-                orderBtn.addEventListener('click', handleFormData);
-                orderBtn.setAttribute('listener', 'true');
-            }
-            
-        }
-    
-    }
     
 
 }(window.jQuery, window, document));
