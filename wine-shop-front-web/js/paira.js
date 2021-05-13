@@ -1648,6 +1648,7 @@
     }
     // show banner 
     if( document.querySelector('.carousel-inner')){
+        console.log('started showbanner')
         let bannerData = [
             {
                 id: "0",
@@ -1703,7 +1704,7 @@
         }
 
         showBanner(bannerData);
-
+        console.log('done showbanner')
     }
    //show blog
         //    fetch('http://spirit.ge:8000/blog/')
