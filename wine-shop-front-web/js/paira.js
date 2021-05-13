@@ -42,10 +42,10 @@
         let input = document.querySelector("#custom-search-input").querySelector('input').value;
         console.log(input)
         if(window.location.href.includes('collection.html')){
-            window.location.replace(`collection.html#${input}`);
+            window.location.replace(`collection.html#search=${input}`);
             window.location.reload();
         } else {
-            window.location.replace(`collection.html#${input}`);
+            window.location.replace(`collection.html#search=${input}`);
         }
     })
     
@@ -489,136 +489,21 @@
         },
         initProductPageSort: function(json){
             document.querySelector('#product-sort').addEventListener('change', e => {
-                let selectValue = e.target.value
-                let sortedJson;
-                let state = productPage.state;
-                
-                
-               
-
-
-
-                if(!state.isFiltered){
-                    if(selectValue === "sort-asc"){
-                        sortedJson = productPage.sortByCost(json, "asc");
-                        productPage.showProducts(sortedJson, 12, 1)
-                        state.isSorted = { byAsc: true, byDesc: false }
-                    } else if(selectValue === "sort-desc"){
-                        sortedJson = productPage.sortByCost(json, "desc");
-                        productPage.showProducts(sortedJson, 12, 1)
-                        state.isSorted = { byAsc: false, byDesc: true }
-                    } else if(selectValue === "sort-def"){
-                        console.log(json);
-                        state.isSorted = false;
-                        productPage.showProducts(json, 12, 1);
-                    }
-                } else {
-                    if(state.isFiltered.byRed){
-                        if(selectValue === "sort-asc"){
-                            productPage.showProducts(productPage.sortByCost(productPage.filter(json, "red"), "asc"), 12, 1);
-                            state.isSorted = { byAsc: true, byDesc: false }
-                        } else if(selectValue === "sort-desc"){
-                            productPage.showProducts(productPage.sortByCost(productPage.filter(json, "red"), "desc"), 12, 1);
-                            state.isSorted = { byAsc: false, byDesc: true }
-                        } else if(selectValue === "sort-def"){
-                            state.isSorted = false;
-                            productPage.showProducts(json, 12, 1);
-                        }
-                    }
-                    if(state.isFiltered.byWhite){
-                        if(selectValue === "sort-asc"){
-                            productPage.showProducts(productPage.sortByCost(productPage.filter(json, "white"), "asc"), 12, 1);
-                            state.isSorted = { byAsc: true, byDesc: false }
-                        } else if(selectValue === "sort-desc"){
-                            productPage.showProducts(productPage.sortByCost(productPage.filter(json, "white"), "desc"), 12, 1);
-                            state.isSorted = { byAsc: false, byDesc: true }
-                        } else if(selectValue === "sort-def"){
-                            state.isSorted = false;
-                            productPage.showProducts(json, 12, 1);
-                        }
-                    }
-                    if(state.isFiltered.byOther){
-                        if(selectValue === "sort-asc"){
-                            productPage.showProducts(productPage.sortByCost(productPage.filter(json, "other"), "asc"), 12, 1);
-                            state.isSorted = { byAsc: true, byDesc: false }
-                        } else if(selectValue === "sort-desc"){
-                            productPage.showProducts(productPage.sortByCost(productPage.filter(json, "other"), "desc"), 12, 1);
-                            state.isSorted = { byAsc: false, byDesc: true }
-                        } else if(selectValue === "sort-def"){
-                            state.isSorted = false;
-                            productPage.showProducts(json, 12, 1);
-                        }
-                    }
-                }
+                productPage.options.sort = e.target.value;
+                productPage.showProducts(productPage.filter(json), 12, 1);
+            })
+        },
+        initProductPageClearFilter: function(){
+            document.querySelector("#clearFilters").addEventListener('click', e => {
+                /////////////
+                window.location.hash = "";
+                window.location.reload();
             })
         },
         initProductPageFilter: function(json){
             document.querySelector('#product-filter').addEventListener('change', e => {
-                let selectValue = e.target.value;
-                let state = productPage.state;
-            
-               
-
-                
-
-                if(!state.isSorted){
-                    if(selectValue === "red"){
-                        productPage.showProducts(productPage.filter(json, "red"), 12, 1);
-                        state.isFiltered = { byRed: true, byWhite: false, byOther: false };
-                    } else if(selectValue === "white"){
-                        productPage.showProducts(productPage.filter(json, "white"), 12, 1);
-                        state.isFiltered = { byRed: false, byWhite: true, byOther: false };
-                    } else if(selectValue === "dry"){
-                        productPage.showProducts(productPage.filter(json, "dry"), 12, 1);
-                        state.isFiltered = { byRed: false, byWhite: false, byOther: false };
-                    } else if(selectValue === "sweet"){
-                        productPage.showProducts(productPage.filter(json, "sweet"), 12, 1);
-                        state.isFiltered = { byRed: false, byWhite: false, byOther: false };
-                    } else if(selectValue === "semi-dry"){
-                        productPage.showProducts(productPage.filter(json, "semi-dry"), 12, 1);
-                        state.isFiltered = { byRed: false, byWhite: false, byOther: false };
-                    } else if(selectValue === "other"){
-                        productPage.showProducts(productPage.filter(json, "other"), 12, 1);
-                        state.isFiltered = { byRed: false, byWhite: false, byOther: true };
-                    } else {
-                        //isFiltered = false;
-                        productPage.showProducts(json, 12, 1)
-                    }
-                } else {
-                    
-                    if(state.isSorted.byAsc){
-                        if(selectValue === "red"){
-                            productPage.showProducts(productPage.sortByCost(productPage.filter(json, "red"), "asc"), 12, 1);
-                            state.isFiltered = { byRed: true, byWhite: false, byOther: false };
-                        } else if(selectValue === "white"){
-                            productPage.showProducts(productPage.sortByCost(productPage.filter(json, "white"), "asc"), 12, 1);
-                            state.isFiltered = { byRed: false, byWhite: true, byOther: false };
-                        } else if(selectValue === "other"){
-                            productPage.showProducts(productPage.sortByCost(productPage.filter(json, "other"), "asc"), 12, 1);
-                            state.isFiltered = { byRed: false, byWhite: false, byOther: true };
-                        } else {
-                            state.isFiltered = false;
-                            productPage.showProducts(json, 12, 1)
-                        }
-                    } else if(state.isSorted.byDesc){
-                        if(selectValue === "red"){
-                            productPage.showProducts(productPage.sortByCost(productPage.filter(json, "red"), "desc"), 12, 1);
-                            state.isFiltered = { byRed: true, byWhite: false, byOther: false };
-                        } else if(selectValue === "white"){
-                            productPage.showProducts(productPage.sortByCost(productPage.filter(json, "white"), "desc"), 12, 1);
-                            state.isFiltered = { byRed: false, byWhite: true, byOther: false };
-                        } else if(selectValue === "other"){
-                            productPage.showProducts(productPage.sortByCost(productPage.filter(json, "other"), "desc"), 12, 1);
-                            state.isFiltered = { byRed: false, byWhite: false, byOther: true };
-                        } else {
-                            state.isFiltered = false;
-                            productPage.showProducts(json, 12, 1)
-                        }
-                    }
-                }
-                
-                
-                
+                productPage.options.filter = e.target.value;
+                productPage.showProducts(productPage.filter(json), 12, 1);
             })
         },
         initProductPagination: function(json, currentPage, recordsPerPage){
@@ -1064,9 +949,9 @@
 
     
     const productPage = {
-        state:{
-            isFiltered: false,
-            isSorted: false
+        options:{
+            filter: "none",
+            sort: "sort-def"
         },
         hideProducts: function(){
             productWidget.innerHTML = "";
@@ -1117,7 +1002,7 @@
             for(let i =0; i < jsonBrands.length; i++){
                 let item = jsonBrands[i];
                 product += `
-                    <a href="collection.html#${item.name}"><img src="http://spirit.ge:8000/images/${item.image}" " alt=""/></a>
+                    <a href="collection.html#brand=${item.name}"><img src="http://spirit.ge:8000/images/${item.image}" " alt=""/></a>
                     `
             }
 
@@ -1196,18 +1081,75 @@
             sortedJson = json.sort((a, b) => parseFloat(b.price) - parseFloat(a.price))
             return sortedJson;
         },
-        filter: function(json, option){
-            let hasOption = item => {
-                if(item.type !== null){
-                    if(option==="other"){
-                        return !item.type.toLowerCase().includes("red") && !item.type.toLowerCase().includes("white")
-                    }
-                    return item.type.toLowerCase().includes(option)
-                } else {
-                    return false;
+        filter: function(json){
+
+            let filter = this.options.filter;
+            let sort = this.options.sort;
+            let sortedJson;
+            let res;
+
+            const filterData = (data) => {
+                if(filter !== "other" && filter !== "none"){
+                    res = data.filter(item => {
+                        return item.type.toLowerCase().includes(filter);
+                    })
+                }
+
+                if(filter == "other"){
+                    res = data.filter(item => {
+                        return  !item.type.toLowerCase().includes("red") &&
+                                !item.type.toLowerCase().includes("white") &&
+                                !item.type.toLowerCase().includes("dry") &&
+                                !item.type.toLowerCase().includes("sweet") &&
+                                !item.type.toLowerCase().includes("semi-dry")
+                    })
                 }
             }
-            return json.filter(hasOption)
+
+
+
+            if(sort === "sort-def"){
+                if(filter === "none"){
+                    return json
+                }
+                filterData(json)
+            }    
+
+            if(sort === "sort-asc"){
+                sortedJson = this.sortByCost(json, "asc");
+                if(filter === "none"){
+                    return sortedJson
+                }
+                filterData(sortedJson)
+            }
+            
+            if(sort === "sort-desc"){
+                sortedJson = this.sortByCost(json, "desc");
+                if(filter === "none"){
+                    return sortedJson
+                }
+                filterData(sortedJson)
+            }
+
+            return res;            
+
+
+
+
+
+
+
+            // let hasOption = item => {
+            //     if(item.type !== null){
+            //         if(option==="other"){
+            //             return !item.type.toLowerCase().includes("red") && !item.type.toLowerCase().includes("white")
+            //         }
+            //         return item.type.toLowerCase().includes(option)
+            //     } else {
+            //         return false;
+            //     }
+            // }
+            // return json.filter(hasOption)
            
         },
         cartModal: function(data){
@@ -1656,14 +1598,28 @@
                 productPage.showProducts(data.menu, 12, 1);
                 paira.initDialogBox(data.menu);
                 if (window.location.href.includes("collection.html")){
-                    if(window.location.hash.substring(1)){
-                        let searchVal = window.location.hash.substring(1).replace(/%20/g, " ");
+                    if(window.location.hash.substring(1).split("=")[0] === "search"){
+                        let searchVal = decodeURI(window.location.hash.substring(1).split("=")[1]);
+                        console.log(searchVal)
+                        let filteredJson = data.menu.filter( item => item.name.toLowerCase().includes(searchVal.toLowerCase()));
+                        productPage.showProducts(filteredJson, 12, 1)
+                    }
+                    if(window.location.hash.substring(1).split("=")[0] === "brand"){
+                        let searchVal = decodeURI(window.location.hash.substring(1).split("=")[1]);
+                        console.log(searchVal)
+                        let filteredJson = data.menu.filter( item => item.brand_id__name.toLowerCase().includes(searchVal.toLowerCase()));
+                        productPage.showProducts(filteredJson, 12, 1)
+                    }
+                    if(window.location.hash.substring(1).split("=")[0] === "type"){
+                        let searchVal = decodeURI(window.location.hash.substring(1).split("=")[1]);
+                        console.log(searchVal)
                         let filteredJson = data.menu.filter( item => item.name.toLowerCase().includes(searchVal.toLowerCase()));
                         productPage.showProducts(filteredJson, 12, 1)
                     }
                     paira.initProductPagination(data.menu, 1, 12);
                     paira.initProductPageSort(data.menu);
                     paira.initProductPageFilter(data.menu);
+                    paira.initProductPageClearFilter();
                 }
                 console.log(productPage.state)
             })
@@ -1689,6 +1645,65 @@
             // paira.initDialogBox(data.menu);
         })
         })
+    }
+    // show banner 
+    if( document.querySelector('.carousel-inner')){
+        let bannerData = [
+            {
+                id: "0",
+                name: "Mtsvane qvevri wine",
+                img: "https://via.placeholder.com/1200x500/500",
+                href: `collection.html#search=Mtsvane qvevri`,
+            },
+            {
+                id: "1",
+                name: "Chinuri qvevri wine",
+                img: "https://via.placeholder.com/1200x500/150",
+                href: `collection.html#search=Chinuri qvevri`,
+            },
+            {
+                id: "2",
+                name: "RQATSITELI QVERI wine",
+                img: "https://via.placeholder.com/1200x500/25",
+                href: `collection.html#search=RQATSITELI QVERI`,
+            },
+        ]
+
+        function showBanner(data){
+            let banner = document.querySelector('.carousel-inner');
+            let bannerDots = document.querySelector('.carousel-indicators');
+            let bannerContent = "";
+            let dotsContent = "";
+
+            banner.innerHTML = "";
+            bannerDots.innerHTML = "";
+            
+            
+            data.forEach((item,i) => {
+                let text = item.name.split(' '); 
+                bannerContent += `
+                <div class="item ${i === 0 ? "active": ""}">
+                    <img alt="Third slide" src="${item.img}">
+                    <div class="container">
+                        <div class="carousel-caption carousel-caption1">
+                            <h1 class="text-uppercase paira-animation animated fadeInRight margin-top-0" data-paira-animation="fadeInLeft" data-paira-animation-delay="0.0s">${text[0]}</h1>
+                            <h1 class="text-uppercase paira-animation animated fadeInRight" data-paira-animation="fadeInLeft" data-paira-animation-delay="0.1s">${text[1]}</h1>
+                            <h1 class="text-uppercase paira-animation animated fadeInRight" data-paira-animation="fadeInLeft" data-paira-animation-delay="0.2s">${text[2]}</h1>
+                            <a href="${item.href}" class="btn-border margin-top-20 paira-animation animated fadeInRight" data-paira-animation="fadeInLeft" data-paira-animation-delay="0.3s">Shop Now</a>
+                        </div>
+                    </div>
+                </div>
+                `
+                dotsContent += `
+                <li data-target="#carousel" data-slide-to="${i}" class="${i === 0 ? "active": ""}"></li>
+                `
+            })
+            banner.insertAdjacentHTML('afterbegin', bannerContent);
+            bannerDots.insertAdjacentHTML('afterbegin', dotsContent);
+        }
+
+        showBanner(bannerData);
+
     }
    //show blog
         //    fetch('http://spirit.ge:8000/blog/')
