@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 import datetime
 from os.path import join, abspath, dirname
+import dj_database_url
 
 here = lambda *x: join(abspath(dirname(__file__)), *x)
 PROJECT_ROOT = here("..", "..", "..")
@@ -115,22 +116,7 @@ WSGI_APPLICATION = 'wine_shop_back_app.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-
-        'NAME': 'django_db',
-
-        'USER': 'djangouser',
-
-        'PASSWORD': 'djangouser123231222',
-
-        'HOST': '127.0.0.1',
-
-        'PORT': '5432',
-
-    }
-
+    'default': dj_database_url.config()
 }
 
 
