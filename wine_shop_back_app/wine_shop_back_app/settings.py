@@ -158,7 +158,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = root('assets')
+STATIC_ROOT = root('static')
 
 MEDIA_URL = '/images/'
 
