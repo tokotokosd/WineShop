@@ -16,7 +16,7 @@ import datetime
 from os.path import join, abspath, dirname
 
 here = lambda *x: join(abspath(dirname(__file__)), *x)
-PROJECT_ROOT = here("..", "..")
+PROJECT_ROOT = here("..", "..", "..")
 root = lambda *x: join(abspath(PROJECT_ROOT), *x)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
