@@ -198,3 +198,5 @@ EMAIL_PAGE_DOMAIN = 'http://spirit.ge:8000/'
 # EMAIL_HOST_USER = 'mymail@gmail.com'
 # EMAIL_HOST_PASSWORD = 'mYC00lP4ssw0rd'  # os.environ['password_key'] suggested
 # EMAIL_USE_TLS = True
+
+DEFAULT_AUTO_FIELD='django.db.models.AutoField' 
