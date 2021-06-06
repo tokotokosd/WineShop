@@ -9,14 +9,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--=================== The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags ===================-->
-    <meta name="description" content="Blog-Single Vine Responsive HTML Template">
-    <meta name="author" content="Blog-Single Vine Responsive HTML Template">
+    <meta name="description" content="Home Vine Responsive HTML Template">
+    <meta name="author" content="Home Vine Responsive HTML Template">
     <link rel="shortcut icon" href="images/favicon.png" type="image/png"/>
-    <title>Blog-Single Vine Responsive HTML Template</title>
+    <title>Home Vine Responsive HTML Template</title>
     <!--=================== Bootstrap core CSS ===================-->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <!--=================== Animate CSS ===================-->
     <link href="css/animate.min.css" rel="stylesheet">
+    <!--=================== Bx Slider CSS ===================-->
+    <link href="css/jquery.bxslider.css" rel="stylesheet">
+    <!--=================== OWL Carousel CSS ===================-->
+    <link href="css/owl.carousel.css" rel="stylesheet">
     <!--=================== Paira Framework Main CSS ===================-->
     <link href="css/paira.css" rel="stylesheet">
     <!--=================== Paira Framework Font and Color CSS ===================-->
@@ -60,7 +64,7 @@
                                     <div id="navbar-collapse" class="navbar-collapse collapse ">
                                         <ul class="nav navbar-nav">
                                             <!--=================== Single Menu ===================-->
-                                            <li class="width-li"><a href="collection.html" data-lang="shop">shop</a></li>
+                                            <li class="width-li"><a href="collection.html">shop</a></li>
                                             <!--=================== Single Menu ===================-->
                                             <!-- <li class="btn-group currencies width-li">
                                                 <button type="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
@@ -74,12 +78,12 @@
                                             <!--=================== Single Menu ===================-->
                                             <!-- <li class="width-li"><a href="#" class="login-popup">login</a></li> -->
                                             <!--=================== Single Menu ===================-->
-                                            <li class="width-li"><a href="blog.html" data-lang="blog">Blog</a></li>
+                                            <li class="width-li"><a href="blog.html">Blog</a></li>
                                             <!--=================== Single Menu ===================-->
                                             
                                             <!--=================== Single Menu ===================-->
-                                            <li class="width-li" style="margin-right:20px;"><a href="contact.html" data-lang="contact">Contact Us</a></li>
-                                            <li class="width-li" id="loginContainer"><a href="#" class="login-popup" id="loginBtn" data-lang="login/register">login/register</a></li>
+                                            <li class="width-li" style="margin-right:20px;"><a href="contact.html">Contact Us</a></li>
+                                            <li class="width-li" id="loginContainer"><a href="#" class="login-popup" id="loginBtn">login/register</a></li>
                                             <!--=================== Grid Mega Menu ===================-->
                                             
                                             <!--=================== Single Menu DISABLED===================-->
@@ -146,7 +150,7 @@
         </section>
     </header>
     <!--=================== Main Content Container ===================-->
-    <main class="blog-single-page">
+    <main class="home-page">
         <!--=================== Breadcrumb Section ===================-->
         <section class="breadcrumb-container paira-padding-bottom-1">
             <div class="container">
@@ -154,57 +158,20 @@
                     <div class="col-md-12 text-center">
                         <div class="breadcrumb">
                             <ul class="list-inline">
-                                <li><a href="#" class="raleway-light"><span data-lang="home">Home</span> <i class="fa fa-angle-right"></i></a></li>
-                                <li class="raleway-sbold" data-lang="blog">Blog</li>
+                                <li><a href="index.html" class="raleway-light">Home <i class="fa fa-angle-right"></i></a></li>
+                                <li class="raleway-sbold">Terms & Conditions</li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-        <!--=================== Blog Section ===================-->
-        <section class="blog-single-content paira-padding-bottom-1">
+        <!--=================== Order History Section ===================-->
+        <section>
             <div class="container">
-                <div class="row">
-                    <div class="col-md-12 text-center">
-                        <img alt="" class="paira-margin-bottom-1" src="images/hedding.png">
-                        <h3 class="text-uppercase raleway-light margin-clear paira-margin-bottom-1" data-lang="blog">Blog</h3>
-                    </div>
-                    <div id="singleBlogContainer">
-                        <!-- here goes blog -->
-                    </div>
-                    <div class="col-md-12 col-sm-12 col-xs-12 paira-padding-bottom-2">
-                        <div class="next-pre">
-                            <a href="#" class="btn-border text-uppercase" id="prevBtn" data-lang="prev post">previous post</a>
-                            <a href="#" class="btn-border pull-right text-uppercase" id="nextBtn" data-lang="next post">next post</a>
-                        </div>
-                    </div>
-                    <!--=================== Comment Section ===================-->
-                    <div class=" col-md-12 col-sm-12 col-xs-12 paira-padding-bottom-2">
-                        <div class="blog-post-comments paira-padding-bottom-2">
-                            <h3 class="text-uppercase raleway-sbold" data-lang="comments">Comments</h3>
-                            <div id="commentContainer">
-                                <!-- here goes comments -->
-                            </div>
-                        </div>
-                    </div>
-                    <div class=" col-md-12 col-sm-12 col-xs-12">
-                        <div class="form-contact">
-                            <h3 class="text-uppercase raleway-sbold margin-bottom-0" data-lang="leave a comment">leave a comment</h3>
-                            <!--=================== Send Comment Section ===================-->
-                            <form accept-charset="UTF-8" action="#" class="contact-form" method="post">
-                                <div class="row">
-                                    <div class="form-group col-md-12 col-sm-12 col-xs-12 paira-margin-top-1 margin-bottom-0">
-                                        <textarea rows="10" name="contact[body]" class="form-control" id="commentArea"></textarea>
-                                        <span class="center-block"><label data-lang="comment">Comment</label></span>
-                                    </div>
-                                </div>
-                                <a href="#" class="btn btn-default btn-lg paira-margin-top-1 color-scheme-2 pull-right text-uppercase raleway-light" id="sendCommentBtn" data-lang="send comment">Send Comment</a>
-                            </form>
-                        </div>
-                    </div>
+                <div class="blog-post-comments paira-padding-bottom-2">
+                    <h3 class="text-uppercase raleway-sbold">Terms & Conditions</h3>
                 </div>
-            </div>
         </section>
     </main>
     <!--=================== Footer Container ===================-->
@@ -273,7 +240,7 @@
         </div>
     </div>
 </div>
-<!-- =================== Login Dialog =================== -->
+<!--=================== Login Dialog ===================-->
 <div class="modal fade paira-login-popup" id="paira-login" tabindex="-1" role="dialog" aria-hidden="false" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -281,18 +248,18 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <div class="row">
                     <div class="col-md-12">
-                        <h3 class="margin-bottom-30 text-capitalize" data-lang="customer login">Customer Login</h3>
+                        <h3 class="margin-bottom-30 text-capitalize">Customer Login</h3>
                         <form class="popup-login-form">
                             <input type="email" class="form-control" name="EMAIL" value="" placeholder="Email"/>
                             <input type="password" class="form-control paira-margin-top-1" name="password" value="" placeholder="Password"/>
                             <div class="forget-password text-right">
-                                <a href="reset-password.html" class="text-capitalize position-rela btn-border" data-lang="forget password">Forget Password?</a>
-                                <button class="btn btn-success color-scheme-2 btn-lg text-uppercase paira-margin-top-1" data-lang="login">Login</button>
+                                <a href="reset-password.html" class="text-capitalize position-rela btn-border">Forget Password?</a>
+                                <button class="btn btn-success color-scheme-2 btn-lg text-uppercase paira-margin-top-1">Login</button>
                             </div>
                         </form>
                         <div class="new-customer text-right overflow">
-                            <h3 class="text-capitalize display-inline-b position-rela margin-top-40" data-lang="new customer">New Customer</h3>
-                            <a href="register.html" class="btn btn-default pull-right btn-lg forget-password text-uppercase margin-top-40" data-lang="register">Register</a>
+                            <h3 class="text-capitalize display-inline-b position-rela margin-top-40">New Customer</h3>
+                            <a href="register.html" class="btn btn-default pull-right btn-lg forget-password text-uppercase margin-top-40">Register</a>
                         </div>
                     </div>
                 </div>
@@ -308,18 +275,18 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12 cart-table">
-                        <h3 class="margin-bottom-20 text-capitalize text-color-1" data-lang="shopping cart">Shopping Cart</h3>
+                        <h3 class="margin-bottom-20 text-capitalize text-color-1">Shopping Cart</h3>
                         <div class="cart-table-inner text-center" id="cartTableWrapper">
                             
                         </div>
                     </div>
                     <div class="col-md-12 col-sm-12 col-xs-12 pull-right text-right">
                         <div>
-                            <h3 class="text-color-1" id="cartCalculate" data-lang="subtotal">Subtotal : <span><b>0</b></span></h3>
-                            <p class="margin-top-10 text-color-1" data-lang="Shipping/tax">Shipping & tax calculate at checkout</p>
-                            <a href="collection.html" class="btn-border text-color-1 text-uppercase margin-top-20" data-lang="continue shopping">CONTINUE SHOPPING</a>
+                            <h3 class="text-color-1" id="cartCalculate">Subtotal : <span><b>0</b></span></h3>
+                            <p class="margin-top-10 text-color-1">Shipping & tax calculate at checkout</p>
+                            <a href="collection.html" class="btn-border text-color-1 text-uppercase margin-top-20">CONTINUE SHOPPING</a>
                             <!-- <a href="#" class="btn btn-success updat btn-lg text-uppercase margin-top-20 margin-left-20" id="cartUpdate">update</a> -->
-                            <a href="#" class="btn btn-default btn-lg text-uppercase checkout margin-top-20 margin-left-20" id="cartCheckout" disabled data-lang="checkout">checkout</a>
+                            <a href="#" class="btn btn-default btn-lg text-uppercase checkout margin-top-20 margin-left-20" id="cartCheckout" disabled>checkout</a>
                         </div>
                     </div>
                 </div>
@@ -327,6 +294,16 @@
         </div>
     </div>
 </div>
+<!--=================== Loading Image ===================-->
+<div class="paira-loading ajax-loading margin-clear text-center" style="display: none;">
+    <img src="images/AjaxLoader.gif" alt="" class="padding-clear margin-top-10">
+    <p><b>Loading...</b></p>
+</div>
+<!--=================== Quick View Dialog ===================-->
+<!--=================== Welcome Newsletter Dialog ===================-->
+<!--=================== Error Dialog Box ===================-->
+
+<!--=================== Ajax Success Message ===================-->
 <!-- Your Chat Plugin code -->
 <div class="fb-customerchat"
   attribution="page_inbox"
@@ -338,7 +315,10 @@
 <script src="js/jquery.easing.1.3.js"></script>
 <script src="js/jquery.waypoints.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/owl.carousel.min.js"></script>
+<script src="js/jquery.bxslider.min.js"></script>
 <script src="js/jquery.mousewheel.min.js"></script>
+<script src="js/jquery.parallax-1.1.3.js" type="text/javascript"></script>
 <!--=================== Paira Framework Main Javascript ===================-->
 <script src="js/paira.js"></script>
 </body>
