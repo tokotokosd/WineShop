@@ -33,7 +33,7 @@ SECRET_KEY = ')ugjbdltugc4i(od!$r5z#bgtb2g8=m^65femimr=d9%ig=u+('
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['34.107.74.144', 'www.spirit.ge', 'spirit.ge']
+ALLOWED_HOSTS = ['34.107.74.144', 'www.spirit.ge', 'spirit.ge', '35.158.100.94']
 
 
 # Application definition
