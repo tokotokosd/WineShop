@@ -3,3 +3,4 @@ psycopg2
 django-cors-headers
 djangorestframework
 djangorestframework-jwt
+django_email_verification
