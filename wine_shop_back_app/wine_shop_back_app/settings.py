@@ -176,7 +176,7 @@ STATICFILES_DIRS = [
     root('static')
 ]
 
-STATIC_ROOT = root('static')
+STATIC_ROOT = root('assets')
 
 MEDIA_URL = '/images/'
 
