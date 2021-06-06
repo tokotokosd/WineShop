@@ -1,5 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.dispatch import receiver
+from django.urls import reverse
+from django_rest_passwordreset.signals import reset_password_token_created
+from django.core.mail import send_mail
 
 
 # Create your models here.
@@ -56,20 +60,34 @@ class Product(models.Model):
     image_tag.allow_tags = True
 
 
+
+class ShippingAddres(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=True, null=True)
+    address = models.CharField(max_length=200, null=True)
+    phone = models.CharField(max_length=200, null=True)
+    first_last_name = models.CharField(max_length=200, null=True)
+    comment = models.CharField(max_length=200, null=True)
+
+    def __str__(self):
+        return self.address
+
+
 class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=True, null=True)
     date_order = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField(default=False, null=True, blank=False)
-    transaction_id = models.CharField(max_length=200, null=True)
+    pay_id = models.CharField(max_length=200, null=True)
+    address = models.ForeignKey(ShippingAddres, on_delete=models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
-        return str(self.transaction_id)
+        return str(self.id)
 
     @property
     def get_cart_total(self):
         orderitems = self.orderitem_set.all()
         total = sum([item.get_total for item in orderitems])
         return total
+
 
 
 class OrderItem(models.Model):
@@ -83,18 +101,6 @@ class OrderItem(models.Model):
         total = self.product.price * self.quantity
         return total
 
-
-class ShippingAddress(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=True, null=True)
-    order = models.ForeignKey(Order, on_delete=models.SET_NULL, blank=True, null=True)
-    address = models.CharField(max_length=200, null=True)
-    city = models.CharField(max_length=200, null=True)
-    state = models.CharField(max_length=200, null=True)
-    zipcode = models.CharField(max_length=200, null=True)
-    date_added = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.address
 
 
 class Blog(models.Model):
@@ -114,3 +120,28 @@ class BlogComments(models.Model):
 
     def __str__(self):
         return self.username.name
+
+
+class Banner(models.Model):
+    img = models.ImageField(null=True, blank=True)
+    text = models.CharField(max_length=400, null=True)
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, blank=True, null=True)
+
+    def __str__(self):
+        return self.product.name
+
+@receiver(reset_password_token_created)
+def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
+
+    email_plaintext_message = "http://spirit.ge/reset-password.html#token={}".format( reset_password_token.key)
+
+    send_mail(
+        # title:
+        "Password Reset for {title}".format(title="Some website title"),
+        # message:
+        email_plaintext_message,
+        # from:
+        "noreply@somehost.local",
+        # to:
+        [reset_password_token.user.email]
+    )
