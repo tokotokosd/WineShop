@@ -5,3 +5,4 @@ djangorestframework
 djangorestframework-jwt
 django_email_verification
 django_rest_passwordreset
+Pillow
