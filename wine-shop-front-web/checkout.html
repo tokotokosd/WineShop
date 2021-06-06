@@ -262,18 +262,18 @@
                                 <div class="col-xs-12 col-sm-12 col-md-12">
                                     <!--=================== Contact Us Form Section ===================-->
                                     <form id="checkoutForm" accept-charset="UTF-8" action="#" class="contact-form" method="post">
-                                        <div class="row">
+                                        <div class="row" id="nonRegisteredForm">
                                             <div id="errorMsg" style="color: red;"></div>
                                             <div class="form-group col-md-12 col-sm-12 col-xs-12 paira-margin-top-1 margin-bottom-0">
-                                                <input type="email" class="form-control" name="contact[name]" id="orderCustomerName">
+                                                <input type="email" class="form-control" name="orderCustomerName" id="orderCustomerName">
                                                 <span class="center-block"><label for="orderCustomerName" data-lang="first & last name" style="min-width: 200px;">First name & Last name</label></span>
                                             </div>
                                             <div class="form-group col-md-12 col-sm-12 col-xs-12 paira-margin-top-1 margin-bottom-0">
-                                                <input type="phone" class="form-control" name="contact[name]" id="orderCustomerPhone">
+                                                <input type="phone" class="form-control" name="orderCustomerPhone" id="orderCustomerPhone">
                                                 <span class="center-block"><label for="orderCustomerPhone" data-lang="phone">Phone</label></span>
                                             </div>
                                             <div class="form-group col-md-12 col-sm-12 col-xs-12 paira-margin-top-1 margin-bottom-0">
-                                                <input type="address" class="form-control" name="contact[email]" id="orderCustomerAddress">
+                                                <input type="address" class="form-control" name="orderCustomerAddress" id="orderCustomerAddress">
                                                 <span class="center-block"><label for="orderCustomerAddress" data-lang="address">Address</label></span>
                                             </div>
                                             <div class="form-check" style="margin-left: 15px;">
@@ -283,8 +283,52 @@
                                                 </label>
                                             </div>
                                         </div>
+                                        <div id="registeredUserForm" style="display: none">
+                                            <h3 class="margin-bottom-20 text-capitalize" style="margin-top: 20px; text-align: center;" data-lang="select order details">Select your order details</h3>
+                                            <div class="form-group col-md-12 col-sm-12 col-xs-12 margin-bottom-0" style="display: flex; justify-content: space-around; flex-direction: column; align-items: center;">
+                                                <div id="addressWrapper">
+                                                    <button value="" data-lang="select" class="btn btn-secondary dropdown-toggle checkout-dropdown" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        Select
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                                        <span style="color: white; text-size: 15px;" data-lang="choose">choose preferred order details</span>
+                                                        <div class="dropdown-divider"></div>
+                                                        <div class="dropdown-menu-container" id="dropdownMenu2Container">
+                                                            
+                                                        </div>
+                                                        <!-- <div class="dropdown-divider"></div>
+                                                        <div class="dropdown-add-item">
+                                                            <input type="address" class="form-control" name="addNewAddress" id="addNewAddress" placeholder="enter new address...">
+                                                            <span class="center-block" id="addNewAddressBtn"><i class="fa fa-plus dropdown-add-icon" aria-hidden="true"></i></span>
+                                                        </div> -->
+                                                    </div>
+                                                </div>
+                                                <h3 style="margin-top:15px" data-lang="or">Or</h3>
+                                                <div>
+                                                    <div id="phoneWrapper" style="margin-top: 5px">
+                                                        
+                                                        <button value="" data-lang="add new address" class="btn btn-secondary dropdown-toggle checkout-dropdown" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-placement="top">
+                                                            Add new address
+                                                        </button>
+                                                        <div class="dropdown-menu add-new-info" aria-labelledby="dropdownMenu1">
+                                                            <span style="color: white; text-size: 15px;" data-lang="fill all">Please, fill all fields</span><br/>
+                                                            <div class="dropdown-add-item" style="display:flex; flex-direction: column; gap: 5px; align-items: center;">
+                                                                <span style="color: white; text-size: 15px;" data-lang="address">Address:</span>
+                                                                <input type="" class="form-control" name="addNewAddress" id="addNewAddress" placeholder="enter your address" style="background-color: white; height: 35px;">
+                                                                <span style="color: white; text-size: 15px;" data-lang="phone">Phone:</span>
+                                                                <input type="" class="form-control" name="addNewPhone" id="addNewPhone" placeholder="enter your phone" style="background-color: white; height: 35px; ">
+                                                                <span style="color: white; text-size: 15px;" data-lang="first & last name">First & last name:</span>
+                                                                <input type="address1" class="form-control" name="addNewName" id="addNewName" placeholder="enter your first & last name" style="background-color: white; height: 35px; ">
+                                                                <a class="add-new-info-button" id="addNewInfo" data-lang="add">Add</a>
+                                                            </div>
+                                                        </div>
+                                                       
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="text-right paira-margin-top-1">
-                                            <a href="#" class="btn btn-default btn-lg color-scheme-2 text-uppercase raleway-light margin-left-25 acc-nt" id="placeOrder" data-lang="place order">Place Order</a>
+                                            <a href="#" class="btn btn-default btn-lg color-scheme-2 text-uppercase raleway-light margin-left-25 acc-nt" id="placeOrder" data-lang="place order" >Place Order</a>
                                         </div>
                                     </form>
                                 </div>

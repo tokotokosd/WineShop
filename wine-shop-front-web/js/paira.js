@@ -29,7 +29,18 @@
 
     const csrftoken = getCookie('csrftoken');
     
-    
+    function dbt(objProp, useFun=true){
+        let hasLanguage = objProp.includes(';');
+        if(useFun === false && hasLanguage) return objProp.split(';')[0]
+        if(useFun === false && !hasLanguage) return objProp
+        if(localStorage.getItem('language') === 'ge'){
+            if(hasLanguage) return objProp.split(';')[1]
+            return objProp
+        } else {
+            if(hasLanguage) return objProp.split(';')[0]
+            return objProp
+        }
+    }
 
 
 
@@ -198,7 +209,7 @@
                     } else {
                         //////////
                         document.querySelector('#modalQuantityText').innerHTML = `
-                        <i class="fa fa-exclamation" aria-hidden="true" style="color: red"></i><span style="color: red";> ${t("Unfortunately, required quantity is out of stock.")}</span>
+                        <i class="fa fa-exclamation" aria-hidden="true" style="color: red"></i><span style="color: red";> ${t("Unfortunately, required quantity is out of stock")}</span>
                         `
                         setTimeout(() => {
                             document.querySelector('#modalQuantityText').innerHTML = "";
@@ -210,14 +221,41 @@
                     calculateSum()
                 })
                 
-                cartBtns.forEach(item => {
-                    item.addEventListener('click', e => {
-                        filteredJson[0].selectedQuantity = counterInput.value
-                        console.log(filteredJson[0])
-                        $('#paira-ajax-success-message').modal('show');
-                        productPage.cartModal(filteredJson[0]);
+                if(!isLoggedIn()){
+                    cartBtns.forEach(item => {
+                        item.addEventListener('click', e => {
+                            filteredJson[0].selectedQuantity = counterInput.value
+                            console.log(filteredJson[0])
+                            $('#paira-ajax-success-message').modal('show');
+                            productPage.cartModal(filteredJson[0]);
+                        })
                     })
-                })
+                }
+                
+                if(isLoggedIn()){
+                    cartBtns.forEach(item => {
+                        item.addEventListener('click', e => {
+                            fetch('http://spirit.ge:8000/cart/', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'appliction/json;charset=utf-8',
+                                    Authorization: `JWT ${localStorage.getItem('token')}`,
+                                    'X-CSRFToken':  csrftoken,
+                                },
+                                body: JSON.stringify({action: 'quantity', productId: filteredJson[0].id , quantity: +counterInput.value}),
+                                credentials: 'include'
+                            })
+                            .then( res => res.json() )
+                            .then( resJson => {
+                                if(resJson === "item was added"){
+                                    $('#paira-ajax-success-message').modal('show');
+                                    productPage.cartModal(filteredJson[0]);
+                                }
+                            });
+                        })
+                    })
+                }
+                
                 
             });
             $(document).on('click', '.search-popup', function(p) {
@@ -307,31 +345,95 @@
             
             $(document).on('click', '#create-acc', function(p) {
                 // p.stopPropagation();
-
-                let firstName = document.querySelector("#first-name");
-                let lastName = document.querySelector("#last-name");
-                let username = document.querySelector("#username");
-                let password = document.querySelector("#register-password");
-                let email = document.querySelector("#email");
-
-
-                
                 p.preventDefault();
-                fetch('http://34.107.74.144:8000/users/', {
+                let username = document.querySelector("#register-username");
+                let password = document.querySelector("#register-password");
+                let repeatedPassword = document.querySelector("#register-repeat-password");
+                let email = document.querySelector("#register-email");
+                let checkbox = document.querySelector('#invalidCheck');
+                let registerFormInputs = document.querySelectorAll('#register-form input')
+                let errorMsg = document.querySelector('#register-error-msg')
+                let isValid = true;
+                let registerJson = {username: "", password: "", email: ""}
+                errorMsg.innerText = "";
+    
+                let printErrorMsg = (text) => {
+                    errorMsg.innerText += text
+                }
+                
+                registerFormInputs.forEach(x => {
+                    if(x !== checkbox) x.removeAttribute('style')
+                    switch(x){
+                        case username:
+                            if(x.value === ""){
+                                isValid = false
+                                x.style.border = "1px solid red";
+                                printErrorMsg("Please, enter your username\n")
+                            }
+                            break;
+                        case email:
+                            if(x.value === ""){
+                                isValid = false
+                                x.style.border = "1px solid red";
+                                printErrorMsg("Please, enter your email\n")
+                            }
+                            break;
+                        case password:
+                            if(x.value === ""){
+                                isValid = false
+                                x.style.border = "1px solid red";
+                                printErrorMsg("Please, enter your password\n")
+                            }
+                            if(x.value !== repeatedPassword.value){
+                                x.style.border = "1px solid red";
+                                repeatedPassword.style.border = "1px solid red";
+                                printErrorMsg("Your passwod doesn't match\n")
+                            }
+                            break;
+                        case repeatedPassword:
+                            if(x.value === ""){
+                                isValid = false
+                                x.style.border = "1px solid red";
+                                printErrorMsg("Please, repeat your password\n")
+                            }
+                            if(x.value !== password.value){
+                                isValid = false
+                                x.style.border = "1px solid red";
+                            }
+                            break;
+                        case checkbox:
+                            if(!checkbox.checked){
+                                isValid = false
+                                printErrorMsg("You must agree to our terms and conditions\n")
+                            }
+                            break;
+                    }
+                })
+                console.log('lol')
+                if(isValid){
+                    registerJson.username = username.value
+                    registerJson.email = email.value
+                    registerJson.password = password.value
+                    console.log(registerJson)
+                    fetch('http://spirit.ge:8000/users/', {
                     method: 'POST',
                     headers: {
                     'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({username: username.value, password: password.value
-                        , first_name: firstName.value, last_name: lastName.value, email : email.value})
+                    //username: username.value, password: password.value, first_name: username.value, last_name: lastName.value, email : email.value
+                    body: JSON.stringify(registerJson)
                 })
-                    .then(res => res.json())
+                    .then(res => {
+                        console.dir(res) 
+                        if(res.ok === true) printErrorMsg("Please check your email to activate your account")
+                        return res.json()
+                    })
                     .then(json => {
-                    localStorage.setItem('token', json.token);
-                    sessionStorage.setItem('logged_in', true);
-                    sessionStorage.setItem('displayed_form', '');
-                    sessionStorage.setItem('username', json.username);
+                        if(Object.keys(json).length > 4) printErrorMsg(json[Object.keys(json)[0]])
                     });
+
+                }
+                
                 
             });
             $(document).on('click', '.cart-menu-body', function(p) {
@@ -339,6 +441,7 @@
                 
                 $('#paira-ajax-cart').modal('show');
                 productPage.displayCartContent(json);
+                
                 function cart(e){
                     e.stopPropagation()
                     
@@ -446,7 +549,7 @@
                         total = 0;
                     }
                     
-                    calculate.innerHTML = `Subtotal : <span><b>${total}&#8382;</b></span>`
+                    calculate.innerHTML = `${t("Subtotal")} : <span><b>${total}&#8382;</b></span>`
                 }
                 if (document.querySelector('#cartTableWrapper').getAttribute('listener') !== 'true') {
                     document.querySelector('#cartTableWrapper').addEventListener('click', cart);
@@ -979,7 +1082,7 @@
                                     <img src="http://spirit.ge:8000/images/${item.image}" alt="IMAGE NOT FOUND" class="img-responsive"; style="display: inline-block; max-width: 265px; max-height: 426px;">
                                 </a>
                             </div>
-                            <h1 class="font-size-16 paira-margin-top-4 margin-bottom-10"><a href="#" class="paira-quick-view">${item.name}</a></h1>
+                            <h1 class="font-size-16 paira-margin-top-4 margin-bottom-10"><a href="#" class="paira-quick-view">${dbt(item.name)}</a></h1>
                             <span class="money font-size-16"><b>${item.price}</b>&#8382;</span>
                             <div class="paira-quick-view product-hover" style="cursor: pointer";>
                                 <div class="paira-wish-compare-con wish-compare-view-cart paira-margin-top-4">
@@ -1017,12 +1120,12 @@
                 <div class="bottom-img">
                     <div class="info">
                         <h4 class="raleway-sbold full-width">${data.price}&#8382;</h4>
-                        <h4 class="raleway-light full-width text-capitalize margin-top-15">${data.name}</h4>
+                        <h4 class="raleway-light full-width text-capitalize margin-top-15">${dbt(data.name)}</h4>
                         <p class="margin-top-15 letter-spacing-2 font-size-14">
-                            ${data.description}
+                            ${dbt(data.description)}
                         </p>
                         <div class="form-group margin-top-15 col-sm-1 full-width">
-                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>${t('vendor')} : </b>${data.brand_id__name}</h4>
+                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>${t('vendor')} : </b>${dbt(data.brand_id__name)}</h4>
                         </div>
                         <div class="form-group margin-top-15 col-sm-1 full-width">
                             <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>${t('year')} : </b>${data.year}</h4>
@@ -1031,16 +1134,16 @@
                             <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>${t('alcohol')} % : </b>${data.alcoholPercent}</h4>
                         </div>
                         <div class="form-group margin-top-15 col-sm-1 full-width">
-                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>${t('region')} : </b>${data.region}</h4>
+                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>${t('region')} : </b>${dbt(data.region)}</h4>
                         </div>
                         <div class="form-group margin-top-15 col-sm-1 full-width">
-                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>${t('type')} : </b>${data.type}</h4>
+                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>${t('type')} : </b>${dbt(data.type)}</h4>
                         </div>
                         <div class="form-group margin-top-15 col-sm-1 full-width">
-                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>${t('color')} : </b>${data.color}</h4>
+                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>${t('color')} : </b>${dbt(data.color)}</h4>
                         </div>
                         <div class="form-group margin-top-15 col-sm-1 full-width">
-                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>${t('variety')} : </b>${data.variety}</h4>
+                            <h4 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase"><b>${t('variety')} : </b>${dbt(data.variety)}</h4>
                         </div>
                         <div class="quantity margin-top-15 display-inline-b full-width">
                             <h1 class="font-size-14 letter-spacing-2 pull-left"><label class="text-uppercase pull-left" style="font-size: 12px;" id="modalQuantityText"></label></h1>
@@ -1190,7 +1293,7 @@
             const handleGoToCart = (e) => {
                 e.stopPropagation();
                 e.preventDefault();
-                
+                $("#paira-quick-view .close").click()
                 $("#paira-ajax-success-message .close").click()
                 $(".cart-menu-body").click()
                 
@@ -1227,6 +1330,7 @@
                     .then( json => {
                         console.log(json.items)
                         let cart = [];
+                        console.log(data)
                         for(let i of data){
                             for(let i2 of json.items){
                                 if(i.id === i2.product_id){
@@ -1234,6 +1338,10 @@
                                 }
                             }
                         }
+
+                        // if(window.location.pathname.includes("checkout")){
+                        //     checkoutPage.init(cart)
+                        // }
 
                         cart.forEach((item) => {
                             cartItem += `
@@ -1316,7 +1424,7 @@
                     <img alt="" src="http://spirit.ge:8000/images/${item.image}" class="img-responsive">
                     <div class=${(i%2 === 0) ? "blogs1" : "blogs"}>
                         <h3 class="text-uppercase margin-bottom-10">${day} ${month}</h3>
-                        <h4 class="paira-margin-bottom-1"><a href="blog-single.html" class="date raleway-light letter-spacing-2">${item.tittle}</a></h4>
+                        <h4 class="paira-margin-bottom-1"><a href="blog-single.html" class="date raleway-light letter-spacing-2">${dbt(item.tittle)}</a></h4>
                         <a href="blog-single.html#${item.id}" class="btn-border font-size-12">${t("Read More")}</a>
                     </div>
                 </div>
@@ -1373,9 +1481,9 @@
                 <img alt="" src="http://spirit.ge:8000/images/${filteredJson[0].image}" class="img-responsive margin-bottom-20">
                 <div class="blogs-detail">
                     <h3 class="text-uppercase margin-top-0 margin-bottom-20">${day} ${month}</h3>
-                    <h1 class="margin-bottom-20 date letter-spacing-2">${filteredJson[0].tittle}</h1>
+                    <h1 class="margin-bottom-20 date letter-spacing-2">${dbt(filteredJson[0].tittle)}</h1>
                     <p class="margin-bottom-20 letter-spacing-2 margin-bottom-0">
-                        ${filteredJson[0].content}
+                        ${dbt(filteredJson[0].content)}
                     </p>
                 </div>
             </div>
@@ -1461,105 +1569,351 @@
 
     let checkoutPage = {
         init: function(data){
-
-        
-        let orderList = document.querySelector("#orderListTable");
-        let table = "";
-        let orderCalculateTotal = document.querySelector('#orderCalculateTotal');
-        let total = 0;
-        let customerName = document.querySelector('input[id="orderCustomerName"]');
-        let customerPhone = document.querySelector('input[id="orderCustomerPhone"]');
-        let customerAddress = document.querySelector('input[id="orderCustomerAddress"]');
-        let checkbox = document.querySelector('#invalidCheck');
-        let orderBtn = document.querySelector('#placeOrder');
-        let checkoutForm = document.querySelector('#checkoutForm');
-        let errorMsg = document.querySelector("#errorMsg");
-        
-
-        if(!isLoggedIn()){
-            let cartItems = JSON.parse(localStorage.getItem('cartItems'));
-            let orderData = { name: "", phone: "", address: "", date: "", order: []}
-    
-            cartItems.forEach( item => {
-                table += `
-                <tr>
-                    <td>${item.name}</td>
-                    <td>${item.quantity}</td>
-                    <td>${item.price}</td>
-                </tr>
-                `
-                total += item.quantity * item.price;
-                orderData.order.push({ id: item.id, quantity: item.quantity });
-            })
-            orderList.insertAdjacentHTML('afterbegin', table)
-            orderCalculateTotal.innerText = total;
+            
+            let orderList = document.querySelector("#orderListTable");
+            let table = "";
+            let orderCalculateTotal = document.querySelector('#orderCalculateTotal');
+            let total = 0;
+            let customerName = document.querySelector('input[id="orderCustomerName"]');
+            let customerPhone = document.querySelector('input[id="orderCustomerPhone"]');
+            let customerAddress = document.querySelector('input[id="orderCustomerAddress"]');
+            let checkbox = document.querySelector('#invalidCheck');
+            let orderBtn = document.querySelector('#placeOrder');
+            let checkoutForm = document.querySelector('#checkoutForm');
+            let errorMsg = document.querySelector("#errorMsg");
+            
             
 
             let printErrorMsg = (text) => {
-                errorMsg.innerText=text
+                errorMsg.innerText += text
             }
-            
-
-            let handleFormData = (e) => {
-                e.preventDefault();
-                
-                let i = 0;
-                document.querySelectorAll('#checkoutForm input').forEach(x =>{
-                    console.log(i++)
-                    switch(x){
-                        case customerName:
-                            if(x.value === ""){
-                                x.style.border = "1px solid red"
-                                printErrorMsg("Please, enter all fields");
-                            }
-                            break;
-                        case customerPhone:
-                            if(x.value === ""){
-                                x.style.border = "1px solid red"
-                            }
-                            break;
-                        case customerAddress:
-                            if(x.value === ""){
-                                x.style.border = "1px solid red"
-                            }
-                            break;
-                        case invalidCheck:
-                            if(!x.checked){
-                                x.style.border = "1px solid red"
-                            }
-                            break;
-                    }
+            console.log('lol')
+            if(!isLoggedIn()){
+                console.log('lol')
+                let cartItems = JSON.parse(localStorage.getItem('cartItems'));
+                let orderData = { "shipping": { first_last_name: "", phone: "", address: "" }, order: [], language: ""}
+                cartItems.forEach( item => {
+                    console.log(item)
+                    table += `
+                    <tr>
+                        <td>${item.name}</td>
+                        <td>${item.quantity}</td>
+                        <td>${item.price}</td>
+                    </tr>
+                    `
+                    total += item.quantity * item.price;
+                    orderData.order.push({ product_id: item.id, quantity: item.quantity });
                 })
+                orderList.insertAdjacentHTML('afterbegin', table)
+                orderCalculateTotal.innerText = total;
                 
-                // orderData.name = customerName.value;
-                // orderData.phone = customerPhone.value;
-                // orderData.address = customerAddress.value;
-                // orderData.date = new Date().toISOString();
-                // console.log(orderData);
-            }
 
-            if(!orderBtn.getAttribute('listener')){
-                orderBtn.addEventListener('click', handleFormData);
-                orderBtn.setAttribute('listener', 'true');
-            }
+                
+                
             
-        }
+                
+
+                let handleFormData = (e) => {
+                    e.preventDefault();
+                    let valid = true;
+                    errorMsg.innerText = "";
+                    let i = 0;
+                    document.querySelectorAll('#checkoutForm input').forEach(x =>{
+                        console.log(i++)
+                        if(x !== checkbox) x.removeAttribute('style');
+                        switch(x){
+                            case customerName:
+                                if(x.value === ""){
+                                    valid = false;
+                                    x.removeAttribute('style');
+                                    x.style.border = "1px solid red"
+                                    printErrorMsg("* Please, enter your name\n");
+                                }
+                                break;
+                            case customerPhone:
+                                if(x.value === ""){
+                                    valid = false;
+                                    x.style.border = "1px solid red"
+                                    printErrorMsg("* Please, enter your phone\n");
+                                }
+                                break;
+                            case customerAddress:
+                                if(x.value === ""){
+                                    valid = false;
+                                    x.style.border = "1px solid red"
+                                    printErrorMsg("* Please, enter your address\n");
+                                }
+                                break;
+                            case checkbox:
+                                if(!x.checked){
+                                    valid = false;
+                                    printErrorMsg("* You must agree to our terms and conditions\n")
+                                }
+                                break;
+                                
+                        }
+                    })
+                    console.log(csrftoken)
+
+                    if(valid){
+                        orderData["shipping"].first_last_name = customerName.value;
+                        orderData["shipping"].phone = customerPhone.value;
+                        orderData["shipping"].address = customerAddress.value;
+                        orderData.language = localStorage.getItem('language') ? localStorage.getItem('language') : "en";
+                        console.log(JSON.stringify(orderData))
+                        orderBtn.setAttribute('disabled', true)
+                        fetch('http://spirit.ge:8000/buy_process_unregistred', {
+                            method: 'POST',
+                            headers: {
+                            'Content-Type': 'application/json;charset=utf-8',
+                            'X-CSRFToken':  csrftoken
+                            },
+                            body: JSON.stringify(orderData)
+                        })
+                        .then( res => {
+                            if(!res.ok) printErrorMsg("Something went wrong, please try again later" + ` (Status Code: ${res.status}, Status Text: ${res.statusText})`)
+                        })
+                        .finally( res => orderBtn.removeAttribute('disabled') )
+                    }
+                }
+
+                if(!orderBtn.getAttribute('listener')){
+                    orderBtn.addEventListener('click', handleFormData);
+                    orderBtn.setAttribute('listener', 'true');
+                }
+                
+            }
 
             if(isLoggedIn()){
-                
-                fetch('http://spirit.ge:8000/buy_process', {
-                            method: 'GET',
+                let phoneDropdownContainer = document.querySelector("#dropdownMenu1Container")
+                let addressDropDownContainer = document.querySelector("#dropdownMenu2Container")
+                let addressInput = document.querySelector('input[id="addNewAddress"]')
+                let phoneInput = document.querySelector('input[id="addNewPhone"]')
+                let addAddressBtn = document.querySelector('#addNewAddressBtn')
+                let addPhoneBtn = document.querySelector('#addNewPhoneBtn')
+                let phoneDropdownBtn = document.querySelector('#dropdownMenu1')
+                let addressDropdownBtn = document.querySelector('#dropdownMenu2')
+
+
+                // add form
+                let addNameInput = document.querySelector('#addNewName')
+                let addAddressInput = document.querySelector('#addNewAddress');
+                let addPhoneInput = document.querySelector('#addNewPhone');
+                let addButton = document.querySelector('#addNewInfo')
+
+                let arr = [1, 2, 3, 4]
+
+
+                // address + button
+                // addAddressBtn.addEventListener('click', e => {
+                //     if(addressInput.value !== ""){
+                    //     fetch('http://spirit.ge:8000/address/', {
+                    //         method: 'POST',
+                    //         headers: {
+                    //             'Content-Type': 'application/json;charset=utf-8',
+                    //             Authorization: `JWT ${localStorage.getItem('token')}`,
+                    //             'X-CSRFToken':  csrftoken,
+                    //         },
+                    //         body: JSON.stringify({action: 'add', info: { address: addressInput.value, phone: null, first_last_name: null } })
+                    //     })
+                    //     console.log('done')
+                    // }
+                // })
+
+                addButton.addEventListener('click', e => {
+                    if(addNameInput.value !== "" && addAddressInput.value !== "" && addPhoneInput.value !== ""){
+                        fetch('http://spirit.ge:8000/address/', {
+                            method: 'POST',
                             headers: {
+                                'Content-Type': 'application/json;charset=utf-8',
+                                Authorization: `JWT ${localStorage.getItem('token')}`,
+                                'X-CSRFToken':  csrftoken,
+                            },
+                            body: JSON.stringify({action: 'add', info: { address: addAddressInput.value, phone: addPhoneInput.value, first_last_name: addNameInput.value } })
+                        })
+                    }
+                })
+
+                
+
+                let initDropdownListButtons = (listButtons=".address-list", deleteButtons=".address-delete") => {
+                    document.querySelectorAll(listButtons).forEach(item => item.addEventListener('click', e => {
+                        console.log('what?')
+                        addressDropdownBtn.setAttribute('value', `${item.getAttribute('value')}`)
+                        addressDropdownBtn.innerText = item.getAttribute('value');
+                    }))
+    
+                    document.querySelectorAll(deleteButtons).forEach(item => item.addEventListener('click', e => {
+                        console.log(item.previousSibling.getAttribute('value'))
+                        console.log(`action delete ${item.previousSibling.getAttribute('data-address-id')}`)
+                        fetch('http://spirit.ge:8000/address/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json;charset=utf-8',
+                                Authorization: `JWT ${localStorage.getItem('token')}`,
+                                'X-CSRFToken':  csrftoken,
+                            },
+                            body: JSON.stringify({ action: 'delete', info: { id: item.previousSibling.getAttribute('data-address-id') } })
+                        })
+                        console.log('done')
+                    }))
+                }
+                printErrorMsg('test')
+                // shipping details
+                // arr.forEach((item,i) => addressDropDownContainer.innerHTML += `
+                // <span style="width: 100%; display: flex;"><a value="${item}" class="dropdown-item text-color-1 address-list" style="cursor: pointer" data-address-id="${i}" >${item}</a><i class="fa fa-times dropdown-icon address-delete"></i></span>
+                // `)
+                ///////////////////////////////////////////////
+                addressDropdownBtn.addEventListener('click', e => {
+                    document.querySelector('body').style.cursor = "wait"
+                    fetch('http://spirit.ge:8000/address/', {
+                        method: 'GET',
+                        headers: {
                             'Content-Type': 'application/json;charset=utf-8',
                             Authorization: `JWT ${localStorage.getItem('token')}`,
                             'X-CSRFToken':  csrftoken
-                            }
+                        }
+                    })
+                    .then(res => res.json())
+                    .then(json => {
+                        addressDropDownContainer.innerHTML = ""
+                        json.items.forEach((item,i) => addressDropDownContainer.innerHTML += `
+                        <span style="width: 100%; display: flex;"><a value="${item.address}" class="dropdown-item text-color-1 address-list" style="cursor: pointer" data-address-id="${item.id}" >${item.first_last_name}/${item.address}/${item.phone}</a><i class="fa fa-times dropdown-icon address-delete"></i></span>`
+                        )
+                        initDropdownListButtons()
+                        document.querySelector('body').style.cursor = "default"
+                    })
+                })
+
+                orderBtn.addEventListener('click', e => {
+                    fetch('http://spirit.ge:8000/buy_process', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json;charset=utf-8',
+                                Authorization: `JWT ${localStorage.getItem('token')}`,
+                                'X-CSRFToken':  csrftoken,
+                            },
+                            body: JSON.stringify({ "shipping": { id: "3" }, language: localStorage.getItem('language') ? localStorage.getItem('language') : "en" })
                         })
-                        .then( res => res.json() )
-                        .then( json => console.log(json))
-                }
+                        .then(res => res.json())
+                        .then(json => console.log(json))
+                    
+                })
+                // document.querySelectorAll('.address-list').forEach(item => item.addEventListener('click', e => {
+                //     console.log('what?')
+                //     addressDropdownBtn.setAttribute('value', `${item.getAttribute('value')}`)
+                //     addressDropdownBtn.innerText = item.getAttribute('value');
+                // }))
+
+                // document.querySelectorAll('.address-delete').forEach(item => item.addEventListener('click', e => {
+                //     console.log(item.previousSibling.getAttribute('value'))
+                // }))
+
+                let registeredFrom = document.querySelector("#registeredUserForm")
+                let nonRegisteredForm = document.querySelector("#nonRegisteredForm")
+                nonRegisteredForm.innerHTML = "";
+                registeredFrom.setAttribute('style', 'display: block');
+
+
+                let cartItems = data
+                console.log(data)
+                
+                cartItems.forEach( item => {
+                    table += `
+                    <tr>
+                        <td>${item.name}</td>
+                        <td>${item.quantity}</td>
+                        <td>${item.price}</td>
+                    </tr>
+                    `
+                    total += item.quantity * item.price;
+                })
+                orderList.insertAdjacentHTML('afterbegin', table)
+                orderCalculateTotal.innerText = total;
+                
+                // $(".dropdown-toggle").dropdown('hide')
+                // fetch('http://spirit.ge:8000/buy_process', {
+                //     method: 'GET',
+                //     headers: {
+                //     'Content-Type': 'application/json;charset=utf-8',
+                //     Authorization: `JWT ${localStorage.getItem('token')}`,
+                //     'X-CSRFToken':  csrftoken
+                //     }
+                // })
+                // .then( res => res.json() )
+                // .then( res => console.log(res))
+            }
+        
         }
     }
+
+    let resetPassword = {
+        init: function(){
+            let emailInput = document.querySelector("#resetPasswordInput");
+            let sendBtn = document.querySelector("#resetSend");
+            let message = document.querySelector("#resetMsgText");
+            let password = document.querySelector("#newPasswordReset");
+            let repeatPassword = document.querySelector("#repeatNewPasswordReset")
+
+            let url = window.location.hash.substring(1).includes('token=');
+
+            const printMsg = (msg) => {
+                message.innerText = msg;
+            } 
+
+            if(url){
+                sendBtn.addEventListener('click', e => {
+                    if(emailInput.value !== ""){
+                        console.log('lol')
+                        fetch('http://spirit.ge:8000/api/password_reset/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json;charset=utf-8',
+                            },
+                            body: JSON.stringify({email: emailInput.value})
+                        })
+                        .then(res => {
+                            if(!res.ok){
+                                printMsg(t('Something went wrong, please try again later'))
+                            }
+                            res.json()
+                        })
+                        .then(json => console.log(json))
+                    }
+                })
+            }
+            
+
+            if(url){
+                let token = window.location.hash.substring(1).split("=")[1]
+                emailInput.parentElement.style = "display: none;"
+                password.parentElement.style = "display: block;"
+
+                sendBtn.addEventListener('click', e => {
+                    console.log(token)
+                    console.log(password.value)
+                    fetch('http://spirit.ge:8000/api/password_reset/confirm/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json;charset=utf-8',
+                        },
+                        body: JSON.stringify({password: password.value, token: token})
+                    })
+                    .then(res => {
+                        if(!res.ok){
+                            printMsg(t('Something went wrong, please try again later'))
+                        }
+                        res.json()
+                    })
+                    .then(json => console.log(json))
+                })
+            }
+
+
+        }
+    }
+
+    resetPassword.init()
 
     // blog page
     if (window.location.href.includes("blog.html") || window.location.href.includes("index.html")){
@@ -1597,6 +1951,7 @@
                 paira.hideLoading('productsLoading');
                 productPage.showProducts(data.menu, 12, 1);
                 paira.initDialogBox(data.menu);
+
                 if (window.location.href.includes("collection.html")){
                     if(window.location.hash.substring(1).split("=")[0] === "search"){
                         let searchVal = decodeURI(window.location.hash.substring(1).split("=")[1]);
@@ -1610,10 +1965,16 @@
                         let filteredJson = data.menu.filter( item => item.brand_id__name.toLowerCase().includes(searchVal.toLowerCase()));
                         productPage.showProducts(filteredJson, 12, 1)
                     }
+                    if(window.location.hash.substring(1).split("=")[0] === "id"){
+                        let searchVal = decodeURI(window.location.hash.substring(1).split("=")[1])
+                        console.log(searchVal)
+                        let filteredJson = data.menu.filter( item => item.id === +searchVal )
+                        productPage.showProducts(filteredJson, 12, 1)
+                    }
                     if(window.location.hash.substring(1).split("=")[0] === "type"){
                         let searchVal = decodeURI(window.location.hash.substring(1).split("=")[1]);
                         console.log(searchVal)
-                        let filteredJson = data.menu.filter( item => item.name.toLowerCase().includes(searchVal.toLowerCase()));
+                        let filteredJson = data.menu.filter( item => item.type.toLowerCase().includes(searchVal.toLowerCase()));
                         productPage.showProducts(filteredJson, 12, 1)
                     }
                     paira.initProductPagination(data.menu, 1, 12);
@@ -1628,7 +1989,14 @@
             console.log(error)
         });
     } else {
-        paira.initDialogBox();
+        fetch('http://spirit.ge:8000/wineproduct/?wine=test')
+        .then(resp => resp.json())
+        .then(data => {
+            paira.initDialogBox(data.menu);
+            if(window.location.pathname.includes('checkout')){
+                loadCheckoutPage(data.menu);
+            }
+        })  
     }
 
     // show brands
@@ -1649,6 +2017,9 @@
     // show banner 
     if( document.querySelector('.carousel-inner')){
         console.log('started showbanner')
+        fetch('http://spirit.ge:8000/banners/')
+        .then(res => res.json())
+        .then(json => showBanner(json))
         let bannerData = [
             {
                 id: "0",
@@ -1679,18 +2050,20 @@
             banner.innerHTML = "";
             bannerDots.innerHTML = "";
             
+            // <h1 class="text-uppercase paira-animation animated fadeInRight" data-paira-animation="fadeInLeft" data-paira-animation-delay="0.1s">${text[1]}</h1>
+            // <h1 class="text-uppercase paira-animation animated fadeInRight" data-paira-animation="fadeInLeft" data-paira-animation-delay="0.2s">${text[2]}</h1>
+
+
             
             data.forEach((item,i) => {
-                let text = item.name.split(' '); 
+                let text = item.text.split(' '); 
                 bannerContent += `
                 <div class="item ${i === 0 ? "active": ""}">
-                    <img alt="Third slide" src="${item.img}">
+                    <img alt="Third slide" src="http://spirit.ge:8000/images/${item.img}">
                     <div class="container">
                         <div class="carousel-caption carousel-caption1">
                             <h1 class="text-uppercase paira-animation animated fadeInRight margin-top-0" data-paira-animation="fadeInLeft" data-paira-animation-delay="0.0s">${text[0]}</h1>
-                            <h1 class="text-uppercase paira-animation animated fadeInRight" data-paira-animation="fadeInLeft" data-paira-animation-delay="0.1s">${text[1]}</h1>
-                            <h1 class="text-uppercase paira-animation animated fadeInRight" data-paira-animation="fadeInLeft" data-paira-animation-delay="0.2s">${text[2]}</h1>
-                            <a href="${item.href}" class="btn-border margin-top-20 paira-animation animated fadeInRight" data-paira-animation="fadeInLeft" data-paira-animation-delay="0.3s">Shop Now</a>
+                            <a href=collection.html#id=${item.product_id} class="btn-border margin-top-20 paira-animation animated fadeInRight" data-paira-animation="fadeInLeft" data-paira-animation-delay="0.3s">Shop Now</a>
                         </div>
                     </div>
                 </div>
@@ -1703,7 +2076,6 @@
             bannerDots.insertAdjacentHTML('afterbegin', dotsContent);
         }
 
-        showBanner(bannerData);
         console.log('done showbanner')
     }
    //show blog
@@ -1716,9 +2088,130 @@
 
     // * checkout
 
-    if(window.location.pathname.includes("checkout")){
-        checkoutPage.init()
+    let orderHistoryPage = {
+        init: function(data){
+            let deliveredCardWrapper = document.querySelector("#orderHistoryDeliveredCardWrapper");
+            let notDeliveredCardWrapper = document.querySelector("#orderHistoryNotDeliveredCardWrapper");
+            let isDelivered;
+
+            data.forEach(item => {
+                isDelivered = item.complete
+                if(!isDelivered) deliveredCardWrapper.insertAdjacentHTML('afterbegin', this.createCards(item));
+                if(isDelivered) notDeliveredCardWrapper.insertAdjacentHTML('afterbegin', this.createCards(item));
+            })
+        },
+        createCards: function(item){
+            let cards = ""
+            
+            
+            cards += `
+            <li class="list-group-item">
+                <div class="order-header">
+                    <div class="order-id">${t("Order No.")}
+                        <span class="order-number">
+                            ${item.id}
+                        </span>
+                    </div>
+                    <div class="order-status-container">${t("Status")}:
+                        <span class="${item.complete ? "order-status-delivered": "order-status"}">
+                            ${item.complete ? t("Delivered") : t("Ongoing")}
+                        </span>
+                    </div>
+                </div>
+                <div class="order-items-container">
+                    <div class="container">
+                        <div class="row columns">
+                            <div class="col-xs-5">${t("Item Name")}</div>
+                            <div class="col-xs-3">${t("Quantity")}</div>
+                            <div class="col-xs-4">${t("Price")}</div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        ${this.createProductList(item)}
+                    </div>
+                </div>
+                <div class="order-footer">
+                    <div class="order-date">
+                        ${t("Ordered on")}:
+                        <span>
+                            ${item.date_order.split("T")[0]}
+                        </span>
+                    </div>
+                    <div class="order-total-price">
+                        ${t("Total Price")}:
+                        <span>${item.total_price}</span>
+                    </div>
+                </div>
+            </li>
+            `
+            return cards;
+        },
+        createProductList: function(data){
+            let productList = '';
+            data.order_products.forEach(item => {
+                productList += `
+                <div class="row item">
+                    <div class="col-xs-5">${item.product__name}</div>
+                    <div class="col-xs-3">${item.quantity}</div>
+                    <div class="col-xs-4">${item.product__price}</div>
+                </div>
+                `
+            })
+            return productList;
+        }
+        
     }
+
+
+    if(window.location.pathname.includes("order-history")){
+        paira.showLoading(document.querySelector('#orderHistoryDeliveredCardWrapper'), "#000", "deliveredCardsLoading");
+        paira.showLoading(document.querySelector('#orderHistoryNotDeliveredCardWrapper'), "#000", "notDeliveredCardsLoading");
+        fetch('http://spirit.ge:8000/history/', {
+            method: 'GET',
+            headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+            Authorization: `JWT ${localStorage.getItem('token')}`,
+            'X-CSRFToken':  csrftoken
+            }
+        })
+        .then(res => res.json())
+        .then(json => {
+            paira.hideLoading("deliveredCardsLoading");
+            paira.hideLoading("notDeliveredCardsLoading");
+            orderHistoryPage.init(json)
+        })
+    }
+
+    let loadCheckoutPage = (data) => {
+        if(isLoggedIn()){
+            fetch('http://spirit.ge:8000/cart/', {
+                method: 'GET',
+                headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                Authorization: `JWT ${localStorage.getItem('token')}`,
+                'X-CSRFToken':  csrftoken
+                }
+            })
+            .then( res => res.json() )
+            .then( json => {
+                console.log(json.items)
+                let cart = [];
+                for(let i of data){
+                    for(let i2 of json.items){
+                        if(i.id === i2.product_id){
+                            cart.push({id: i.id, image: i.image, name: i.name, quantity: i2.quantity, price: i.price})
+                        }
+                    }
+                }
+                checkoutPage.init(cart)
+            })
+        }
+        if(!isLoggedIn()){
+            checkoutPage.init()
+        }
+    }
+
+    
 
 
 
@@ -1926,6 +2419,41 @@
             "phone": "ტელ. ნომერი",
             "terms and conditions": "წესებს და პირობებებს",
             "place order": "შეკვეთის გაკეთება", 
+            "select order details": "აირჩიეთ შეკვეთის დეტალები",
+            "select": "არჩევა",
+            "or": "ან",
+            "add new address": "დაამატეთ ახალი მისამართი",
+            "add": "დამატება",
+            "address": "მისამართი",
+            "phone": "ტელეფონის ნომერი",
+            "first & last name": "სახელი, გვარი",
+            "fill all": "გთხოვთ შეავსოთ ყველა ველი",
+            "choose": "აირჩიეთ სასურველი შეკვეთის დეტალები",
+            //login
+            "customer login": "მომხმარებლის ავტორიზაცია",
+            "forget password": "დაგავიწყდათ პაროლი?",
+            "login": "ავტორიზაცია",
+            "new customer": "ახალი მომხმარებელი",
+            "register": "რეგისტრაცია",
+            //cart
+            "shopping cart": "სასყიდლების კალათა",
+            "subtotal": "სულ:",
+            "Shipping/tax": "მიტანის & გადასახადების დაანგარიშება შეკვეთისას",
+            "continue shopping": "ყიდვების გაგრძელება",
+            "checkout": "შეკვეთა",
+        },
+        "order-history": {
+            // navbar
+            "shop": "მაღაზია",
+            "blog": "ბლოგი",
+            "contact": "დაგვიკავშირდით",
+            "login/register": "ავტორიზაცია/რეგისტრაცია",
+            "latest product": "ახალი პროდუქცია",
+            //contact specific
+            "home": "მთავარი",
+            "history": "ისტორია",
+            "ongoing orders": "მიმდინარე შეკვეთები",
+            "delivered orders": "მიტანილი შეკვეთები",
             //login
             "customer login": "მომხმარებლის ავტორიზაცია",
             "forget password": "დაგავიწყდათ პაროლი?",
@@ -1941,9 +2469,10 @@
         },
         "dynamic": {
             //ee
+            "Welcome back": "კეთილი იყოს თქვენი დაბრუნება",
             "Read More": "მეტის წაკითხვა",
             "Total": "სულ",
-            "Subtotal": "მთლიანობაში",
+            "Subtotal": "სულ",
             "vendor": "მწარმოებელი",
             "year": "წელი",
             "alcohol": "ალკოჰოლის",
@@ -1958,7 +2487,15 @@
             "add to cart": "კალათაში დამატება",
             "Your password & username is wrong!": "თქვენი პაროლი ან მომხმარებლის სახელი არასწორია!",
             "Log Out": "ანგარიშიდან გამოსვლა",
-            "Unfortunately, required quantity is out of stock": "სამწუხაროდ ეს ღვინო მოთხოვნილ რაოდენობაში არ გვაქ"
+            "Unfortunately, required quantity is out of stock": "სამწუხაროდ ეს ღვინო მოთხოვნილ რაოდენობაში არ გვაქ",
+            "Order No.": "შეკვეთის ნომერი",
+            "Status": "სტატუსი",
+            "Ordered on": "შეკვეთა გაკეთდა",
+            "Total Price": "სრული ღირებულება",
+            "Price": "ფასი",
+            "Item Name": "პროდუქტის სახელი",
+            "Ongoing": "მიმდინარე",
+            "Delivered": "მიტანილი"
         },
     
 
@@ -2010,6 +2547,9 @@
                 case "/checkout.html":
                     handlePageTranslation("checkout");
                     break;
+                case "/order-history.html":
+                    handlePageTranslation("order-history");
+                    break;
             }
 
             language.classList.add('navbar-language-change-ge');
@@ -2036,7 +2576,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 text-center" style="font-size:16px;">
-                    Welcome back, <a href="order-history.html"><i class="fa fa-user-circle" aria-hidden="true" style="margin-right:3px;"></i><b>${sessionStorage.getItem('username')}</b></a>!
+                    ${t("Welcome back")}, <a href="order-history.html"><i class="fa fa-user-circle" aria-hidden="true" style="margin-right:3px;"></i><b>${sessionStorage.getItem('username')}</b></a>!
                     </div>
                 </div>
             </div>

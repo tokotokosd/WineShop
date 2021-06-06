@@ -509,7 +509,8 @@ a.boxclose {
     text-shadow: none;
 }
 .carousel-caption1 {
-    right: 52%;
+    /* right: 52%; */
+    width: fit-content;
     left: 124px;
     padding-bottom: 30px;
     float: left;
