@@ -9,13 +9,24 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['customer', 'date_order', 'complete', 'transaction_id']
+    list_display = ['id', 'customer', 'date_order', 'complete', 'pay_id']
 
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
     list_display = ['product', 'order', 'quantity', 'date_added']
 
+@admin.register(Blog)
+class BlogAdmin(admin.ModelAdmin):
+    list_display = ['tittle', 'content', 'time']
+
+@admin.register(BlogComments)
+class BlogCommentsAdmin(admin.ModelAdmin):
+    list_display = ['blog', 'username', 'comment']
+
+@admin.register(ShippingAddres)
+class ShippingAddresCommentsAdmin(admin.ModelAdmin):
+    list_display = ['id', 'customer', 'address', 'first_last_name']
 
 admin.site.register(Customer)
-admin.site.register(ShippingAddress)
 admin.site.register(Brand)
+admin.site.register(Banner)
