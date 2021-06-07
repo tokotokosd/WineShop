@@ -268,8 +268,8 @@
 
                 let form = document.querySelector('.popup-login-form')
                 
-                let email = document.querySelector('input[type=email]');
-                let password = document.querySelector('input[type=password]');
+                let email = document.querySelector('.popup-login-form input[type=email]');
+                let password = document.querySelector('.popup-login-form input[type=password]');
                 let submit = document.querySelector("#paira-login > div > div > div > div > div > form > div > button");
 
                 let insertLoginText = (response) => {
@@ -424,8 +424,8 @@
                     body: JSON.stringify(registerJson)
                 })
                     .then(res => {
-                        console.dir(res) 
-                        if(res.ok === true) printErrorMsg("Please check your email to activate your account")
+                        console.dir(res)
+                        if(res.ok === true) printErrorMsg(t("Please check your email to activate your account"))
                         return res.json()
                     })
                     .then(json => {
@@ -588,7 +588,12 @@
                 }
                 
             });
-            //$('#paira-welcome-newsletter').modal('show');
+            if(!isLoggedIn()){
+                if(!sessionStorage.getItem('visited')){
+                    $('#paira-welcome-newsletter').modal('show'); 
+                    sessionStorage.setItem('visited', true)
+                }
+            }
         },
         initProductPageSort: function(json){
             document.querySelector('#product-sort').addEventListener('change', e => {
@@ -618,7 +623,7 @@
                 pageNumber += `<li class="" value="${i}" style="cursor: pointer;">${i}</li>`;
             }
             let pageStat = document.querySelector("#paging-stat")
-            pageStat.innerHTML = `Showing : <b>${currentPage} - ${recordsPerPage}</b> Of <b>${json.length}</b>`;
+            pageStat.innerHTML = `${t("Showing")} : <b>${currentPage} - ${recordsPerPage}</b> ${t('Of')} <b>${json.length}</b>`;
             $("#page-numbers li:first-child").after(pageNumber);
             container.addEventListener('click', e => {
                 e.preventDefault()
@@ -1627,27 +1632,27 @@
                                     valid = false;
                                     x.removeAttribute('style');
                                     x.style.border = "1px solid red"
-                                    printErrorMsg("* Please, enter your name\n");
+                                    printErrorMsg(t("* Please, enter your name\n"));
                                 }
                                 break;
                             case customerPhone:
                                 if(x.value === ""){
                                     valid = false;
                                     x.style.border = "1px solid red"
-                                    printErrorMsg("* Please, enter your phone\n");
+                                    printErrorMsg(t("* Please, enter your phone\n"));
                                 }
                                 break;
                             case customerAddress:
                                 if(x.value === ""){
                                     valid = false;
                                     x.style.border = "1px solid red"
-                                    printErrorMsg("* Please, enter your address\n");
+                                    printErrorMsg(t("* Please, enter your address\n"));
                                 }
                                 break;
                             case checkbox:
                                 if(!x.checked){
                                     valid = false;
-                                    printErrorMsg("* You must agree to our terms and conditions\n")
+                                    printErrorMsg(t("* You must agree to our terms and conditions\n"))
                                 }
                                 break;
                                 
@@ -1856,14 +1861,15 @@
             let repeatPassword = document.querySelector("#repeatNewPasswordReset")
 
             let url = window.location.hash.substring(1).includes('token=');
-
+            
             const printMsg = (msg) => {
                 message.innerText = msg;
             } 
-
-            if(url){
+            console.log(url)
+            if(!url){
                 sendBtn.addEventListener('click', e => {
-                    if(emailInput.value !== ""){
+                    
+                    if(password.value !== "" && password.value === repeatPassword.value){
                         console.log('lol')
                         fetch('http://spirit.ge:8000/api/password_reset/', {
                             method: 'POST',
@@ -1878,7 +1884,11 @@
                             }
                             res.json()
                         })
-                        .then(json => console.log(json))
+                        .then(json => {
+                            printMsg(t('Please, check your mail to reset your password'))
+                        })
+                    } else {///////////////////////////////////////////////////
+                        printMsg(t('Passwords must match'))
                     }
                 })
             }
@@ -1913,7 +1923,11 @@
         }
     }
 
-    resetPassword.init()
+
+    // reset-password page
+    if(window.location.pathname.includes("reset-password")){
+        resetPassword.init()
+    }
 
     // blog page
     if (window.location.href.includes("blog.html") || window.location.href.includes("index.html")){
@@ -2020,26 +2034,7 @@
         fetch('http://spirit.ge:8000/banners/')
         .then(res => res.json())
         .then(json => showBanner(json))
-        let bannerData = [
-            {
-                id: "0",
-                name: "Mtsvane qvevri wine",
-                img: "https://via.placeholder.com/1200x500/500",
-                href: `collection.html#search=Mtsvane qvevri`,
-            },
-            {
-                id: "1",
-                name: "Chinuri qvevri wine",
-                img: "https://via.placeholder.com/1200x500/150",
-                href: `collection.html#search=Chinuri qvevri`,
-            },
-            {
-                id: "2",
-                name: "RQATSITELI QVERI wine",
-                img: "https://via.placeholder.com/1200x500/25",
-                href: `collection.html#search=RQATSITELI QVERI`,
-            },
-        ]
+        
 
         function showBanner(data){
             let banner = document.querySelector('.carousel-inner');
@@ -2249,6 +2244,13 @@
             "Shipping/tax": "მიტანის & გადასახადების დაანგარიშება შეკვეთისას",
             "continue shopping": "ყიდვების გაგრძელება",
             "checkout": "შეკვეთა",
+            //newsletter
+            "require 18": "ჩვენ გვსურს დავრწმუნდეთ, რომ ყველა მყიდველი მინიმუმ 18 წლიაა",
+            "are you 18": "ხართ 18+ წლის?",
+            "illegal age": "საიტის მოხმარებისთვის, თქვენ უნდა იყოთ მინიმუმ 18 წლის",
+            "18-": "სამწუხაროდ თქვნთვის საიტზე შემოსვლა აკრძალულია. ჩვენ გვაქვს ასაკის შეზღუდვა.",
+            "yes": "კი",
+            "no": "არა",
         },
         "shop":{
             // navbar
@@ -2495,9 +2497,74 @@
             "Price": "ფასი",
             "Item Name": "პროდუქტის სახელი",
             "Ongoing": "მიმდინარე",
-            "Delivered": "მიტანილი"
+            "Delivered": "მიტანილი",
+            "Please, check your mail to reset your password": "გთხოვთ შეამოწმოთ თქვენი ელ.ფოსტა რათა შეცვალოთ პაროლი",
+            'Something went wrong, please try again later': "დაფიქსირდა ხარვეზები, გთხოვთ ცადოთ მოგვიანებით",
+            'Passwords must match': "პაროლები უნდა ემთხვეოდეს",
+            "* Please, enter your name\n": "* გთხოვთ შეიყვანოთ სახელი\n",
+            "* Please, enter your phone\n": "* გთხოვთ შეიყვანოთ ტლეფონის ნომერი\n",
+            "* Please, enter your address\n": "* გთხოვთ შეიყვანოთ მისამართი\n",
+            "* You must agree to our terms and conditions\n": "* თქვენ უნდა დათანმხდეთ ჩვენ წესებს და პირობებს\n",
+            "Showing": "ნახულობთ",
+            "Of": ", რაოდენობა:",
+            "Please check your email to activate your account": "გთხოვთ შეამოწმეთ თქვენი ელ.ფოსტა რათა გააქტიუროთ ანგარიში",
         },
-    
+        "404": {
+            // navbar
+            "shop": "მაღაზია",
+            "blog": "ბლოგი",
+            "contact": "დაგვიკავშირდით",
+            "login/register": "ავტორიზაცია/რეგისტრაცია",
+            "latest product": "ახალი პროდუქცია",
+            //contact specific
+            "home": "მთავარი",
+            "page not found": "გვერდი ვერ მოიძებნა",
+            "sorry not found": "სამწუხაროდ თქვენი გვერდი ვერ მოიძებნა",
+            "go back": "გთხოვთ დაბრუნდეთ უკან",
+            "shop now": "დაიწყე შოპინგი",
+            //login
+            "customer login": "მომხმარებლის ავტორიზაცია",
+            "forget password": "დაგავიწყდათ პაროლი?",
+            "login": "ავტორიზაცია",
+            "new customer": "ახალი მომხმარებელი",
+            "register": "რეგისტრაცია",
+            //cart
+            "shopping cart": "სასყიდლების კალათა",
+            "subtotal": "სულ:",
+            "Shipping/tax": "მიტანის & გადასახადების დაანგარიშება შეკვეთისას",
+            "continue shopping": "ყიდვების გაგრძელება",
+            "checkout": "შეკვეთა",
+        },
+        "reset-password": {
+            // navbar
+            "shop": "მაღაზია",
+            "blog": "ბლოგი",
+            "contact": "დაგვიკავშირდით",
+            "login/register": "ავტორიზაცია/რეგისტრაცია",
+            "latest product": "ახალი პროდუქცია",
+            //contact specific
+            "home": "მთავარი",
+            "create new pass": "შექმენით ახალი პაროლი",
+            "email": "ელ.ფოსტა",
+            "new password": "ახალი პაროლი",
+            "repeat password": "გაიმეორეთ პაროლი",
+            "send": "გაგზავნა",
+            "cancel": "შეწყვეტა",
+            "or": "ან",
+            "reset password": "პაროლის აღდგენა",
+            //login
+            "customer login": "მომხმარებლის ავტორიზაცია",
+            "forget password": "დაგავიწყდათ პაროლი?",
+            "login": "ავტორიზაცია",
+            "new customer": "ახალი მომხმარებელი",
+            "register": "რეგისტრაცია",
+            //cart
+            "shopping cart": "სასყიდლების კალათა",
+            "subtotal": "სულ:",
+            "Shipping/tax": "მიტანის & გადასახადების დაანგარიშება შეკვეთისას",
+            "continue shopping": "ყიდვების გაგრძელება",
+            "checkout": "შეკვეთა",
+        }
 
     }
     
@@ -2549,6 +2616,12 @@
                     break;
                 case "/order-history.html":
                     handlePageTranslation("order-history");
+                    break;
+                case "/404.html":
+                    handlePageTranslation("404");
+                    break;
+                case "/reset-password.html":
+                    handlePageTranslation("reset-password");
                     break;
             }
 
