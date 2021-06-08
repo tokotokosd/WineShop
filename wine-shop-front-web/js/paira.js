@@ -1669,7 +1669,6 @@
                         orderBtn.setAttribute('disabled', true)
                         fetch('https://spirit.ge:8000/buy_process_unregistred', {
                             method: 'POST',
-							mode: 'no-cors',
                             headers: {
                             'Content-Type': 'application/json;charset=utf-8',
                             'X-CSRFToken':  csrftoken
@@ -1678,7 +1677,11 @@
                         })
                         .then( res => {
                             if(!res.ok) printErrorMsg("Something went wrong, please try again later" + ` (Status Code: ${res.status}, Status Text: ${res.statusText})`)
+							return res.json()
                         })
+						.then(json => [
+							window.location.href = json.link;
+						])
                         .finally( res => orderBtn.removeAttribute('disabled') )
                     }
                 }
@@ -1803,7 +1806,7 @@
                             body: JSON.stringify({ "shipping": { id: "3" }, language: localStorage.getItem('language') ? localStorage.getItem('language') : "en" })
                         })
                         .then(res => res.json())
-                        .then(json => console.log(json))
+                        .then(json => window.location.href = json.link)
                     
                 })
                 // document.querySelectorAll('.address-list').forEach(item => item.addEventListener('click', e => {

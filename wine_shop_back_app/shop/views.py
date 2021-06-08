@@ -212,7 +212,7 @@ def buy_process(request):
         print(response.content)
         url_chek = json.loads(response.content)['links'][0]['uri']
         url_buy = json.loads(response.content)['links'][1]['uri']
-        return HttpResponseRedirect(url_buy)
+        return HttpResponse(json.dumps({'link': url_buy}), content_type="application/json")
 
 @csrf_exempt
 @renderer_classes((TemplateHTMLRenderer, JSONRenderer))
@@ -268,7 +268,7 @@ def buy_process_unregistred(request):
         print(response.content)
         url_chek = json.loads(response.content)['links'][0]['uri']
         url_buy = json.loads(response.content)['links'][1]['uri']
-        return HttpResponseRedirect(url_buy)
+        return HttpResponse(json.dumps({'link': url_buy}), content_type="application/json")
 
 
 @csrf_exempt
