@@ -429,7 +429,7 @@
                         return res.json()
                     })
                     .then(json => {
-                        if(Object.keys(json).length > 4) printErrorMsg(json[Object.keys(json)[0]])
+                        if(Object.keys(json).length < 4) printErrorMsg(json[Object.keys(json)[0]])
                     });
 
                 }
@@ -1869,8 +1869,8 @@
             if(!url){
                 sendBtn.addEventListener('click', e => {
                     
-                    if(password.value !== "" && password.value === repeatPassword.value){
-                        console.log('lol')
+                    if(emailInput.value !== ""){
+                        
                         fetch('https://spirit.ge:8000/api/password_reset/', {
                             method: 'POST',
                             headers: {
@@ -1882,13 +1882,22 @@
                             if(!res.ok){
                                 printMsg(t('Something went wrong, please try again later'))
                             }
-                            res.json()
+                            return res.json();
                         })
                         .then(json => {
-                            printMsg(t('Please, check your mail to reset your password'))
+                            let checkEmail = json.email ? json.email[0] : ""
+                            if(checkEmail === "There is no active user associated with this e-mail address or the password can not be changed"){
+                                printMsg(t('There is no active user associated with this e-mail address or the password can not be changed'))
+                            }////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                            if(checkEmail === "Enter a valid email address."){
+                                printMsg(t('Enter a valid email address'))
+                            }
+                            if(json.status === "OK"){
+                                printMsg(t('Please check your email to change your password'))
+                            }
                         })
-                    } else {///////////////////////////////////////////////////
-                        printMsg(t('Passwords must match'))
+                    } else {
+                        printMsg(t('Please, enter your email'))
                     }
                 })
             }
@@ -1900,22 +1909,26 @@
                 password.parentElement.style = "display: block;"
 
                 sendBtn.addEventListener('click', e => {
-                    console.log(token)
-                    console.log(password.value)
-                    fetch('https://spirit.ge:8000/api/password_reset/confirm/', {
+                    
+                    if(password.value !== "" && password.value === repeatPassword.value){
+                        fetch('https://spirit.ge:8000/api/password_reset/confirm/', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json;charset=utf-8',
                         },
                         body: JSON.stringify({password: password.value, token: token})
-                    })
-                    .then(res => {
-                        if(!res.ok){
-                            printMsg(t('Something went wrong, please try again later'))
-                        }
-                        res.json()
-                    })
-                    .then(json => console.log(json))
+                        })
+                        .then(res => {
+                            if(!res.ok){
+                                printMsg(t('Something went wrong, please try again later'))
+                            }
+                            return res.json()
+                        })
+                        .then(json => console.log(json))    
+                    } else {
+                        printMsg(t('Passwords must match'))
+                    }
+                    
                 })
             }
 
@@ -2016,7 +2029,7 @@
     // show brands
     if ( document.querySelector('.paira-brand') != null ) {
         paira.showLoading(document.querySelector('.paira-brand'), '#000', 'brandCarLoading');
-        fetch('https://www.spirit.ge:8000/brandlist/').then(resp => {
+        fetch('https://spirit.ge:8000/brandlist/').then(resp => {
         resp.json()
         .then(data => {
             paira.hideLoading('brandCarLoading')
@@ -2508,6 +2521,9 @@
             "Showing": "ნახულობთ",
             "Of": ", რაოდენობა:",
             "Please check your email to activate your account": "გთხოვთ შეამოწმეთ თქვენი ელ.ფოსტა რათა გააქტიუროთ ანგარიში",
+            "There is no active user associated with this e-mail address or the password can not be changed": "მითითებულ ელ.ფოსტაზე მომხმარებელი არ არსებობს ან პაროლის შეცვლა შეუძლებელია",
+            'Enter a valid email address': "შეიყვანეთ ვალიდური ელ.ფოსტა",
+            "Please check your email to change your password": "გთხოვთ შეამოწმოთ თქვენი ელ.ფოსტა "
         },
         "404": {
             // navbar
