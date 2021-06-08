@@ -1679,9 +1679,9 @@
                             if(!res.ok) printErrorMsg("Something went wrong, please try again later" + ` (Status Code: ${res.status}, Status Text: ${res.statusText})`)
 							return res.json()
                         })
-						.then(json => [
+						.then(json => {
 							window.location.href = json.link;
-						])
+						})
                         .finally( res => orderBtn.removeAttribute('disabled') )
                     }
                 }
