@@ -1671,7 +1671,8 @@
                             method: 'POST',
                             headers: {
                             'Content-Type': 'application/json;charset=utf-8',
-                            'X-CSRFToken':  csrftoken
+                            'X-CSRFToken':  csrftoken,
+							"Access-Control-Allow-Origin": "*",
                             },
                             body: JSON.stringify(orderData)
                         })
@@ -1797,6 +1798,7 @@
                                 'Content-Type': 'application/json;charset=utf-8',
                                 Authorization: `JWT ${localStorage.getItem('token')}`,
                                 'X-CSRFToken':  csrftoken,
+								"Access-Control-Allow-Origin": "*",
                             },
                             body: JSON.stringify({ "shipping": { id: "3" }, language: localStorage.getItem('language') ? localStorage.getItem('language') : "en" })
                         })
