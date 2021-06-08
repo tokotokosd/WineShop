@@ -235,7 +235,7 @@
                 if(isLoggedIn()){
                     cartBtns.forEach(item => {
                         item.addEventListener('click', e => {
-                            fetch('http://spirit.ge:8000/cart/', {
+                            fetch('https://spirit.ge:8000/cart/', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'appliction/json;charset=utf-8',
@@ -318,7 +318,7 @@
                     let passwordValue = password.value;
                     e.preventDefault();
                     if(validateInputs() === true){
-                        fetch('http://spirit.ge:8000/token-auth/', {
+                        fetch('https://spirit.ge:8000/token-auth/', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
@@ -415,7 +415,7 @@
                     registerJson.email = email.value
                     registerJson.password = password.value
                     console.log(registerJson)
-                    fetch('http://spirit.ge:8000/users/', {
+                    fetch('https://spirit.ge:8000/users/', {
                     method: 'POST',
                     headers: {
                     'Content-Type': 'application/json'
@@ -448,7 +448,7 @@
                     if(e.target.id === 'removeItem'){
                         console.log('removeitem click')
                         if(isLoggedIn()){
-                            fetch('http://spirit.ge:8000/cart/', {
+                            fetch('https://spirit.ge:8000/cart/', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'appliction/json;charset=utf-8',
@@ -483,7 +483,7 @@
                     }
                     if(e.target.id === "cartDown"){
                         if(isLoggedIn()){
-                            fetch('http://spirit.ge:8000/cart/', {
+                            fetch('https://spirit.ge:8000/cart/', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'appliction/json;charset=utf-8',
@@ -510,7 +510,7 @@
                     if(e.target.id === "cartUp"){
                         console.log(+e.target.dataset.id)
                         if(isLoggedIn()){
-                            fetch('http://spirit.ge:8000/cart/', {
+                            fetch('https://spirit.ge:8000/cart/', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'appliction/json;charset=utf-8',
@@ -570,7 +570,7 @@
                     console.log(csrftoken)
                     let data = {action: 'add', productId: filteredJson[0].id}
                     console.log(filteredJson[0].id)
-                    fetch('http://spirit.ge:8000/cart/', {
+                    fetch('https://spirit.ge:8000/cart/', {
                         method: 'POST',
                         headers: {
                         'Content-Type': 'application/json;charset=utf-8',
@@ -1032,7 +1032,7 @@
         },
         showLoading: function(parentNode, color, id){
             let circleSvg = `<?xml version="1.0" encoding="utf-8"?>
-            <svg id="${id}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; display: block; shape-rendering: auto;" width="137px" height="137px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+            <svg id="${id}" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink" style="margin: auto; display: block; shape-rendering: auto;" width="137px" height="137px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
             <circle cx="50" cy="50" fill="none" stroke="${color}" stroke-width="11" r="35" stroke-dasharray="164.93361431346415 56.97787143782138">
             <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" values="0 50 50;360 50 50" keyTimes="0;1"></animateTransform>
             </circle>
@@ -1084,7 +1084,7 @@
                             <div class="block-image position-rela">
                                 <a href="#" class="paira-quick-view">
                                     <div class="background-overlay"></div>
-                                    <img src="http://spirit.ge:8000/images/${item.image}" alt="IMAGE NOT FOUND" class="img-responsive"; style="display: inline-block; max-width: 265px; max-height: 426px;">
+                                    <img src="https://spirit.ge:8000/images/${item.image}" alt="IMAGE NOT FOUND" class="img-responsive"; style="display: inline-block; max-width: 265px; max-height: 426px;">
                                 </a>
                             </div>
                             <h1 class="font-size-16 paira-margin-top-4 margin-bottom-10"><a href="#" class="paira-quick-view">${dbt(item.name)}</a></h1>
@@ -1110,7 +1110,7 @@
             for(let i =0; i < jsonBrands.length; i++){
                 let item = jsonBrands[i];
                 product += `
-                    <a href="collection.html#brand=${item.name}"><img src="http://spirit.ge:8000/images/${item.image}" " alt=""/></a>
+                    <a href="collection.html#brand=${item.name}"><img src="https://spirit.ge:8000/images/${item.image}" " alt=""/></a>
                     `
             }
 
@@ -1179,7 +1179,7 @@
         </div>
             `
         productModalContent.insertAdjacentHTML('beforeend', modalContent);
-        document.querySelector(".paira-product.single-varients-product").innerHTML=`<img src="http://spirit.ge:8000/images/${data.image}" style="max-width:374px;max-height:621px;margin-left:90px;margin-top:30px"></img>`
+        document.querySelector(".paira-product.single-varients-product").innerHTML=`<img src="https://spirit.ge:8000/images/${data.image}" style="max-width:374px;max-height:621px;margin-left:90px;margin-top:30px"></img>`
         },
         sortByCost: function(json, by="asc"){
             let sortedJson;
@@ -1273,7 +1273,7 @@
             }
 
             let cartItem = { id: data.id, image: data.image, name: data.name, quantity: quantity, price: data.price };
-            productImage.src = `http://spirit.ge:8000/images/${data.image}`;
+            productImage.src = `https://spirit.ge:8000/images/${data.image}`;
             productName.innerHTML = `${data.name}`;
 
             
@@ -1323,7 +1323,7 @@
             cartWidget.innerHTML = '';
             paira.showLoading(cartWidget, "#fff", 'cartWidgetLoading')
                 if(isLoggedIn()){
-                    fetch('http://spirit.ge:8000/cart/', {
+                    fetch('https://spirit.ge:8000/cart/', {
                         method: 'GET',
                         headers: {
                         'Content-Type': 'application/json;charset=utf-8',
@@ -1353,7 +1353,7 @@
                                 <div class="column full-width overflow paira-margin-bottom-4 cartItem" data-id="${item.id}">
                                 <div class="row-1">
                                     <a href="collection.html">
-                                        <img src="http://spirit.ge:8000/images/${item.image}" alt="" class="img-responsive center-block">
+                                        <img src="https://spirit.ge:8000/images/${item.image}" alt="" class="img-responsive center-block">
                                     </a>
                                 </div>
                                 <div class="row-2"><p><a href="#">${item.name}</a></p></div>
@@ -1383,7 +1383,7 @@
                             <div class="column full-width overflow paira-margin-bottom-4 cartItem" data-id="${item.id}">
                             <div class="row-1">
                                 <a href="product.html">
-                                    <img src="http://spirit.ge:8000/images/${item.image}" alt="" class="img-responsive center-block">
+                                    <img src="https://spirit.ge:8000/images/${item.image}" alt="" class="img-responsive center-block">
                                 </a>
                             </div>
                             <div class="row-2"><p><a href="#">${item.name}</a></p></div>
@@ -1426,7 +1426,7 @@
                 let day = date.getDate();
                 cards +=`
                 <div class="col-md-6 col-sm-12 col-xs-12 paira-margin-top-1">
-                    <img alt="" src="http://spirit.ge:8000/images/${item.image}" class="img-responsive">
+                    <img alt="" src="https://spirit.ge:8000/images/${item.image}" class="img-responsive">
                     <div class=${(i%2 === 0) ? "blogs1" : "blogs"}>
                         <h3 class="text-uppercase margin-bottom-10">${day} ${month}</h3>
                         <h4 class="paira-margin-bottom-1"><a href="blog-single.html" class="date raleway-light letter-spacing-2">${dbt(item.tittle)}</a></h4>
@@ -1483,7 +1483,7 @@
             blogContainer.innerHTML="";
             let blogContent = `
             <div class="col-md-12 col-sm-12 col-xs-12 paira-margin-top-1">
-                <img alt="" src="http://spirit.ge:8000/images/${filteredJson[0].image}" class="img-responsive margin-bottom-20">
+                <img alt="" src="https://spirit.ge:8000/images/${filteredJson[0].image}" class="img-responsive margin-bottom-20">
                 <div class="blogs-detail">
                     <h3 class="text-uppercase margin-top-0 margin-bottom-20">${day} ${month}</h3>
                     <h1 class="margin-bottom-20 date letter-spacing-2">${dbt(filteredJson[0].tittle)}</h1>
@@ -1555,7 +1555,7 @@
 
                 console.log(commentJson)
 
-                fetch('http://spirit.ge:8000/blog_comment/', {
+                fetch('https://spirit.ge:8000/blog_comment/', {
                         method: 'POST',
                         headers: {
                         'Content-Type': 'application/json;charset=utf-8',
@@ -1667,7 +1667,7 @@
                         orderData.language = localStorage.getItem('language') ? localStorage.getItem('language') : "en";
                         console.log(JSON.stringify(orderData))
                         orderBtn.setAttribute('disabled', true)
-                        fetch('http://spirit.ge:8000/buy_process_unregistred', {
+                        fetch('https://spirit.ge:8000/buy_process_unregistred', {
                             method: 'POST',
                             headers: {
                             'Content-Type': 'application/json;charset=utf-8',
@@ -1712,7 +1712,7 @@
                 // address + button
                 // addAddressBtn.addEventListener('click', e => {
                 //     if(addressInput.value !== ""){
-                    //     fetch('http://spirit.ge:8000/address/', {
+                    //     fetch('https://spirit.ge:8000/address/', {
                     //         method: 'POST',
                     //         headers: {
                     //             'Content-Type': 'application/json;charset=utf-8',
@@ -1727,7 +1727,7 @@
 
                 addButton.addEventListener('click', e => {
                     if(addNameInput.value !== "" && addAddressInput.value !== "" && addPhoneInput.value !== ""){
-                        fetch('http://spirit.ge:8000/address/', {
+                        fetch('https://spirit.ge:8000/address/', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json;charset=utf-8',
@@ -1751,7 +1751,7 @@
                     document.querySelectorAll(deleteButtons).forEach(item => item.addEventListener('click', e => {
                         console.log(item.previousSibling.getAttribute('value'))
                         console.log(`action delete ${item.previousSibling.getAttribute('data-address-id')}`)
-                        fetch('http://spirit.ge:8000/address/', {
+                        fetch('https://spirit.ge:8000/address/', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json;charset=utf-8',
@@ -1771,7 +1771,7 @@
                 ///////////////////////////////////////////////
                 addressDropdownBtn.addEventListener('click', e => {
                     document.querySelector('body').style.cursor = "wait"
-                    fetch('http://spirit.ge:8000/address/', {
+                    fetch('https://spirit.ge:8000/address/', {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json;charset=utf-8',
@@ -1791,7 +1791,7 @@
                 })
 
                 orderBtn.addEventListener('click', e => {
-                    fetch('http://spirit.ge:8000/buy_process', {
+                    fetch('https://spirit.ge:8000/buy_process', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json;charset=utf-8',
@@ -1837,7 +1837,7 @@
                 orderCalculateTotal.innerText = total;
                 
                 // $(".dropdown-toggle").dropdown('hide')
-                // fetch('http://spirit.ge:8000/buy_process', {
+                // fetch('https://spirit.ge:8000/buy_process', {
                 //     method: 'GET',
                 //     headers: {
                 //     'Content-Type': 'application/json;charset=utf-8',
@@ -1871,7 +1871,7 @@
                     
                     if(password.value !== "" && password.value === repeatPassword.value){
                         console.log('lol')
-                        fetch('http://spirit.ge:8000/api/password_reset/', {
+                        fetch('https://spirit.ge:8000/api/password_reset/', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json;charset=utf-8',
@@ -1902,7 +1902,7 @@
                 sendBtn.addEventListener('click', e => {
                     console.log(token)
                     console.log(password.value)
-                    fetch('http://spirit.ge:8000/api/password_reset/confirm/', {
+                    fetch('https://spirit.ge:8000/api/password_reset/confirm/', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json;charset=utf-8',
@@ -1932,7 +1932,7 @@
     // blog page
     if (window.location.href.includes("blog.html") || window.location.href.includes("index.html")){
         paira.showLoading(blogCardContainer, "#000", 'blogCardContainerLoading');
-        fetch('http://spirit.ge:8000/blog/')
+        fetch('https://spirit.ge:8000/blog/')
         .then(resp => resp.json())
         .then(json => {
             //console.log(json.blog)
@@ -1943,7 +1943,7 @@
     // single blog page
     if (window.location.href.includes("blog-single.html")){
         paira.showLoading(document.querySelector('#singleBlogContainer'), '#000', 'singleBlogLoading');
-        fetch('http://spirit.ge:8000/blog/')
+        fetch('https://spirit.ge:8000/blog/')
         .then(resp => resp.json())
         .then(json => {
             paira.hideLoading('singleBlogLoading');
@@ -1958,7 +1958,7 @@
     // show products
     if (document.querySelector('.product-widget') != null || undefined){
         paira.showLoading(document.querySelector('.product-widget'), '#000', 'productsLoading');
-        fetch('http://spirit.ge:8000/wineproduct/?wine=test')
+        fetch('https://spirit.ge:8000/wineproduct/?wine=test')
         .then(resp => {
             resp.json()
             .then(data => {
@@ -2003,7 +2003,7 @@
             console.log(error)
         });
     } else {
-        fetch('http://spirit.ge:8000/wineproduct/?wine=test')
+        fetch('https://spirit.ge:8000/wineproduct/?wine=test')
         .then(resp => resp.json())
         .then(data => {
             paira.initDialogBox(data.menu);
@@ -2016,7 +2016,7 @@
     // show brands
     if ( document.querySelector('.paira-brand') != null ) {
         paira.showLoading(document.querySelector('.paira-brand'), '#000', 'brandCarLoading');
-        fetch('http://www.spirit.ge:8000/brandlist/').then(resp => {
+        fetch('https://www.spirit.ge:8000/brandlist/').then(resp => {
         resp.json()
         .then(data => {
             paira.hideLoading('brandCarLoading')
@@ -2031,7 +2031,7 @@
     // show banner 
     if( document.querySelector('.carousel-inner')){
         console.log('started showbanner')
-        fetch('http://spirit.ge:8000/banners/')
+        fetch('https://spirit.ge:8000/banners/')
         .then(res => res.json())
         .then(json => showBanner(json))
         
@@ -2054,7 +2054,7 @@
                 let text = item.text.split(' '); 
                 bannerContent += `
                 <div class="item ${i === 0 ? "active": ""}">
-                    <img alt="Third slide" src="http://spirit.ge:8000/images/${item.img}">
+                    <img alt="Third slide" src="https://spirit.ge:8000/images/${item.img}">
                     <div class="container">
                         <div class="carousel-caption carousel-caption1">
                             <h1 class="text-uppercase paira-animation animated fadeInRight margin-top-0" data-paira-animation="fadeInLeft" data-paira-animation-delay="0.0s">${text[0]}</h1>
@@ -2074,7 +2074,7 @@
         console.log('done showbanner')
     }
    //show blog
-        //    fetch('http://spirit.ge:8000/blog/')
+        //    fetch('https://spirit.ge:8000/blog/')
         //     .then(resp => resp.json())
         //     .then(json => {
 
@@ -2161,7 +2161,7 @@
     if(window.location.pathname.includes("order-history")){
         paira.showLoading(document.querySelector('#orderHistoryDeliveredCardWrapper'), "#000", "deliveredCardsLoading");
         paira.showLoading(document.querySelector('#orderHistoryNotDeliveredCardWrapper'), "#000", "notDeliveredCardsLoading");
-        fetch('http://spirit.ge:8000/history/', {
+        fetch('https://spirit.ge:8000/history/', {
             method: 'GET',
             headers: {
             'Content-Type': 'application/json;charset=utf-8',
@@ -2179,7 +2179,7 @@
 
     let loadCheckoutPage = (data) => {
         if(isLoggedIn()){
-            fetch('http://spirit.ge:8000/cart/', {
+            fetch('https://spirit.ge:8000/cart/', {
                 method: 'GET',
                 headers: {
                 'Content-Type': 'application/json;charset=utf-8',
