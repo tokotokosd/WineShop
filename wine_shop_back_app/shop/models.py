@@ -78,6 +78,7 @@ class Order(models.Model):
     complete = models.BooleanField(default=False, null=True, blank=False)
     pay_id = models.CharField(max_length=200, null=True)
     address = models.ForeignKey(ShippingAddres, on_delete=models.SET_NULL, blank=True, null=True)
+    delivered = models.BooleanField(default=False, null=True, blank=False)
 
     def __str__(self):
         return str(self.id)
