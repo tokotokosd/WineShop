@@ -133,7 +133,7 @@ class Banner(models.Model):
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
 
-    email_plaintext_message = "http://spirit.ge/reset-password.html#token={}".format( reset_password_token.key)
+    email_plaintext_message = "https://spirit.ge/reset-password.html#token={}".format( reset_password_token.key)
 
     send_mail(
         # title:

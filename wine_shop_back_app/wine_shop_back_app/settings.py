@@ -185,7 +185,7 @@ EMAIL_MAIL_HTML = 'mail_body.html'
 EMAIL_MAIL_PLAIN = 'mail_body.txt'
 EMAIL_TOKEN_LIFE = 60 * 60
 EMAIL_PAGE_TEMPLATE = 'confirm_template.html'
-EMAIL_PAGE_DOMAIN = 'http://spirit.ge:8000/'
+EMAIL_PAGE_DOMAIN = 'https://spirit.ge:8000/'
 #
 # # For Django Email Backend
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
