@@ -1669,10 +1669,10 @@
                         orderBtn.setAttribute('disabled', true)
                         fetch('https://spirit.ge:8000/buy_process_unregistred', {
                             method: 'POST',
+							mode: 'no-cors',
                             headers: {
                             'Content-Type': 'application/json;charset=utf-8',
-                            'X-CSRFToken':  csrftoken,
-							"Access-Control-Allow-Origin": "*",
+                            'X-CSRFToken':  csrftoken
                             },
                             body: JSON.stringify(orderData)
                         })
@@ -1794,11 +1794,11 @@
                 orderBtn.addEventListener('click', e => {
                     fetch('https://spirit.ge:8000/buy_process', {
                             method: 'POST',
+							mode: 'no-cors',
                             headers: {
                                 'Content-Type': 'application/json;charset=utf-8',
                                 Authorization: `JWT ${localStorage.getItem('token')}`,
                                 'X-CSRFToken':  csrftoken,
-								"Access-Control-Allow-Origin": "*",
                             },
                             body: JSON.stringify({ "shipping": { id: "3" }, language: localStorage.getItem('language') ? localStorage.getItem('language') : "en" })
                         })
