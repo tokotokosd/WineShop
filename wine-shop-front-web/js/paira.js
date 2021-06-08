@@ -1797,7 +1797,6 @@
                 orderBtn.addEventListener('click', e => {
                     fetch('https://spirit.ge:8000/buy_process', {
                             method: 'POST',
-							mode: 'no-cors',
                             headers: {
                                 'Content-Type': 'application/json;charset=utf-8',
                                 Authorization: `JWT ${localStorage.getItem('token')}`,
