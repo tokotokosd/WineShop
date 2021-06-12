@@ -245,13 +245,14 @@
                                 body: JSON.stringify({action: 'quantity', productId: filteredJson[0].id , quantity: +counterInput.value}),
                                 credentials: 'include'
                             })
-                            .then( res => res.json() )
-                            .then( resJson => {
-                                if(resJson === "item was added"){
+                            .then(res => {
+                                if(res.ok){
                                     $('#paira-ajax-success-message').modal('show');
                                     productPage.cartModal(filteredJson[0]);
                                 }
-                            });
+                                return res.json()
+                            })
+                            
                         })
                     })
                 }
@@ -441,10 +442,35 @@
                 
                 $('#paira-ajax-cart').modal('show');
                 productPage.displayCartContent(json);
-                
+                productPage.cartCounter(json)
+                setTimeout(() => totalPriceUpdate(), 450);
+
+                function totalPriceUpdate(){
+
+                    
+                    let calculate = document.querySelector('#cartCalculate')
+                    let total = 0;
+                    let totalArr = [];
+                    
+                    
+                    document.querySelectorAll('.row-3 p').forEach(item => {
+                        totalArr.push(parseInt(item.innerText.match(/\d+/g)[0])* item.closest('.row-3').nextElementSibling.querySelector('div div input').value)
+                    })
+                    if(totalArr.length !== 0){
+                        total = totalArr.reduce((accumulator, currentValue) => accumulator + currentValue);
+                    } else {
+                        total = 0;
+                        console.log('total = 0')
+                    }
+                    
+                    calculate.innerHTML = `${t("Subtotal")} : <span><b>${total}&#8382;</b></span>`
+                }
+
                 function cart(e){
                     e.stopPropagation()
                     
+                   
+
                     if(e.target.id === 'removeItem'){
                         console.log('removeitem click')
                         if(isLoggedIn()){
@@ -463,6 +489,7 @@
                                 if(resJson === "item was added"){
                                     e.target.closest(`div[data-id="${json.filter(item => item.id === +e.target.dataset.id)[0].id}"]`).remove();
                                     totalPriceUpdate();
+                                    productPage.cartCounter();
                                 }
                             });
                         } else {
@@ -474,8 +501,9 @@
                             } else {
                                 e.target.closest(`div[data-id="${item.id}"]`).remove();
                                 totalPriceUpdate();
+                                productPage.cartCounter();
                                 return false;
-                            }
+                            } 
                             })
                             console.log(filteredJson);
                             localStorage.setItem('cartItems', JSON.stringify(filteredJson))
@@ -494,18 +522,33 @@
                                 credentials: 'include'
                             })
                             .then( res => res.json() )
-                            .then( json => console.log(json) );
+                            .then( json => {
+                                productPage.cartCounter();
+                            } );
                         }
                         let inputText = e.target.nextElementSibling
                         let totalValue = e.target.closest('.row-4').previousElementSibling.querySelector('p br')
                         if(inputText.value > 1){
-                            console.log()
+                            
                             
                             console.log(`inputText.value is ${inputText.value}`)
                             inputText.value -= 1;
                             totalValue.nextSibling.nodeValue = `${t('Total')} : ${inputText.value* parseInt(totalValue.previousSibling.nodeValue)}`
+
+
+                            if(!isLoggedIn()){
+                                let cart = JSON.parse(localStorage.getItem('cartItems'));
+                                cart.forEach(item => {
+                                    if(item.id === +inputText.getAttribute('data-id')){
+                                        item.quantity -= 1;
+                                    }
+                                })
+                                localStorage.setItem('cartItems', JSON.stringify(cart));
+                                productPage.cartCounter();
+                            }
                         }
                         totalPriceUpdate();
+                        productPage.cartCounter();
                     }
                     if(e.target.id === "cartUp"){
                         console.log(+e.target.dataset.id)
@@ -528,29 +571,25 @@
                         if(json.filter(item => item.id === +e.target.dataset.id)[0].quantity > inputText.value){
                             inputText.value = parseInt(inputText.value) + 1;
                             totalValue.nextSibling.nodeValue = `${t('Total')} : ${inputText.value* parseInt(totalValue.previousSibling.nodeValue)}`
+                            
+
+                            if(!isLoggedIn()){
+                                let cart = JSON.parse(localStorage.getItem('cartItems'));
+                                cart.forEach(item => {
+                                    if(item.id === +inputText.getAttribute('data-id')){
+                                        item.quantity += 1;
+                                    }
+                                })
+                                localStorage.setItem('cartItems', JSON.stringify(cart));
+                            }
                         }
                         
                     }
                     totalPriceUpdate();
+                    productPage.cartCounter();
                 }
 
-                function totalPriceUpdate(){
-                    let calculate = document.querySelector('#cartCalculate')
-                    let total = 0;
-                    let totalArr = [];
-                    
-                    
-                    document.querySelectorAll('.row-3 p').forEach(item => {
-                        totalArr.push(parseInt(item.innerText.match(/\d+/g)[0])* item.closest('.row-3').nextElementSibling.querySelector('div div input').value)
-                    })
-                    if(totalArr.length !== 0){
-                        total = totalArr.reduce((accumulator, currentValue) => accumulator + currentValue);
-                    } else {
-                        total = 0;
-                    }
-                    
-                    calculate.innerHTML = `${t("Subtotal")} : <span><b>${total}&#8382;</b></span>`
-                }
+                
                 if (document.querySelector('#cartTableWrapper').getAttribute('listener') !== 'true') {
                     document.querySelector('#cartTableWrapper').addEventListener('click', cart);
                     document.querySelector('#cartTableWrapper').setAttribute('listener', 'true');
@@ -581,7 +620,12 @@
                     body: JSON.stringify(data),
                     credentials: 'include',
                     })
-                    .then(res => {console.log(res)})
+                    .then(res => {
+                        if(res.ok){
+                            $('#paira-ajax-success-message').modal('show');
+                            productPage.cartModal(filteredJson[0]);
+                        }
+                    })
                 } else {
                     $('#paira-ajax-success-message').modal('show');
                     productPage.cartModal(filteredJson[0]);
@@ -1199,17 +1243,18 @@
             const filterData = (data) => {
                 if(filter !== "other" && filter !== "none"){
                     res = data.filter(item => {
-                        return item.type.toLowerCase().includes(filter);
+                        console.log(dbt(item.type, false))
+                        return dbt(item.type, false).toLowerCase().includes(filter);
                     })
-                }
+                }///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                 if(filter == "other"){
                     res = data.filter(item => {
-                        return  !item.type.toLowerCase().includes("red") &&
-                                !item.type.toLowerCase().includes("white") &&
-                                !item.type.toLowerCase().includes("dry") &&
-                                !item.type.toLowerCase().includes("sweet") &&
-                                !item.type.toLowerCase().includes("semi-dry")
+                        return  !dbt(item.type, false).toLowerCase().includes("red") &&
+                                !dbt(item.type, false).toLowerCase().includes("white") &&
+                                !dbt(item.type, false).toLowerCase().includes("dry") &&
+                                !dbt(item.type, false).toLowerCase().includes("sweet") &&
+                                !dbt(item.type, false).toLowerCase().includes("semi-dry")
                     })
                 }
             }
@@ -1267,31 +1312,39 @@
             let quantity = 1
 
             let goToCartBtn = document.querySelector("#goToCart");
+            let continueShopping = document.querySelector("#continueShopping");
 
-            if (data.selectedQuantity){
-                quantity = data.selectedQuantity
-            }
+            if(!isLoggedIn()){
+                if (data.selectedQuantity){
+                    quantity = data.selectedQuantity
+                }
 
-            let cartItem = { id: data.id, image: data.image, name: data.name, quantity: quantity, price: data.price };
-            productImage.src = `https://spirit.ge:8000/images/${data.image}`;
-            productName.innerHTML = `${data.name}`;
+                let cartItem = { id: data.id, image: data.image, name: data.name, quantity: quantity, price: data.price };
+                productImage.src = `https://spirit.ge:8000/images/${data.image}`;
+                productName.innerHTML = `${dbt(data.name)}`;
 
+                
+                let existing = localStorage.getItem('cartItems');
+
+
+                if(existing){
+                    existing = JSON.parse(existing);
+                    existing = existing.filter(item => item.id !== cartItem.id);
+                    existing.push(cartItem);
             
-            let existing = localStorage.getItem('cartItems');
+                } else {
+                    existing = []
+                    existing.push(cartItem);
+                    localStorage.setItem('cartItems', JSON.stringify(existing));
+                }
 
-
-            if(existing){
-                existing = JSON.parse(existing);
-                existing = existing.filter(item => JSON.stringify(item) !== JSON.stringify(cartItem));
-                existing.push(cartItem);
-        
-            } else {
-                existing = []
-                existing.push(cartItem);
-                localStorage.setItem('cartItems', JSON.stringify(existing));
+                localStorage.setItem('cartItems', JSON.stringify(existing))
             }
 
-            localStorage.setItem('cartItems', JSON.stringify(existing))
+            if(isLoggedIn()){
+                productImage.src = `https://spirit.ge:8000/images/${data.image}`;
+                productName.innerHTML = `${dbt(data.name)}`;
+            }
             this.cartCounter();
             
 
@@ -1304,17 +1357,60 @@
                 
             }
 
+            const handleContinueShopping = (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                $("#paira-quick-view .close").click()
+                $("#paira-ajax-success-message .close").click()
+            }
+
             ////
             if(goToCartBtn.getAttribute('listener') !== 'true'){
                 goToCartBtn.setAttribute('listener', 'true');   
                 goToCartBtn.addEventListener('click', handleGoToCart);
             }
+            if(continueShopping.getAttribute('listener') !== 'true'){
+                continueShopping.setAttribute('listener', 'true');
+                continueShopping.addEventListener('click', handleContinueShopping);
+            }
            
         },
-        cartCounter: function(){
-            let existing = JSON.parse(localStorage.getItem('cartItems'))
+        cartCounter: function(json){
+            
             let counter = document.querySelector('#cartCounter')
-            if(existing) counter.innerText = existing.length
+            // counter.innerText = 0;
+            if(!isLoggedIn()){
+                let existing = JSON.parse(localStorage.getItem('cartItems'))
+                if(existing) {
+                    let count = 0;
+                    existing.forEach(item => {
+                        count += parseInt(item.quantity);
+                    })
+                    counter.innerText = count;
+                } 
+            }
+            if(isLoggedIn()){
+                console.log('is logged in cart')
+                fetch('https://spirit.ge:8000/cart/', {
+                    method: 'GET',
+                    headers: {
+                    'Content-Type': 'application/json;charset=utf-8',
+                    Authorization: `JWT ${localStorage.getItem('token')}`,
+                    'X-CSRFToken':  csrftoken
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    let count = 0;
+                    data.items.forEach((item, i) => {
+                        count += item.quantity;
+                    })
+                    counter.innerText = count;
+                })
+                    
+                
+            
+            }
         },
         displayCartContent: function(data){
             let cartContent = JSON.parse(localStorage.getItem('cartItems'));
@@ -1333,9 +1429,11 @@
                     })
                     .then( res => res.json() )
                     .then( json => {
-                        console.log(json.items)
+                        this.cartCounter(json)
+                        console.log(json)
                         let cart = [];
                         console.log(data)
+                        
                         for(let i of data){
                             for(let i2 of json.items){
                                 if(i.id === i2.product_id){
@@ -1344,20 +1442,53 @@
                             }
                         }
 
-                        // if(window.location.pathname.includes("checkout")){
-                        //     checkoutPage.init(cart)
-                        // }
+                        if(json.items.length > 0){
+                            cart.forEach((item) => {
+                                cartItem += `
+                                    <div class="column full-width overflow paira-margin-bottom-4 cartItem" data-id="${item.id}">
+                                    <div class="row-1">
+                                        <a href="collection.html">
+                                            <img src="https://spirit.ge:8000/images/${item.image}" alt="" class="img-responsive center-block">
+                                        </a>
+                                    </div>
+                                    <div class="row-2"><p><a href="#">${dbt(item.name)}</a></p></div>
+                                    <div class="row-3"><p>${item.price}&#8382;<br class="totalItem">${t('Total')} : ${item.price}&#8382</p></div>
+                                    <div class="row-4">
+                                        <div class="quantity">
+                                            <div class="quantity-fix display-inline-b">
+                                                <button class="btn-default btn" data-direction="down" id="cartDown" data-id="${item.id}"><i class="fa fa-angle-down"></i></button>
+                                                <input type="text" value="${item.quantity}" class="text-center product_quantity_text" id="cartInput" data-id="${item.id}" disabled>
+                                                <button class="btn-success btn" data-direction="up" id="cartUp" data-id="${item.id}"><i class="fa fa-angle-up"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row-5"><p><a href="#" class="remove"><i class="fa fa-trash fa-2x" id="removeItem" data-id="${item.id}"></i></a>
+                                    </p></div>
+                                    </div>
+                                `
+                            });
+                        } else {
+                            cartItem = `<div style='margin-top: 20px; margin-bottom: 20px;'>${t('There is nothing to display, please choose products from the shop first')}</div>`
+                        }
 
-                        cart.forEach((item) => {
+                        
+                        paira.hideLoading('cartWidgetLoading')
+                        cartWidget.insertAdjacentHTML('beforeend', cartItem);
+                    })
+                
+                console.log(cartContent)
+                } else {
+                    if(cartContent !== null && cartContent.length > 0){
+                        cartContent.forEach((item, i) => {
                             cartItem += `
                                 <div class="column full-width overflow paira-margin-bottom-4 cartItem" data-id="${item.id}">
                                 <div class="row-1">
-                                    <a href="collection.html">
+                                    <a href="product.html">
                                         <img src="https://spirit.ge:8000/images/${item.image}" alt="" class="img-responsive center-block">
                                     </a>
                                 </div>
-                                <div class="row-2"><p><a href="#">${item.name}</a></p></div>
-                                <div class="row-3"><p>${item.price}&#8382;<br class="totalItem">Total : ${item.price}&#8382</p></div>
+                                <div class="row-2"><p><a href="#">${dbt(item.name)}</a></p></div>
+                                <div class="row-3"><p>${item.price}&#8382;<br class="totalItem">${t("Total")} : ${item.price}&#8382</p></div>
                                 <div class="row-4">
                                     <div class="quantity">
                                         <div class="quantity-fix display-inline-b">
@@ -1372,36 +1503,10 @@
                                 </div>
                             `
                         });
-                        paira.hideLoading('cartWidgetLoading')
-                        cartWidget.insertAdjacentHTML('beforeend', cartItem);
-                    })
-                
-                console.log(cartContent)
-                } else {
-                    cartContent.forEach((item, i) => {
-                        cartItem += `
-                            <div class="column full-width overflow paira-margin-bottom-4 cartItem" data-id="${item.id}">
-                            <div class="row-1">
-                                <a href="product.html">
-                                    <img src="https://spirit.ge:8000/images/${item.image}" alt="" class="img-responsive center-block">
-                                </a>
-                            </div>
-                            <div class="row-2"><p><a href="#">${item.name}</a></p></div>
-                            <div class="row-3"><p>${item.price}&#8382;<br class="totalItem">${t("Total")} : ${item.price}&#8382</p></div>
-                            <div class="row-4">
-                                <div class="quantity">
-                                    <div class="quantity-fix display-inline-b">
-                                        <button class="btn-default btn" data-direction="down" id="cartDown" data-id="${item.id}"><i class="fa fa-angle-down"></i></button>
-                                        <input type="text" value="${item.quantity}" class="text-center product_quantity_text" id="cartInput" data-id="${item.id}" disabled>
-                                        <button class="btn-success btn" data-direction="up" id="cartUp" data-id="${item.id}"><i class="fa fa-angle-up"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row-5"><p><a href="#" class="remove"><i class="fa fa-trash fa-2x" id="removeItem" data-id="${item.id}"></i></a>
-                            </p></div>
-                            </div>
-                        `
-                    });
+                    } else {
+                        cartItem = `<div style='margin-top: 20px; margin-bottom: 20px;'>${t('There is nothing to display, please choose products from the shop first')}</div>`
+                    }
+                    
                     paira.hideLoading('cartWidgetLoading');
                     cartWidget.insertAdjacentHTML('beforeend', cartItem);
                 }
@@ -1601,7 +1706,7 @@
                     console.log(item)
                     table += `
                     <tr>
-                        <td>${item.name}</td>
+                        <td>${dbt(item.name)}</td>
                         <td>${item.quantity}</td>
                         <td>${item.price}</td>
                     </tr>
@@ -1677,8 +1782,14 @@
                         })
                         .then( res => {
                             if(!res.ok) printErrorMsg("Something went wrong, please try again later" + ` (Status Code: ${res.status}, Status Text: ${res.statusText})`)
+                            return res.json()
                         })
-                        .finally( res => orderBtn.removeAttribute('disabled') )
+                        .then( json => {
+                            window.location = json.link;
+                        })
+                        .finally( () => {
+                            orderBtn.removeAttribute('disabled');
+                        })
                     }
                 }
 
@@ -1746,6 +1857,7 @@
                         console.log('what?')
                         addressDropdownBtn.setAttribute('value', `${item.getAttribute('value')}`)
                         addressDropdownBtn.innerText = item.getAttribute('value');
+                        addressDropdownBtn.setAttribute('data-address-id', `${item.getAttribute('data-address-id')}`)
                     }))
     
                     document.querySelectorAll(deleteButtons).forEach(item => item.addEventListener('click', e => {
@@ -1763,7 +1875,7 @@
                         console.log('done')
                     }))
                 }
-                printErrorMsg('test')
+                
                 // shipping details
                 // arr.forEach((item,i) => addressDropDownContainer.innerHTML += `
                 // <span style="width: 100%; display: flex;"><a value="${item}" class="dropdown-item text-color-1 address-list" style="cursor: pointer" data-address-id="${i}" >${item}</a><i class="fa fa-times dropdown-icon address-delete"></i></span>
@@ -1791,17 +1903,24 @@
                 })
 
                 orderBtn.addEventListener('click', e => {
-                    fetch('https://spirit.ge:8000/buy_process', {
+                    if(addressDropdownBtn.getAttribute('data-address-id') !== null){
+                        fetch('https://spirit.ge:8000/buy_process', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json;charset=utf-8',
                                 Authorization: `JWT ${localStorage.getItem('token')}`,
                                 'X-CSRFToken':  csrftoken,
                             },
-                            body: JSON.stringify({ "shipping": { id: "3" }, language: localStorage.getItem('language') ? localStorage.getItem('language') : "en" })
+                            body: JSON.stringify({ "shipping": { id: addressDropdownBtn.getAttribute('data-address-id') }, language: localStorage.getItem('language') ? localStorage.getItem('language') : "en" })
                         })
                         .then(res => res.json())
-                        .then(json => console.log(json))
+                        .then(json => {
+                            window.location = json.link
+                        })
+                    } else {
+                        printErrorMsg(t('Please, select your order details first!'));///////////////////////////////////////////////////////////////////////
+                    }
+                    
                     
                 })
                 // document.querySelectorAll('.address-list').forEach(item => item.addEventListener('click', e => {
@@ -1826,7 +1945,7 @@
                 cartItems.forEach( item => {
                     table += `
                     <tr>
-                        <td>${item.name}</td>
+                        <td>${dbt(item.name)}</td>
                         <td>${item.quantity}</td>
                         <td>${item.price}</td>
                     </tr>
@@ -2044,9 +2163,13 @@
     // show banner 
     if( document.querySelector('.carousel-inner')){
         console.log('started showbanner')
+        paira.showLoading(document.querySelector('.carousel-inner'), '#000', 'bannerLoading')
         fetch('https://spirit.ge:8000/banners/')
         .then(res => res.json())
-        .then(json => showBanner(json))
+        .then(json => {
+            paira.hideLoading('bannerLoading')
+            showBanner(json) 
+        })
         
 
         function showBanner(data){
@@ -2288,7 +2411,7 @@
             // sort
             "sort by": "დაწყობა: ",
             "not sorted": "დაუწყობელი",
-            "asc": "\uf176 ზრდით",
+            "asc": "\uf176 მატებით",
             "desc": "\uf175 კლებით",
             //pagination
             "prev": "წინა",
@@ -2401,7 +2524,9 @@
             "email": "ელ.ფოსტა",
             "username": "მომხ. სახელი",
             "password": "პაროლი",
-
+            "terms and conditions": "წესებს და პირობებებს",
+            "i agree": "ვეთანხმები",
+            "repeat password": "გაიმეორეთ პაროლი",
             //login
             "customer login": "მომხმარებლის ავტორიზაცია",
             "forget password": "დაგავიწყდათ პაროლი?",
@@ -2523,7 +2648,9 @@
             "Please check your email to activate your account": "გთხოვთ შეამოწმეთ თქვენი ელ.ფოსტა რათა გააქტიუროთ ანგარიში",
             "There is no active user associated with this e-mail address or the password can not be changed": "მითითებულ ელ.ფოსტაზე მომხმარებელი არ არსებობს ან პაროლის შეცვლა შეუძლებელია",
             'Enter a valid email address': "შეიყვანეთ ვალიდური ელ.ფოსტა",
-            "Please check your email to change your password": "გთხოვთ შეამოწმოთ თქვენი ელ.ფოსტა "
+            "Please check your email to change your password": "გთხოვთ შეამოწმოთ თქვენი ელ.ფოსტა ",
+            "Please, select your order details first!": "გთხოვთ აირჩიოთ სასურველი შეკვეთის დეტალები",
+            "There is nothing to display, please choose products from the shop first": "კალათა ცარიელია, გთხოვთ აირჩიოთ პროდუქტები რათა განათავსოთ ისინი კალათაში"
         },
         "404": {
             // navbar
@@ -2653,12 +2780,17 @@
         }
 
     }
+    
 
     document.querySelector('.navbar-language-container').addEventListener('click', (e) => handleLanguageChange(e) );
     if(localStorage.getItem('language') === 'ge' && localStorage.getItem('language') !== null){
         handleLanguageChange();
     }
+    if(localStorage.getItem('language') === null){
+        handleLanguageChange();
+    }
 
+    
     if(isLoggedIn()){
         let userSection = `
         <section class="breadcrumb-container paira-padding-bottom-1" id="userSection">
@@ -2674,6 +2806,7 @@
         document.querySelector('#loginBtn').remove()
         document.getElementsByTagName('main')[0].insertAdjacentHTML('afterBegin', userSection)
         document.querySelector('#loginContainer').innerHTML = `<a href="#" id="logOutBtn">${t("Log Out")}</a>`
+        
 
         document.querySelector('#logOutBtn').addEventListener('click', e => {
             localStorage.removeItem('token');
