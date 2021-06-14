@@ -805,7 +805,7 @@ a.boxclose {
     position: relative;
 }
 .product-dtl .sort-by{
-    width: 104px;
+    width: 195px;
     margin-top: -5px;
     margin-left: 5px;
 }
@@ -863,7 +863,7 @@ a.boxclose {
 .sort-by {
     border: none;
     outline: none;
-    width: 150px;
+    width: 195px;
     font-size: 18px;
     letter-spacing: 2px;
     appearance: none;
@@ -1428,3 +1428,131 @@ li.active{
     overflow-x: auto;
 }
 
+
+/*
+   Checkout dropdowns for registered users
+*/
+
+.checkout-dropdown:hover {
+    background-color: rgba(255,255,255, 0.5)
+}
+
+.dropdown-menu {
+    padding: 20px;
+    min-width: 360px;
+    min-height: 210px;
+    top: inherit;
+    left: inherit;
+    
+}
+.dropdown-menu-container {
+    display: flex;
+    flex-direction: column;
+    height: 130px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.dropdown-item {
+    font-size: 20px;
+    width: 91%
+} 
+
+.fa.fa-times.dropdown-icon:hover {
+    color: rgba(255,255,255, 0.5)
+}   
+
+.fa.fa-times.dropdown-icon {
+    color: white;
+    cursor: pointer;
+    font-size: 28px;
+    margin-left: 5px;
+    width: 9%
+}
+
+.dropdown-add-item:hover {
+    cursor: pointer;
+    color: rgba(255,255,255, 0.5);
+}
+
+.dropdown-add-item {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.fa.fa-plus.dropdown-add-icon {
+    font-size: 25px;
+    color: white;
+    margin-left: -15px;
+    margin-top: 16px
+}
+
+.fa.fa-plus.dropdown-add-icon:hover {
+    cursor: pointer;
+    color: rgba(255,255,255, 0.5)
+}
+
+.dropdown-divider {
+    border-bottom: 1px solid white;
+}
+
+#addNewAddress {
+    background-color: white;
+    height: 30px
+}
+
+#registeredUserForm {
+    display: flex;
+    display: column;
+}
+
+.add-new-info-button:hover{
+    cursor: pointer;
+    background-color: rgba(255,255,255, 0.9);
+}
+
+.add-new-info-button {
+    background-color: white;
+    height: 27px;
+    text-align: center;
+    width: 30%;
+    padding: 5px;
+}
+
+@media screen and (max-width: 767px) {
+    .dropdown-menu {
+        width: 100%;
+        left: 0;
+    }
+    .add-new-info {
+        width: 100%;
+        left: 0;
+    }
+}
+
+/* menu item size for georgian */
+
+ /* .navbar-collapse.collapse>ul>li>a */
+
+.navbar-collapse.collapse>ul>li>a { 
+    font-size: 1.1em !important; 
+}
+
+@media screen and (max-width: 1200px) {
+    .navbar-collapse.collapse>ul>li>a {
+        font-size: 0.9em !important;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .navbar-collapse.collapse>ul>li>a {
+        font-size: 0.75em !important;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .navbar-collapse.collapse>ul>li>a {
+        font-size: 1em !important;
+    }
+}
