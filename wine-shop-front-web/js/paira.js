@@ -662,23 +662,32 @@
             let total = Math.ceil(json.length / recordsPerPage);
             let container = document.querySelector("#page-numbers");
             //container.innerHTML="";
+
+            let pageWidget = () => {
+                let currentDisplayed = json.length < recordsPerPage ? json.length : recordsPerPage
+                pageStat.innerHTML = `${t("Showing")} : <b>${currentPage} - ${currentDisplayed}</b> ${t('Of')} <b>${json.length}</b>`;
+            }
+
             let pageNumber = ``;
             for(let i = 1; i < total + 1; i++){
                 pageNumber += `<li class="" value="${i}" style="cursor: pointer;">${i}</li>`;
             }
             let pageStat = document.querySelector("#paging-stat")
-            pageStat.innerHTML = `${t("Showing")} : <b>${currentPage} - ${recordsPerPage}</b> ${t('Of')} <b>${json.length}</b>`;
+            pageWidget()
             $("#page-numbers li:first-child").after(pageNumber);
             container.addEventListener('click', e => {
                 e.preventDefault()
+                console.log(`current page is ${currentPage}`)
+                console.log(`records per page are ${recordsPerPage}`)
+                console.log(`json length is ${json.length}`)
                 let selectValue = e.target.getAttribute('value');
                 if(selectValue === "next"){
                     currentPage++;
-                    if(currentPage > total) currentPage = 1;
+                    if(currentPage > total ) currentPage = 1;
                     productPage.showProducts(json, recordsPerPage, currentPage);
                 } else if(selectValue === "prev"){
                     currentPage--;
-                    if(currentPage < 1) currentPage = total;
+                    if(currentPage < 1 ) currentPage = total;
                     productPage.showProducts(json, recordsPerPage, currentPage);
                 } else if(typeof(parseInt(selectValue)) === "number" && !NaN){
                     e.target.previousElementSibling.classList.remove("active");
@@ -689,7 +698,7 @@
                 } else {
                     console.log('lol')
                 }
-                pageStat.innerHTML = `Showing : <b>${currentPage} - ${json.length - recordsPerPage}</b> Of <b>${json.length}</b>`;
+                pageWidget()
             })
             
                 
@@ -2224,12 +2233,20 @@
             let deliveredCardWrapper = document.querySelector("#orderHistoryDeliveredCardWrapper");
             let notDeliveredCardWrapper = document.querySelector("#orderHistoryNotDeliveredCardWrapper");
             let isDelivered;
+            
+            
 
-            data.forEach(item => {
-                isDelivered = item.complete
-                if(!isDelivered) deliveredCardWrapper.insertAdjacentHTML('afterbegin', this.createCards(item));
-                if(isDelivered) notDeliveredCardWrapper.insertAdjacentHTML('afterbegin', this.createCards(item));
-            })
+            if(data.length >= 1){
+                data.forEach(item => {
+                    isDelivered = item.complete
+                    if(!isDelivered) deliveredCardWrapper.insertAdjacentHTML('afterbegin', this.createCards(item));
+                    if(isDelivered) notDeliveredCardWrapper.insertAdjacentHTML('afterbegin', this.createCards(item));
+                })
+            } else {
+                //TODO
+                deliveredCardWrapper.insertAdjacentHTML('afterbegin', `<div style="text-align: center">${t("You have no ongoing orders!")}</div>`)
+                notDeliveredCardWrapper.insertAdjacentHTML('afterbegin', `<div style="text-align: center">${t("You have no delivered orders!")}</div>`)
+            }
         },
         createCards: function(item){
             let cards = ""
@@ -2282,7 +2299,7 @@
             data.order_products.forEach(item => {
                 productList += `
                 <div class="row item">
-                    <div class="col-xs-5">${item.product__name}</div>
+                    <div class="col-xs-5">${dbt(item.product__name)}</div>
                     <div class="col-xs-3">${item.quantity}</div>
                     <div class="col-xs-4">${item.product__price}</div>
                 </div>
@@ -2381,12 +2398,18 @@
             "continue shopping": "ყიდვების გაგრძელება",
             "checkout": "შეკვეთა",
             //newsletter
-            "require 18": "ჩვენ გვსურს დავრწმუნდეთ, რომ ყველა მყიდველი მინიმუმ 18 წლიაა",
+            "require 18": "ჩვენ გვსურს დავრწმუნდეთ, რომ ყველა მყიდველი მინიმუმ 18 წლისაა",
             "are you 18": "ხართ 18+ წლის?",
             "illegal age": "საიტის მოხმარებისთვის, თქვენ უნდა იყოთ მინიმუმ 18 წლის",
             "18-": "სამწუხაროდ თქვნთვის საიტზე შემოსვლა აკრძალულია. ჩვენ გვაქვს ასაკის შეზღუდვა.",
             "yes": "კი",
             "no": "არა",
+            //wine & chacha banner
+            "shop now": "დაიწყე შოპინგი",
+            "most popular": "ყველაზე პოპულარული",
+            "all customer": "ყველა კლიენტისთვის",
+            "wine": "ღვინო",
+            "chacha": "ჭაჭა",
         },
         "shop":{
             // navbar
@@ -2650,7 +2673,9 @@
             'Enter a valid email address': "შეიყვანეთ ვალიდური ელ.ფოსტა",
             "Please check your email to change your password": "გთხოვთ შეამოწმოთ თქვენი ელ.ფოსტა ",
             "Please, select your order details first!": "გთხოვთ აირჩიოთ სასურველი შეკვეთის დეტალები",
-            "There is nothing to display, please choose products from the shop first": "კალათა ცარიელია, გთხოვთ აირჩიოთ პროდუქტები რათა განათავსოთ ისინი კალათაში"
+            "There is nothing to display, please choose products from the shop first": "კალათა ცარიელია, გთხოვთ აირჩიოთ პროდუქტები რათა განათავსოთ ისინი კალათაში",
+            "You have no ongoing orders!": "თქვენ არ გაქვთ მიმდინარე შეკვეთები",
+            "You have no delivered orders!": "თქვენ არ გაქვთ დასრულებული შეკვეთები",
         },
         "404": {
             // navbar
@@ -2765,6 +2790,9 @@
                     break;
                 case "/reset-password.html":
                     handlePageTranslation("reset-password");
+                    break;
+                default:
+                    handlePageTranslation("404");
                     break;
             }
 
