@@ -4,7 +4,7 @@ from django.dispatch import receiver
 from django.urls import reverse
 from django_rest_passwordreset.signals import reset_password_token_created
 from django.core.mail import send_mail
-from sorl.thumbnail import ImageField, get_thumbnail
+from image_optimizer.fields import OptimizedImageField
 
 # Create your models here.
 
@@ -19,15 +19,15 @@ class Customer(models.Model):
 
 class Brand(models.Model):
     name = models.CharField(max_length=200, null=True)
-    image = models.ImageField(null=True, blank=True)
+    image = OptimizedImageField(
+        upload_to='uploads/collaborators/%Y/%m/%d',
+        optimized_image_output_size=(100, 100),
+        optimized_image_resize_method='cover',  # 'thumbnail', 'cover' or None
+        null = True, blank = True
+    )
 
     def __str__(self):
         return self.name
-
-    def save(self, *args, **kwargs):
-        if self.image:
-            self.image = get_thumbnail(self.image, '100x100', quality=99, format='JPEG').url[7:]
-        super(Brand, self).save(*args, **kwargs)
 
 
 class Product(models.Model):
@@ -42,7 +42,12 @@ class Product(models.Model):
     brand = models.ForeignKey(Brand, on_delete=models.SET_NULL, blank=True, null=True)
     type = models.CharField(max_length=200, null=True, blank=True)
     description = models.CharField(max_length=200, null=True, blank=True)
-    image = models.ImageField(null=True, blank=True)
+    image = OptimizedImageField(
+        upload_to='uploads/collaborators/%Y/%m/%d',
+        optimized_image_output_size=(620, 200),
+        optimized_image_resize_method='cover',
+        null=True, blank=True
+    )
     quantity = models.IntegerField(default=1)
     production_technology = models.CharField(max_length=200, null=True, blank=True)
 
@@ -64,10 +69,7 @@ class Product(models.Model):
     image_tag.short_description = 'Image'
     image_tag.allow_tags = True
 
-    def save(self, *args, **kwargs):
-        if self.image:
-            self.image = get_thumbnail(self.image, '620x200', quality=99, format='JPEG').url[7:]
-        super(Product, self).save(*args, **kwargs)
+
 
 class ShippingAddres(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=True, null=True)
@@ -121,7 +123,6 @@ class Blog(models.Model):
 
     def __str__(self):
         return self.tittle
-
 
 class BlogComments(models.Model):
     blog = models.ForeignKey(Blog, on_delete=models.SET_NULL, blank=True, null=True)

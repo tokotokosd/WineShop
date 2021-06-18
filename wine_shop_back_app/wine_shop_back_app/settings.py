@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_email_verification',
     'django_rest_passwordreset',
-    'sorl.thumbnail',
+    'image_optimizer',
 ]
 
 MIDDLEWARE = [
@@ -196,4 +196,6 @@ EMAIL_PAGE_DOMAIN = 'https://spirit.ge:8000/'
 # EMAIL_HOST_PASSWORD = 'mYC00lP4ssw0rd'  # os.environ['password_key'] suggested
 # EMAIL_USE_TLS = True
 
-DEFAULT_AUTO_FIELD='django.db.models.AutoField' 
+DEFAULT_AUTO_FIELD='django.db.models.AutoField'
+
+OPTIMIZED_IMAGE_METHOD = 'pillow'
