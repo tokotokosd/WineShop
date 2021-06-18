@@ -24,10 +24,10 @@ class Brand(models.Model):
     def __str__(self):
         return self.name
 
-    # def save(self, *args, **kwargs):
-    #     if self.image:
-    #         self.image = get_thumbnail(self.image, '100x100', quality=99, format='JPEG').url[7:]
-    #     super(Brand, self).save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        if self.image:
+            self.image = get_thumbnail(self.image, '100x100', quality=99, format='JPEG').url[7:]
+        super(Brand, self).save(*args, **kwargs)
 
 
 class Product(models.Model):
