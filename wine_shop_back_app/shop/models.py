@@ -44,7 +44,7 @@ class Product(models.Model):
     description = models.CharField(max_length=200, null=True, blank=True)
     image = OptimizedImageField(
         upload_to='uploads/collaborators/%Y/%m/%d',
-        optimized_image_output_size=(620, 200),
+        optimized_image_output_size=(200, 620),
         optimized_image_resize_method='thumbnail',
         null=True, blank=True
     )
