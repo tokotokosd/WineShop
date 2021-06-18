@@ -22,7 +22,7 @@ class Brand(models.Model):
     image = OptimizedImageField(
         upload_to='uploads/collaborators/%Y/%m/%d',
         optimized_image_output_size=(100, 100),
-        optimized_image_resize_method='cover',  # 'thumbnail', 'cover' or None
+        optimized_image_resize_method='thumbnail',  # 'thumbnail', 'cover' or None
         null = True, blank = True
     )
 
@@ -45,7 +45,7 @@ class Product(models.Model):
     image = OptimizedImageField(
         upload_to='uploads/collaborators/%Y/%m/%d',
         optimized_image_output_size=(620, 200),
-        optimized_image_resize_method='cover',
+        optimized_image_resize_method='thumbnail',
         null=True, blank=True
     )
     quantity = models.IntegerField(default=1)
