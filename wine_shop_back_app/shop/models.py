@@ -26,7 +26,7 @@ class Brand(models.Model):
 
     def save(self, *args, **kwargs):
         if self.image:
-            self.image = get_thumbnail(self.image, '100x100', quality=99, format='JPEG')
+            self.image = get_thumbnail(self.image, '100x100', quality=99, format='JPEG').url
         super(Brand, self).save(*args, **kwargs)
 
 
@@ -66,7 +66,7 @@ class Product(models.Model):
 
     def save(self, *args, **kwargs):
         if self.image:
-            self.image = get_thumbnail(self.image, '620x200', quality=99, format='JPEG')
+            self.image = get_thumbnail(self.image, '620x200', quality=99, format='JPEG').url
         super(Product, self).save(*args, **kwargs)
 
 class ShippingAddres(models.Model):
