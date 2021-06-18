@@ -30,6 +30,7 @@
     const csrftoken = getCookie('csrftoken');
     
     function dbt(objProp, useFun=true){
+        if(objProp === null || objProp === undefined) return null;
         let hasLanguage = objProp.includes(';');
         if(useFun === false && hasLanguage) return objProp.split(';')[0]
         if(useFun === false && !hasLanguage) return objProp
@@ -2169,6 +2170,12 @@
         })
         })
     }
+    // display burger menu
+    if(window.location.pathname === "/index.html" || window.location.path === "/" && window.innerHeight < 768){
+        // setInterval(() => console.log(window.innerWidth), 3000);
+        document.querySelector('[data-target="#navbar-collapse"]').click()
+    }
+
     // show banner 
     if( document.querySelector('.carousel-inner')){
         console.log('started showbanner')
@@ -2406,8 +2413,6 @@
             "no": "არა",
             //wine & chacha banner
             "shop now": "დაიწყე შოპინგი",
-            "most popular": "ყველაზე პოპულარული",
-            "all customer": "ყველა კლიენტისთვის",
             "wine": "ღვინო",
             "chacha": "ჭაჭა",
         },
