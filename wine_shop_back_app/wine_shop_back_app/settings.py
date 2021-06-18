@@ -169,8 +169,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'archvadzetornike@gmail.com'
-EMAIL_HOST_PASSWORD = 'evkibcraqpgcmokb'
+EMAIL_HOST_USER = 'spiritwineshop@gmail.com'
+EMAIL_HOST_PASSWORD = 'lsjwxalkrhjqgqbc'
 
 DEFAULT_FROM_EMAIL = 'noreply<no_reply@domain.com>'
 
