@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_email_verification',
     'django_rest_passwordreset',
+    'sorl.thumbnail',
 ]
 
 MIDDLEWARE = [
