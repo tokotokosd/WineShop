@@ -139,7 +139,7 @@ class BlogComments(models.Model):
 class Banner(models.Model):
     img = OptimizedImageField(
         upload_to='uploads/collaborators/%Y/%m/%d',
-        optimized_image_output_size=(1200, 500),
+        optimized_image_output_size=(1140, 475),
         optimized_image_resize_method='thumbnail',
         null=True, blank=True
     )
