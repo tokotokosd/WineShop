@@ -116,7 +116,10 @@ class OrderItem(models.Model):
 
 class Blog(models.Model):
     id = models.AutoField(primary_key=True)
-    image = models.ImageField(null=True, blank=True)
+    image = OptimizedImageField(
+        upload_to='uploads/collaborators/%Y/%m/%d',
+        null=True, blank=True
+    )
     time = models.DateTimeField(auto_now_add=True)
     tittle = models.CharField(max_length=100, null=True)
     content = models.CharField(max_length=999, null=True)
@@ -134,7 +137,12 @@ class BlogComments(models.Model):
 
 
 class Banner(models.Model):
-    img = models.ImageField(null=True, blank=True)
+    img = OptimizedImageField(
+        upload_to='uploads/collaborators/%Y/%m/%d',
+        optimized_image_output_size=(1200, 500),
+        optimized_image_resize_method='thumbnail',
+        null=True, blank=True
+    )
     text = models.CharField(max_length=400, null=True)
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, blank=True, null=True)
 
