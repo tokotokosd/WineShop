@@ -15,6 +15,7 @@ import os
 import datetime
 from os.path import join, abspath, dirname
 import dj_database_url
+import socket
 
 here = lambda *x: join(abspath(dirname(__file__)), *x)
 PROJECT_ROOT = here("..", "..", "..")
@@ -167,7 +168,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
 
 # mail part
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = socket.gethostbyname('smtp.gmail.com')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'spiritwineshop@gmail.com'
