@@ -44,7 +44,6 @@
     }
 
 
-
     
 
     //navbar changes
@@ -85,7 +84,7 @@
          * Init Dom Ready Function
          ***************************************************************************************/
         initDomReady: function() {
-            this.initMenu();
+            // this.initMenu();
             this.initPairaAnimation();
             this.initDomLoadClass();
             productPage.cartCounter();
@@ -98,7 +97,6 @@
             this.initToolTip();
             this.initIE10ViewPortHack();
             this.initWindowLoadClass();
-            this.initGoogleMap();
             this.initBxCarousel();
             //this.initProductPageSort(); //mine
             //this.initProductPagination(0, 5); //mine
@@ -129,7 +127,7 @@
          * Animation Load Function
          *******************************************************************************/
         initPairaAnimation: function() {
-            paira.pairaAnimation($('.paira-animation'));
+            // paira.pairaAnimation($('.paira-animation'));
         },
         /*******************************************************************************
          * Tool Tips
@@ -143,31 +141,31 @@
         /*******************************************************************************
          * Menu Customize
          *******************************************************************************/
-        initMenu: function() {
-            /***************************************************************************************
-             * Mega Menu
-             ***************************************************************************************/
-            window.prettyPrint && prettyPrint();
-            $(document).on('click', '.paira-mega-menu .paira-dropdown-menu', function(p) {
-                p.stopPropagation();
-            });
-            $('.paira-mega-menu ul .paira-dropdown-menu').parent().hover(function() {
-                var menu = $(this).find("ul");
-                var menupos = $(menu).offset();
-                if (menupos.left + menu.width() > $(window).width()) {
-                    var newpos = -$(menu).width();
-                    menu.css({ left: newpos });
-                }
-            });
-            $(document).on('click', '.paira-mega-menu .paira-angle-down', function(p) {
-                p.preventDefault();
-                $(this).parents('.paira-dropdown').find('.paira-dropdown-menu').toggleClass('active');
-            });
-            $(document).on('click', '.paira-dropdown-menu .dropdown-submenu .fa-angle-right', function(p) {
-                p.preventDefault();
-                $(this).parents('a').next().toggleClass('active-on');
-            });
-        },
+        // initMenu: function() {
+        //     /***************************************************************************************
+        //      * Mega Menu
+        //      ***************************************************************************************/
+        //     window.prettyPrint && prettyPrint();
+        //     $(document).on('click', '.paira-mega-menu .paira-dropdown-menu', function(p) {
+        //         p.stopPropagation();
+        //     });
+        //     $('.paira-mega-menu ul .paira-dropdown-menu').parent().hover(function() {
+        //         var menu = $(this).find("ul");
+        //         var menupos = $(menu).offset();
+        //         if (menupos.left + menu.width() > $(window).width()) {
+        //             var newpos = -$(menu).width();
+        //             menu.css({ left: newpos });
+        //         }
+        //     });
+        //     $(document).on('click', '.paira-mega-menu .paira-angle-down', function(p) {
+        //         p.preventDefault();
+        //         $(this).parents('.paira-dropdown').find('.paira-dropdown-menu').toggleClass('active');
+        //     });
+        //     $(document).on('click', '.paira-dropdown-menu .dropdown-submenu .fa-angle-right', function(p) {
+        //         p.preventDefault();
+        //         $(this).parents('a').next().toggleClass('active-on');
+        //     });
+        // },
         /*******************************************************************************
          * Dialog Box
          *******************************************************************************/
@@ -721,201 +719,6 @@
               });
             });
           },
-        
-        /*******************************************************************************
-         * Google Map
-         *******************************************************************************/
-        initGoogleMap: function() {
-            if($("#googleMap").length > 0) {
-                var locations = [
-                    ['Head Office', 23.544997, 89.172591, 1],
-                    ['Head Of Developer Office', 23.544798, 89.170480, 2],
-                    ['Production House', 23.537337, 89.174856, 3],
-                    ['Head Of Designer Office', 23.531917, 89.172887, 4],
-                    ['Selling House', 23.545307, 89.165835, 5],
-                    ['Packaging House', 23.542749, 89.167293, 6],
-                    ['Play Ground', 23.544863, 89.177532, 7],
-                ];
-                var map = new google.maps.Map(document.getElementById('googleMap'), {
-                        zoom: 14,
-                        center: new google.maps.LatLng(23.544997, 89.172591),
-                        styles: [
-                            {
-                                "elementType": "geometry",
-                                "stylers": [
-                                    {
-                                        "color": "#f5f5f5"
-                                    }
-                                ]
-                            },
-                            {
-                                "elementType": "labels.icon",
-                                "stylers": [
-                                    {
-                                        "visibility": "off"
-                                    }
-                                ]
-                            },
-                            {
-                                "elementType": "labels.text.fill",
-                                "stylers": [
-                                    {
-                                        "color": "#616161"
-                                    }
-                                ]
-                            },
-                            {
-                                "elementType": "labels.text.stroke",
-                                "stylers": [
-                                    {
-                                        "color": "#f5f5f5"
-                                    }
-                                ]
-                            },
-                            {
-                                "featureType": "administrative.land_parcel",
-                                "elementType": "labels.text.fill",
-                                "stylers": [
-                                    {
-                                        "color": "#bdbdbd"
-                                    }
-                                ]
-                            },
-                            {
-                                "featureType": "poi",
-                                "elementType": "geometry",
-                                "stylers": [
-                                    {
-                                        "color": "#eeeeee"
-                                    }
-                                ]
-                            },
-                            {
-                                "featureType": "poi",
-                                "elementType": "labels.text.fill",
-                                "stylers": [
-                                    {
-                                        "color": "#757575"
-                                    }
-                                ]
-                            },
-                            {
-                                "featureType": "poi.park",
-                                "elementType": "geometry",
-                                "stylers": [
-                                    {
-                                        "color": "#e5e5e5"
-                                    }
-                                ]
-                            },
-                            {
-                                "featureType": "poi.park",
-                                "elementType": "labels.text.fill",
-                                "stylers": [
-                                    {
-                                        "color": "#9e9e9e"
-                                    }
-                                ]
-                            },
-                            {
-                                "featureType": "road",
-                                "elementType": "geometry",
-                                "stylers": [
-                                    {
-                                        "color": "#ffffff"
-                                    }
-                                ]
-                            },
-                            {
-                                "featureType": "road.arterial",
-                                "elementType": "labels.text.fill",
-                                "stylers": [
-                                    {
-                                        "color": "#757575"
-                                    }
-                                ]
-                            },
-                            {
-                                "featureType": "road.highway",
-                                "elementType": "geometry",
-                                "stylers": [
-                                    {
-                                        "color": "#dadada"
-                                    }
-                                ]
-                            },
-                            {
-                                "featureType": "road.highway",
-                                "elementType": "labels.text.fill",
-                                "stylers": [
-                                    {
-                                        "color": "#616161"
-                                    }
-                                ]
-                            },
-                            {
-                                "featureType": "road.local",
-                                "elementType": "labels.text.fill",
-                                "stylers": [
-                                    {
-                                        "color": "#9e9e9e"
-                                    }
-                                ]
-                            },
-                            {
-                                "featureType": "transit.line",
-                                "elementType": "geometry",
-                                "stylers": [
-                                    {
-                                        "color": "#e5e5e5"
-                                    }
-                                ]
-                            },
-                            {
-                                "featureType": "transit.station",
-                                "elementType": "geometry",
-                                "stylers": [
-                                    {
-                                        "color": "#eeeeee"
-                                    }
-                                ]
-                            },
-                            {
-                                "featureType": "water",
-                                "elementType": "geometry",
-                                "stylers": [
-                                    {
-                                        "color": "#c9c9c9"
-                                    }
-                                ]
-                            },
-                            {
-                                "featureType": "water",
-                                "elementType": "labels.text.fill",
-                                "stylers": [
-                                    {
-                                        "color": "#9e9e9e"
-                                    }
-                                ]
-                            }
-                        ]
-                    }),
-                    infowindow = new google.maps.InfoWindow(),
-                    marker, i;
-                for (i = 0; i < locations.length; i++) {
-                    marker = new google.maps.Marker({
-                        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-                        map: map
-                    });
-                    google.maps.event.addListener(marker, 'click', (function(marker, i) {
-                        return function() {
-                            infowindow.setContent(locations[i][0]);
-                            infowindow.open(map, marker);
-                        }
-                    })(marker, i));
-                }
-            }
-        },
         /*******************************************************************************
          * Single Product Page Item Carousel With Product Elevate Zoom Effect
          *******************************************************************************/
