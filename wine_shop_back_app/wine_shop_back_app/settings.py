@@ -168,13 +168,14 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
 
 # mail part
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = socket.gethostbyname('smtp.gmail.com')
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'spiritwineshop@gmail.com'
 EMAIL_HOST_PASSWORD = 'lsjwxalkrhjqgqbc'
 
-DEFAULT_FROM_EMAIL = 'noreply<no_reply@domain.com>'
+DEFAULT_FROM_EMAIL = 'spiritwineshop@gmail.com'
+SERVER_EMAIL = 'spiritwineshop@gmail.com'
 
 def verified_callback(user):
     user.is_active = True
