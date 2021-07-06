@@ -320,6 +320,8 @@ def callback(request):
                     fail_silently=False,
                 )
 
+            order.pay_id = user.email
+
         order.save()
 
     return HttpResponse('')

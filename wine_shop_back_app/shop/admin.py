@@ -21,6 +21,12 @@ class OrderAdmin(admin.ModelAdmin):
 class OrderItemAdmin(admin.ModelAdmin):
     list_display = ['product', 'order', 'quantity', 'date_added']
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser or request.user.groups.filter(name = 'Overwatch').exists() or request.user.groups.filter(name = 'Warehouse').exists() :
+            return qs
+        return qs.filter(product=Product.objects.filter(brand=Brand.objects.get(user=request.user)))
+
 @admin.register(Blog)
 class BlogAdmin(admin.ModelAdmin):
     list_display = ['tittle', 'content', 'time']
