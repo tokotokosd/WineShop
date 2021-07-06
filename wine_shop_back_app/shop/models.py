@@ -81,7 +81,7 @@ class ShippingAddres(models.Model):
     comment = models.CharField(max_length=200, null=True)
 
     def __str__(self):
-        return self.address
+        return self.address + " / " + self.phone + " / " + self.first_last_name
 
 
 class Order(models.Model):

@@ -310,14 +310,15 @@ def callback(request):
         Overwatch = User.objects.filter(groups__name='Overwatch')
 
 
-        for elements in Warehouse + Deliver + Overwatch:
-            send_mail_core(
-                'New Order',
-                'Order with id( ' + order.id + ' ) is Approved',
-                'shop@spirit.ge',
-                [elements.email],
-                fail_silently=False,
-            )
+        for elements in [Warehouse, Deliver, Overwatch]:
+            for user in elements:
+                send_mail_core(
+                    'New Order',
+                    'Order with id( ' + order.id + ' ) is Approved',
+                    'shop@spirit.ge',
+                    [user.email],
+                    fail_silently=False,
+                )
 
         order.save()
 
