@@ -320,7 +320,7 @@ def callback(request):
                     fail_silently=False,
                 )
 
-            order.pay_id = user.email
+                print(user.email)
 
         order.save()
 
