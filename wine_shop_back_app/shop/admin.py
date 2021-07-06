@@ -9,7 +9,7 @@ class ProductAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        if request.user.is_superuser or request.user.groups__name in ['Overwatch', 'Overwatch']:
+        if request.user.is_superuser or request.user.groups.filter(name = 'Overwatch').exists() or request.user.groups.filter(name = 'Warehouse').exists() :
             return qs
         return qs.filter(brand=Brand.objects.get(user=request.user))
 
