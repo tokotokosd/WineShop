@@ -24,7 +24,7 @@ from rest_framework.response import Response
 from django.contrib.auth.models import User
 from .serializers import ChangePasswordSerializer
 from rest_framework.permissions import IsAuthenticated
-
+from django.core.mail import send_mail as send_mail_core
 
 env = "api.tbcbank.ge"
 app_key = "lOwrKb8uy75GGwoIXO11tjl44L8Atlap"
@@ -302,6 +302,23 @@ def callback(request):
         order = Order.objects.get(id=merchantPaymentId)
         order.complete = True
         order.pay_id = payId
+
+
+        # send data about new email
+        Warehouse = User.objects.filter(groups__name='Warehouse')
+        Deliver = User.objects.filter(groups__name='Deliver')
+        Overwatch = User.objects.filter(groups__name='Overwatch')
+
+
+        for elements in Warehouse + Deliver + Overwatch:
+            send_mail_core(
+                'New Order',
+                'Order with id( ' + order.id + ' ) is Approved',
+                'shop@spirit.ge',
+                [elements.email],
+                fail_silently=False,
+            )
+
         order.save()
 
     return HttpResponse('')

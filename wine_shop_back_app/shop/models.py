@@ -26,6 +26,8 @@ class Brand(models.Model):
         null = True, blank = True
     )
 
+    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True)
+
     def __str__(self):
         return self.name
 

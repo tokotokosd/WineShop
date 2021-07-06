@@ -1,4 +1,5 @@
 from django.contrib import admin
+from models import Brand
 
 # Register your models here.
 
@@ -7,9 +8,15 @@ from .models import *
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'image_tag']
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser or request.user.groups__name in ['Overwatch', 'Overwatch']:
+            return qs
+        return qs.filter(brand=Brand.objects.get(user=request.user))
+
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['id', 'customer', 'date_order', 'complete', 'pay_id']
+    list_display = ['id', 'customer', 'date_order', 'complete', 'pay_id', 'delivered']
 
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
