@@ -314,7 +314,7 @@ def callback(request):
             for user in elements:
                 send_mail_core(
                     'New Order',
-                    'Order with id( ' + order.id + ' ) is Approved',
+                    'Order with id( ' + str(order.id) + ' ) is Approved',
                     'shop@spirit.ge',
                     [user.email],
                     fail_silently=False,

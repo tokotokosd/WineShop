@@ -25,7 +25,7 @@ class OrderItemAdmin(admin.ModelAdmin):
         qs = super().get_queryset(request)
         if request.user.is_superuser or request.user.groups.filter(name = 'Overwatch').exists() or request.user.groups.filter(name = 'Warehouse').exists() :
             return qs
-        return qs.filter(product=Product.objects.filter(brand=Brand.objects.get(user=request.user)))
+        return qs.filter(product__brand=Brand.objects.get(user=request.user))
 
 @admin.register(Blog)
 class BlogAdmin(admin.ModelAdmin):
