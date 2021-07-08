@@ -36,6 +36,7 @@ class Product(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200, null=True)
     price = models.FloatField()
+    sale = models.FloatField()
     year = models.CharField(max_length=200, null=True, blank=True)
     alcoholPercent = models.CharField(max_length=200, null=True, blank=True)
     color = models.CharField(max_length=200, null=True, blank=True)

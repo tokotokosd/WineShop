@@ -39,6 +39,11 @@ class BlogCommentsAdmin(admin.ModelAdmin):
 class ShippingAddresCommentsAdmin(admin.ModelAdmin):
     list_display = ['id', 'customer', 'address', 'first_last_name']
 
+@admin.register(Banner)
+class BannersAdmin(admin.ModelAdmin):
+    list_display = ['text', 'product']
+
+
 admin.site.register(Customer)
 admin.site.register(Brand)
-admin.site.register(Banner)
+

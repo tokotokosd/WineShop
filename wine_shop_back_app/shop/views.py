@@ -306,11 +306,10 @@ def callback(request):
 
         # send data about new email
         Warehouse = User.objects.filter(groups__name='Warehouse')
-        Deliver = User.objects.filter(groups__name='Deliver')
         Overwatch = User.objects.filter(groups__name='Overwatch')
 
 
-        for elements in [Warehouse, Deliver, Overwatch]:
+        for elements in [Warehouse, Overwatch]:
             for user in elements:
                 send_mail_core(
                     'New Order',
@@ -350,6 +349,7 @@ def history(request):
             order_new = {}
             order_new['id'] = order['id']
             order_new['complete'] = order['complete']
+            order_new['delivered'] = order['delivered']
             order_new['date_order'] = order['date_order']
             order_new['total_price'] = Order.objects.get(id=order['id']).get_cart_total
             order_new['order_address'] = order['address__address']
