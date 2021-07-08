@@ -29,7 +29,7 @@
 
     const csrftoken = getCookie('csrftoken');
     
-    function dbt(objProp, useFun=true){
+    function dbt(objProp, useFun=true){1
         if(objProp === null || objProp === undefined) return null;
         let hasLanguage = objProp.includes(';');
         if(useFun === false && hasLanguage) return objProp.split(';')[0]
@@ -42,6 +42,7 @@
             return objProp
         }
     }
+
 
 
     
@@ -84,7 +85,7 @@
          * Init Dom Ready Function
          ***************************************************************************************/
         initDomReady: function() {
-            // this.initMenu();
+            this.initMenu();
             this.initPairaAnimation();
             this.initDomLoadClass();
             productPage.cartCounter();
@@ -97,6 +98,7 @@
             this.initToolTip();
             this.initIE10ViewPortHack();
             this.initWindowLoadClass();
+            this.initGoogleMap();
             this.initBxCarousel();
             //this.initProductPageSort(); //mine
             //this.initProductPagination(0, 5); //mine
@@ -127,7 +129,7 @@
          * Animation Load Function
          *******************************************************************************/
         initPairaAnimation: function() {
-            // paira.pairaAnimation($('.paira-animation'));
+            paira.pairaAnimation($('.paira-animation'));
         },
         /*******************************************************************************
          * Tool Tips
@@ -141,31 +143,31 @@
         /*******************************************************************************
          * Menu Customize
          *******************************************************************************/
-        // initMenu: function() {
-        //     /***************************************************************************************
-        //      * Mega Menu
-        //      ***************************************************************************************/
-        //     window.prettyPrint && prettyPrint();
-        //     $(document).on('click', '.paira-mega-menu .paira-dropdown-menu', function(p) {
-        //         p.stopPropagation();
-        //     });
-        //     $('.paira-mega-menu ul .paira-dropdown-menu').parent().hover(function() {
-        //         var menu = $(this).find("ul");
-        //         var menupos = $(menu).offset();
-        //         if (menupos.left + menu.width() > $(window).width()) {
-        //             var newpos = -$(menu).width();
-        //             menu.css({ left: newpos });
-        //         }
-        //     });
-        //     $(document).on('click', '.paira-mega-menu .paira-angle-down', function(p) {
-        //         p.preventDefault();
-        //         $(this).parents('.paira-dropdown').find('.paira-dropdown-menu').toggleClass('active');
-        //     });
-        //     $(document).on('click', '.paira-dropdown-menu .dropdown-submenu .fa-angle-right', function(p) {
-        //         p.preventDefault();
-        //         $(this).parents('a').next().toggleClass('active-on');
-        //     });
-        // },
+        initMenu: function() {
+            /***************************************************************************************
+             * Mega Menu
+             ***************************************************************************************/
+            window.prettyPrint && prettyPrint();
+            $(document).on('click', '.paira-mega-menu .paira-dropdown-menu', function(p) {
+                p.stopPropagation();
+            });
+            $('.paira-mega-menu ul .paira-dropdown-menu').parent().hover(function() {
+                var menu = $(this).find("ul");
+                var menupos = $(menu).offset();
+                if (menupos.left + menu.width() > $(window).width()) {
+                    var newpos = -$(menu).width();
+                    menu.css({ left: newpos });
+                }
+            });
+            $(document).on('click', '.paira-mega-menu .paira-angle-down', function(p) {
+                p.preventDefault();
+                $(this).parents('.paira-dropdown').find('.paira-dropdown-menu').toggleClass('active');
+            });
+            $(document).on('click', '.paira-dropdown-menu .dropdown-submenu .fa-angle-right', function(p) {
+                p.preventDefault();
+                $(this).parents('a').next().toggleClass('active-on');
+            });
+        },
         /*******************************************************************************
          * Dialog Box
          *******************************************************************************/
@@ -192,6 +194,9 @@
                 console.log(filteredJson)
 
                 const calculateSum = () => {
+                    if(filteredJson[0].sales){
+                        total.innerText = +counterInput.value * +filteredJson[0].sales
+                    }
                     total.innerText = +counterInput.value * +filteredJson[0].price
                 }
 
@@ -526,13 +531,13 @@
                             } );
                         }
                         let inputText = e.target.nextElementSibling
-                        let totalValue = e.target.closest('.row-4').previousElementSibling.querySelector('p br')
+                        let totalValue = e.target.closest('.row-4').previousElementSibling
                         if(inputText.value > 1){
                             
                             
                             console.log(`inputText.value is ${inputText.value}`)
                             inputText.value -= 1;
-                            totalValue.nextSibling.nodeValue = `${t('Total')} : ${inputText.value* parseInt(totalValue.previousSibling.nodeValue)}`
+                            totalValue.querySelector('p br').nextSibling.nodeValue = `${t('Total')} : ${inputText.value* parseInt(totalValue.querySelector('p span.productMoney').innerText)}`
 
 
                             if(!isLoggedIn()){
@@ -566,17 +571,18 @@
                             .then( json => console.log(json) );
                         }
                         let inputText = e.target.previousElementSibling
-                        let totalValue = e.target.closest('.row-4').previousElementSibling.querySelector('p br')
+                        let totalValue = e.target.closest('.row-4').previousElementSibling
                         if(json.filter(item => item.id === +e.target.dataset.id)[0].quantity > inputText.value){
                             inputText.value = parseInt(inputText.value) + 1;
-                            totalValue.nextSibling.nodeValue = `${t('Total')} : ${inputText.value* parseInt(totalValue.previousSibling.nodeValue)}`
+                            // TODO
+                            totalValue.querySelector('p br').nextSibling.nodeValue = `${t('Total')} : ${inputText.value* parseInt(totalValue.querySelector('p span.productMoney').innerText)}`
                             
 
                             if(!isLoggedIn()){
                                 let cart = JSON.parse(localStorage.getItem('cartItems'));
                                 cart.forEach(item => {
                                     if(item.id === +inputText.getAttribute('data-id')){
-                                        item.quantity += 1;
+                                        item.quantity = +item.quantity + 1;
                                     }
                                 })
                                 localStorage.setItem('cartItems', JSON.stringify(cart));
@@ -719,6 +725,201 @@
               });
             });
           },
+        
+        /*******************************************************************************
+         * Google Map
+         *******************************************************************************/
+        initGoogleMap: function() {
+            if($("#googleMap").length > 0) {
+                var locations = [
+                    ['Head Office', 23.544997, 89.172591, 1],
+                    ['Head Of Developer Office', 23.544798, 89.170480, 2],
+                    ['Production House', 23.537337, 89.174856, 3],
+                    ['Head Of Designer Office', 23.531917, 89.172887, 4],
+                    ['Selling House', 23.545307, 89.165835, 5],
+                    ['Packaging House', 23.542749, 89.167293, 6],
+                    ['Play Ground', 23.544863, 89.177532, 7],
+                ];
+                var map = new google.maps.Map(document.getElementById('googleMap'), {
+                        zoom: 14,
+                        center: new google.maps.LatLng(23.544997, 89.172591),
+                        styles: [
+                            {
+                                "elementType": "geometry",
+                                "stylers": [
+                                    {
+                                        "color": "#f5f5f5"
+                                    }
+                                ]
+                            },
+                            {
+                                "elementType": "labels.icon",
+                                "stylers": [
+                                    {
+                                        "visibility": "off"
+                                    }
+                                ]
+                            },
+                            {
+                                "elementType": "labels.text.fill",
+                                "stylers": [
+                                    {
+                                        "color": "#616161"
+                                    }
+                                ]
+                            },
+                            {
+                                "elementType": "labels.text.stroke",
+                                "stylers": [
+                                    {
+                                        "color": "#f5f5f5"
+                                    }
+                                ]
+                            },
+                            {
+                                "featureType": "administrative.land_parcel",
+                                "elementType": "labels.text.fill",
+                                "stylers": [
+                                    {
+                                        "color": "#bdbdbd"
+                                    }
+                                ]
+                            },
+                            {
+                                "featureType": "poi",
+                                "elementType": "geometry",
+                                "stylers": [
+                                    {
+                                        "color": "#eeeeee"
+                                    }
+                                ]
+                            },
+                            {
+                                "featureType": "poi",
+                                "elementType": "labels.text.fill",
+                                "stylers": [
+                                    {
+                                        "color": "#757575"
+                                    }
+                                ]
+                            },
+                            {
+                                "featureType": "poi.park",
+                                "elementType": "geometry",
+                                "stylers": [
+                                    {
+                                        "color": "#e5e5e5"
+                                    }
+                                ]
+                            },
+                            {
+                                "featureType": "poi.park",
+                                "elementType": "labels.text.fill",
+                                "stylers": [
+                                    {
+                                        "color": "#9e9e9e"
+                                    }
+                                ]
+                            },
+                            {
+                                "featureType": "road",
+                                "elementType": "geometry",
+                                "stylers": [
+                                    {
+                                        "color": "#ffffff"
+                                    }
+                                ]
+                            },
+                            {
+                                "featureType": "road.arterial",
+                                "elementType": "labels.text.fill",
+                                "stylers": [
+                                    {
+                                        "color": "#757575"
+                                    }
+                                ]
+                            },
+                            {
+                                "featureType": "road.highway",
+                                "elementType": "geometry",
+                                "stylers": [
+                                    {
+                                        "color": "#dadada"
+                                    }
+                                ]
+                            },
+                            {
+                                "featureType": "road.highway",
+                                "elementType": "labels.text.fill",
+                                "stylers": [
+                                    {
+                                        "color": "#616161"
+                                    }
+                                ]
+                            },
+                            {
+                                "featureType": "road.local",
+                                "elementType": "labels.text.fill",
+                                "stylers": [
+                                    {
+                                        "color": "#9e9e9e"
+                                    }
+                                ]
+                            },
+                            {
+                                "featureType": "transit.line",
+                                "elementType": "geometry",
+                                "stylers": [
+                                    {
+                                        "color": "#e5e5e5"
+                                    }
+                                ]
+                            },
+                            {
+                                "featureType": "transit.station",
+                                "elementType": "geometry",
+                                "stylers": [
+                                    {
+                                        "color": "#eeeeee"
+                                    }
+                                ]
+                            },
+                            {
+                                "featureType": "water",
+                                "elementType": "geometry",
+                                "stylers": [
+                                    {
+                                        "color": "#c9c9c9"
+                                    }
+                                ]
+                            },
+                            {
+                                "featureType": "water",
+                                "elementType": "labels.text.fill",
+                                "stylers": [
+                                    {
+                                        "color": "#9e9e9e"
+                                    }
+                                ]
+                            }
+                        ]
+                    }),
+                    infowindow = new google.maps.InfoWindow(),
+                    marker, i;
+                for (i = 0; i < locations.length; i++) {
+                    marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+                        map: map
+                    });
+                    google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                        return function() {
+                            infowindow.setContent(locations[i][0]);
+                            infowindow.open(map, marker);
+                        }
+                    })(marker, i));
+                }
+            }
+        },
         /*******************************************************************************
          * Single Product Page Item Carousel With Product Elevate Zoom Effect
          *******************************************************************************/
@@ -918,6 +1119,13 @@
             filter: "none",
             sort: "sort-def"
         },
+        handleSales: function(sales, originalPrice){
+            if(sales){
+                return `<span class ="money font-size-18"><b>${sales}</b>&#8382;</span><span class="money font-size-14" style="margin-left: 3px;color: #B8B8B8;"><s><b>${originalPrice}</b>&#8382;</s></span>`
+            } else {
+                return `<span class="money font-size-18"><b>${originalPrice}</b>&#8382;</span>`
+            }
+        },
         hideProducts: function(){
             productWidget.innerHTML = "";
         },
@@ -932,6 +1140,7 @@
             let paginatedJson = json.slice(start, end);
 
             /////
+            
 
             for(let i =0; i < paginatedJson.length; i++){
                 let item = paginatedJson[i];
@@ -945,7 +1154,7 @@
                                 </a>
                             </div>
                             <h1 class="font-size-16 paira-margin-top-4 margin-bottom-10"><a href="#" class="paira-quick-view">${dbt(item.name)}</a></h1>
-                            <span class="money font-size-16"><b>${item.price}</b>&#8382;</span>
+                            ${this.handleSales(item.sales, item.price)}
                             <div class="paira-quick-view product-hover" style="cursor: pointer";>
                                 <div class="paira-wish-compare-con wish-compare-view-cart paira-margin-top-4">
                                     <a href="#paira-quick-view" class="paira-quick-view quick-view  btn color-scheme-2 font-size-18"><i class="fa fa-eye"></i></a>
@@ -976,12 +1185,15 @@
         },
         displayModalContent: function(data){
             productModalContent.innerHTML="";
+
+
+
             let modalContent = `
             <div class="pro-conte
             <div class="pro-body product-dtl">
                 <div class="bottom-img">
                     <div class="info">
-                        <h4 class="raleway-sbold full-width">${data.price}&#8382;</h4>
+                        <h4 class="raleway-sbold full-width">${this.handleSales(data.sales, data.price)}</h4>
                         <h4 class="raleway-light full-width text-capitalize margin-top-15">${dbt(data.name)}</h4>
                         <p class="margin-top-15 letter-spacing-2 font-size-14">
                             ${dbt(data.description)}
@@ -1132,7 +1344,7 @@
                     quantity = data.selectedQuantity
                 }
 
-                let cartItem = { id: data.id, image: data.image, name: data.name, quantity: quantity, price: data.price };
+                let cartItem = { id: data.id, image: data.image, name: data.name, quantity: quantity, price: data.price, sales: data.sales };
                 productImage.src = `https://spirit.ge:8000/images/${data.image}`;
                 productName.innerHTML = `${dbt(data.name)}`;
 
@@ -1246,15 +1458,15 @@
                         console.log(json)
                         let cart = [];
                         console.log(data)
-                        
+                        // TODO link to object
                         for(let i of data){
                             for(let i2 of json.items){
                                 if(i.id === i2.product_id){
-                                    cart.push({id: i.id, image: i.image, name: i.name, quantity: i2.quantity, price: i.price})
+                                    cart.push({id: i.id, image: i.image, name: i.name, sales: 12311, quantity: i2.quantity, price: i.price})
                                 }
                             }
                         }
-
+                        // TODO
                         if(json.items.length > 0){
                             cart.forEach((item) => {
                                 cartItem += `
@@ -1265,7 +1477,7 @@
                                         </a>
                                     </div>
                                     <div class="row-2"><p><a href="#">${dbt(item.name)}</a></p></div>
-                                    <div class="row-3"><p>${item.price}&#8382;<br class="totalItem">${t('Total')} : ${item.price}&#8382</p></div>
+                                    <div class="row-3"><p>${item.sales ? `${item.sales}&#8382;<s style="margin-left: 3px;color: #B8B8B8;">${item.price}&#8382;</s>` : `${item.price}&#8382;`}<br class="totalItem">${t('Total')} : ${item.sales ? item.sales : item.price}&#8382</p></div>
                                     <div class="row-4">
                                         <div class="quantity">
                                             <div class="quantity-fix display-inline-b">
@@ -1291,8 +1503,10 @@
                 
                 console.log(cartContent)
                 } else {
+                    // TODO
                     if(cartContent !== null && cartContent.length > 0){
                         cartContent.forEach((item, i) => {
+                            console.log(item)
                             cartItem += `
                                 <div class="column full-width overflow paira-margin-bottom-4 cartItem" data-id="${item.id}">
                                 <div class="row-1">
@@ -1301,7 +1515,7 @@
                                     </a>
                                 </div>
                                 <div class="row-2"><p><a href="#">${dbt(item.name)}</a></p></div>
-                                <div class="row-3"><p>${item.price}&#8382;<br class="totalItem">${t("Total")} : ${item.price}&#8382</p></div>
+                                <div class="row-3"><p>${true ? `<span class="productMoney">${11}&#8382;</span><s style="margin-left: 3px;color: #B8B8B8;">${item.price}&#8382;</s>` : `<span class="productMoney">${item.price}&#8382;</span>`}<br class="totalItem">${t("Total")} : ${true ? 2 : item.price}&#8382</p></div>
                                 <div class="row-4">
                                     <div class="quantity">
                                         <div class="quantity-fix display-inline-b">
@@ -1760,7 +1974,7 @@
                     <tr>
                         <td>${dbt(item.name)}</td>
                         <td>${item.quantity}</td>
-                        <td>${item.price}</td>
+                        <td>${item.sales ? item.sales : item.price}</td>
                     </tr>
                     `
                     total += item.quantity * item.price;
@@ -2044,7 +2258,7 @@
             let notDeliveredCardWrapper = document.querySelector("#orderHistoryNotDeliveredCardWrapper");
             let isDelivered;
             
-            
+            console.log(data)
 
             if(data.length >= 1){
                 data.forEach(item => {
@@ -2053,7 +2267,7 @@
                     if(isDelivered) notDeliveredCardWrapper.insertAdjacentHTML('afterbegin', this.createCards(item));
                 })
             } else {
-                //TODO
+                //TODO sanaxavia
                 deliveredCardWrapper.insertAdjacentHTML('afterbegin', `<div style="text-align: center">${t("You have no ongoing orders!")}</div>`)
                 notDeliveredCardWrapper.insertAdjacentHTML('afterbegin', `<div style="text-align: center">${t("You have no delivered orders!")}</div>`)
             }
@@ -2432,7 +2646,7 @@
             "new customer": "ახალი მომხმარებელი",
             "register": "რეგისტრაცია",
             //cart
-            "shopping cart": "სასყიდლების კალათა",
+            "shopping cart": "სასყიდლების კალათ��",
             "subtotal": "სულ:",
             "Shipping/tax": "მიტანის & გადასახადების დაანგარიშება შეკვეთისას",
             "continue shopping": "ყიდვების გაგრძელება",
