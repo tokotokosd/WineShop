@@ -94,6 +94,13 @@ class UserList(APIView):
             user = get_user_model().objects.get(username=serializer.data['username'])
             user.is_active = False
             send_email(user)
+            send_mail_core(
+                'Subject here',
+                'Here is the message.',
+                'from@example.com',
+                ['to@example.com'],
+                fail_silently=True,
+            )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
