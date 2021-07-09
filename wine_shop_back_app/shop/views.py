@@ -50,7 +50,7 @@ def wineproduct(request):
     if request.method == 'GET':
         wine = request.GET.get('wine')
         if wine:
-            data['menu'] = list(Product.objects.all().values("id", "name", "price", "year",
+            data['menu'] = list(Product.objects.all().values("id", "name", "price", "sales", "year",
                                                              "alcoholPercent", "color", "region",
                                                              "variety", "brand_id__name", "type", "description",
                                                              "image", "quantity", "production_technology"))
