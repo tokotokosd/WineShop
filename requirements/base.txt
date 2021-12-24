@@ -1,8 +1,8 @@
-Django
-psycopg2
+Django==3.0
+psycopg2==2.8.6
 django-cors-headers
-djangorestframework
-djangorestframework-jwt
+djangorestframework==3.10
+djangorestframework_simplejwt
 django_email_verification
 django_rest_passwordreset
 Pillow
