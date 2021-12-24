@@ -2,7 +2,7 @@ Django
 psycopg2
 django-cors-headers
 djangorestframework
-djangorestframework-jwt
+djangorestframework_simplejwt
 django_email_verification
 django_rest_passwordreset
 Pillow
