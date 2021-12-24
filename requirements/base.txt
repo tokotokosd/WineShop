@@ -1,7 +1,7 @@
-Django
+Django==3.0
 psycopg2
 django-cors-headers
-djangorestframework
+djangorestframework==3.10
 djangorestframework_simplejwt
 django_email_verification
 django_rest_passwordreset
