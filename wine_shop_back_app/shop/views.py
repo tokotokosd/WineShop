@@ -361,8 +361,8 @@ def history(request):
             order_new['total_price'] = Order.objects.get(id=order['id']).get_cart_total
             order_new['order_address'] = order['address__address']
             order_new['order_products'] = list(
-                OrderItem.objects.all().filter(order_id=order['id']).values('quantity', 'product__price',
-                                                                            'product__name'))
+                OrderItem.objects.all().filter(order_id=order['id']).values('quantity','product__id', 'product__price',
+                                                                            'product__name', 'product__type', 'product__color', 'product__image'))
             history.append(order_new)
         try:
             data = history
