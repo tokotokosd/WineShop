@@ -349,7 +349,7 @@ def history(request):
     serializer = UserSerializer(request.user)
     user = User.objects.get(username=serializer['username'].value)
     customer = user.customer
-    orders = Order.objects.all().filter(customer=customer).values('id', 'complete', 'date_order','address__address' )
+    orders = Order.objects.all().filter(customer=customer).values('id', 'complete', 'date_order','address__address', 'delivered' )
     history = []
     if request.method == 'GET':
         for order in orders:
